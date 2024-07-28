@@ -1,6 +1,6 @@
 import { Modal, Text, View, TextInput, Pressable } from "react-native";
 import { styled } from "nativewind";
-import { useRef, useEffect } from "react";
+import { useRef, useEffect, useState } from "react";
 
 const StyledPressable = styled(Pressable);
 
@@ -8,9 +8,11 @@ export default function AddExpense({ visible, setVisible }) {
   const conceptInput = useRef(null);
   const budgetInput = useRef(null);
   const totalInput = useRef(null);
+  const [totalFormated, setTotalFormated] = useState(null);
 
   useEffect(() => {
     if (visible) {
+      setTotalFormated(null);
       const timeout = setTimeout(() => {
         totalInput.current?.blur();
         totalInput.current?.focus();
@@ -26,13 +28,25 @@ export default function AddExpense({ visible, setVisible }) {
           <Text className="text-sm font-bold">Total del gasto</Text>
           <TextInput
             className={`w-full h-12 text-sm border
-              border-gray-400 rounded-xl mb-4 pl-5`}
+              border-gray-400 rounded-xl pl-5`}
             keyboardType="numeric"
             enterKeyHint="next"
+            onChangeText={(text) => {
+              const cleanedText = text.replace(/[^0-9]/g, "");
+              setTotalFormated(
+                Number(cleanedText).toLocaleString("es-CO", {
+                  style: "currency",
+                  currency: "COP",
+                })
+              );
+            }}
             ref={totalInput}
             blurOnSubmit={false}
             onSubmitEditing={() => conceptInput.current.focus()}
           />
+          <Text className="text-sm font-bold mb-4">
+            {totalFormated || "$ 0.00"}
+          </Text>
           <Text className="text-sm font-bold">Descripción del gasto</Text>
           <TextInput
             className={`w-full h-12 text-sm border
