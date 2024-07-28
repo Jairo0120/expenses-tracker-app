@@ -4,9 +4,13 @@ import { Stack, Link } from "expo-router";
 export default function Layout() {
   return (
     <View className="flex-1 bg-black">
-      <Stack>
-        <Stack.Screen name="index" options={{}} />
-      </Stack>
+      <Stack
+        screenOptions={{
+          headerStyle: { backgroundColor: "black" },
+          headerTitle: "Expenses Tracker",
+          headerTintColor: "#c98b1e",
+        }}
+      />
     </View>
   );
 }
