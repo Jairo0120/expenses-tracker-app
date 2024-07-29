@@ -1,61 +1,78 @@
-import { Modal, Text, View, TextInput, Pressable } from "react-native";
+import { Modal, Text, View, Pressable } from "react-native";
+import { useForm, useWatch } from "react-hook-form";
 import { styled } from "nativewind";
-import { useRef, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import BadgetPicker from "./BadgetPicker";
+import { FormTextInput } from "./FormTextInput";
 
 const StyledPressable = styled(Pressable);
 
 export default function AddExpense({ visible, setVisible, categories = [] }) {
-  const conceptInput = useRef(null);
-  const totalInput = useRef(null);
+  const { control, handleSubmit, setFocus, resetField } = useForm();
   const [totalFormated, setTotalFormated] = useState(null);
   const [selectedCategory, setSelectedCategory] = useState(null);
+  const watchTotal = useWatch({
+    control,
+    name: "total",
+    defaultValue: "",
+  });
+  const onSubmit = (data) => {
+    console.log(data);
+    setVisible(false);
+  };
 
   useEffect(() => {
     if (visible) {
-      setTotalFormated(null);
-      setSelectedCategory(null);
       const timeout = setTimeout(() => {
-        totalInput.current?.blur();
-        totalInput.current?.focus();
+        setFocus("total");
       }, 100);
       return () => clearTimeout(timeout);
+    } else {
+      setTotalFormated(null);
+      setSelectedCategory(null);
+      resetField("total");
+      resetField("concept");
     }
-  }, [visible]);
+  }, [visible, setFocus, resetField]);
+
+  useEffect(() => {
+    if (watchTotal !== "") {
+      const cleanedText = watchTotal.replace(/[^0-9]/g, "");
+      setTotalFormated(
+        Number(cleanedText).toLocaleString("es-CO", {
+          style: "currency",
+          currency: "COP",
+        })
+      );
+    }
+  }, [watchTotal]);
 
   return (
     <Modal transparent={true} visible={visible} animationType="slide">
       <View className="flex-1 mx-5 justify-center">
         <View className="bg-white px-5 rounded-tl-xl rounded-tr-xl py-3">
           <Text className="text-sm font-bold">Total del gasto</Text>
-          <TextInput
+          <FormTextInput
             className={`w-full h-12 text-sm border
               border-gray-400 rounded-xl pl-5`}
+            control={control}
             keyboardType="numeric"
             enterKeyHint="next"
-            onChangeText={(text) => {
-              const cleanedText = text.replace(/[^0-9]/g, "");
-              setTotalFormated(
-                Number(cleanedText).toLocaleString("es-CO", {
-                  style: "currency",
-                  currency: "COP",
-                })
-              );
-            }}
-            ref={totalInput}
+            name={"total"}
             blurOnSubmit={false}
-            onSubmitEditing={() => conceptInput.current.focus()}
+            onSubmitEditing={() => setFocus("concept")}
           />
           <Text className="text-sm font-bold mb-4">
-            {totalFormated || "$ 0.00"}
+            {totalFormated || "$ 0,00"}
           </Text>
           <Text className="text-sm font-bold">Descripción del gasto</Text>
-          <TextInput
+          <FormTextInput
             className={`w-full h-12 text-sm border
               border-gray-400 rounded-xl mb-4 pl-5`}
+            control={control}
             enterKeyHint="done"
             blurOnSubmit={false}
-            ref={conceptInput}
+            name={"concept"}
           />
           <Text className="text-sm font-bold">Categoría</Text>
           <BadgetPicker
@@ -75,6 +92,7 @@ export default function AddExpense({ visible, setVisible, categories = [] }) {
           <StyledPressable
             className={`flex-1 bg-green-100 justify-center border-r
               border-gray-400 py-3 active:opacity-50`}
+            onPress={handleSubmit(onSubmit)}
           >
             <Text className="text-center text-sm font-bold">Guardar</Text>
           </StyledPressable>
