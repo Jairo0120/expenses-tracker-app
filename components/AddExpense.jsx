@@ -1,18 +1,20 @@
 import { Modal, Text, View, TextInput, Pressable } from "react-native";
 import { styled } from "nativewind";
 import { useRef, useEffect, useState } from "react";
+import BadgetPicker from "./BadgetPicker";
 
 const StyledPressable = styled(Pressable);
 
-export default function AddExpense({ visible, setVisible }) {
+export default function AddExpense({ visible, setVisible, categories = [] }) {
   const conceptInput = useRef(null);
-  const budgetInput = useRef(null);
   const totalInput = useRef(null);
   const [totalFormated, setTotalFormated] = useState(null);
+  const [selectedCategory, setSelectedCategory] = useState(null);
 
   useEffect(() => {
     if (visible) {
       setTotalFormated(null);
+      setSelectedCategory(null);
       const timeout = setTimeout(() => {
         totalInput.current?.blur();
         totalInput.current?.focus();
@@ -51,17 +53,15 @@ export default function AddExpense({ visible, setVisible }) {
           <TextInput
             className={`w-full h-12 text-sm border
               border-gray-400 rounded-xl mb-4 pl-5`}
-            enterKeyHint="next"
+            enterKeyHint="done"
             blurOnSubmit={false}
-            onSubmitEditing={() => budgetInput.current.focus()}
             ref={conceptInput}
           />
           <Text className="text-sm font-bold">Categoría</Text>
-          <TextInput
-            className={`w-full h-12 text-sm border
-              border-gray-400 rounded-xl mb-4 pl-5`}
-            enterKeyHint="done"
-            ref={budgetInput}
+          <BadgetPicker
+            categories={categories}
+            selectedCategory={selectedCategory}
+            setSelectedCategory={setSelectedCategory}
           />
         </View>
         <View className="flex-row border-t border-gray-400">
