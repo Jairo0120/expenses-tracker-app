@@ -1,5 +1,5 @@
 import { Modal, Text, View, Pressable, ActivityIndicator } from "react-native";
-import { useForm, useWatch } from "react-hook-form";
+import { set, useForm, useWatch } from "react-hook-form";
 import { styled } from "nativewind";
 import { useEffect, useState } from "react";
 import { FormTextInput } from "./FormTextInput";
@@ -12,7 +12,11 @@ import BadgetPicker from "./BadgetPicker";
 
 const StyledPressable = styled(Pressable);
 
-export default function ExpenseModal({ visible, setVisible }) {
+export default function ExpenseModal({
+  visible,
+  setVisible,
+  setRefreshExpenses,
+}) {
   const {
     control,
     handleSubmit,
@@ -52,6 +56,7 @@ export default function ExpenseModal({ visible, setVisible }) {
           type: "success",
         });
         setVisible(false);
+        setRefreshExpenses(true);
       } else {
         showMessage({
           message: "No se pudo registrar el gasto",
