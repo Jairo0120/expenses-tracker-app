@@ -1,5 +1,5 @@
 import { Modal, Text, View, Pressable } from "react-native";
-import { useForm, useWatch } from "react-hook-form";
+import { set, useForm, useWatch } from "react-hook-form";
 import { styled } from "nativewind";
 import { useEffect, useState } from "react";
 import { FormTextInput } from "./FormTextInput";
@@ -36,67 +36,34 @@ export default function ExpenseModal({ visible, setVisible }) {
     resetField("concept");
   };
 
-  const onSubmit = (data) => {
-    createExpense(token, {
-      val_expense: data.total,
-      description: data.concept.trim(),
-      date_expense: new Date().toISOString(),
-      budget_id: selectedBudget,
-    })
-      .then((response) => {
-        if (response.status === 201) {
-          showMessage({
-            message: "Gasto registrado",
-            type: "success",
-          });
-          setVisible(false);
-        } else {
-          showMessage({
-            message: "No se pudo registrar el gasto",
-            type: "danger",
-          });
-          console.error(response.data);
-        }
-      })
-      .catch((error) => {
-        console.log(error);
+  const onSubmit = async (data) => {
+    try {
+      const response = await createExpense(token, {
+        val_expense: data.total,
+        description: data.concept.trim(),
+        date_expense: new Date().toISOString(),
+        budget_id: selectedBudget,
+      });
+      if (response.status === 201) {
+        showMessage({
+          message: "Gasto registrado",
+          type: "success",
+        });
+        setVisible(false);
+      } else {
         showMessage({
           message: "No se pudo registrar el gasto",
           type: "danger",
         });
+        console.error(response.data);
+      }
+    } catch (error) {
+      console.log(error);
+      showMessage({
+        message: "No se pudo registrar el gasto",
+        type: "danger",
       });
-  };
-
-  const onSubmitAndCreate = (data) => {
-    createExpense(token, {
-      val_expense: data.total,
-      description: data.concept.trim(),
-      date_expense: new Date().toISOString(),
-      budget_id: selectedBudget,
-    })
-      .then((response) => {
-        if (response.status === 201) {
-          showMessage({
-            message: "Gasto registrado",
-            type: "success",
-          });
-          resetFields();
-          setFocus("total");
-        } else {
-          showMessage({
-            message: "No se pudo registrar el gasto",
-            type: "danger",
-          });
-          console.error(response.data);
-        }
-      })
-      .catch((error) => {
-        console.log(error);
-        showMessage({
-          message: "No se pudo registrar el gasto",
-          type: "danger",
-        });
-      });
+    }
   };
 
   useEffect(() => {
@@ -195,14 +162,19 @@ export default function ExpenseModal({ visible, setVisible }) {
           <StyledPressable
             className={`flex-1 bg-green-100 justify-center border-r
               border-gray-400 py-3 active:bg-green-200`}
-            onPress={handleSubmit(onSubmit)}
+            onPress={handleSubmit(async (data) => {
+              await onSubmit(data);
+            })}
           >
             <Text className="text-center text-sm font-bold">Guardar</Text>
           </StyledPressable>
           <StyledPressable
             className={`flex-1 bg-green-100 justify-center
               rounded-br-xl py-3 active:bg-green-200`}
-            onPress={handleSubmit(onSubmitAndCreate)}
+            onPress={handleSubmit(async (data) => {
+              await onSubmit(data);
+              setVisible(true);
+            })}
           >
             <Text className="text-center text-sm font-bold">Crear otro</Text>
           </StyledPressable>
