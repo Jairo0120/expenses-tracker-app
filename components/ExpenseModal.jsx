@@ -1,24 +1,53 @@
-import { Modal, Text, View, Pressable } from "react-native";
+import { Modal, Text, View, Pressable, ToastAndroid } from "react-native";
 import { useForm, useWatch } from "react-hook-form";
 import { styled } from "nativewind";
 import { useEffect, useState } from "react";
-import BadgetPicker from "./BadgetPicker";
 import { FormTextInput } from "./FormTextInput";
+import { createExpense } from "../api/expenses";
+import { useAuth } from "../contexts/TokenContext";
+import { getBudgets } from "../api/catalogs";
+import { formatMoney } from "../helpers/utils";
+import { showMessage } from "react-native-flash-message";
+import BadgetPicker from "./BadgetPicker";
 
 const StyledPressable = styled(Pressable);
 
-export default function AddExpense({ visible, setVisible, categories = [] }) {
+export default function ExpenseModal({ visible, setVisible }) {
   const { control, handleSubmit, setFocus, resetField } = useForm();
   const [totalFormated, setTotalFormated] = useState(null);
-  const [selectedCategory, setSelectedCategory] = useState(null);
+  const [selectedBudget, setSelectedBudget] = useState(null);
+  const [budgets, setBudgets] = useState([]);
+  const { token } = useAuth();
   const watchTotal = useWatch({
     control,
     name: "total",
     defaultValue: "",
   });
   const onSubmit = (data) => {
-    console.log(data);
-    setVisible(false);
+    createExpense(token, {
+      val_expense: data.total,
+      description: data.concept,
+      date_expense: new Date().toISOString(),
+      budget_id: selectedBudget,
+    })
+      .then((response) => {
+        if (response.status === 201) {
+          showMessage({
+            message: "Gasto registrado",
+            type: "success",
+          });
+          setVisible(false);
+        } else {
+          console.error(response.data);
+        }
+      })
+      .catch((error) => {
+        console.log(error);
+        showMessage({
+          message: "No se pudo registrar el gasto",
+          type: "danger",
+        });
+      });
   };
 
   useEffect(() => {
@@ -29,7 +58,7 @@ export default function AddExpense({ visible, setVisible, categories = [] }) {
       return () => clearTimeout(timeout);
     } else {
       setTotalFormated(null);
-      setSelectedCategory(null);
+      setSelectedBudget(null);
       resetField("total");
       resetField("concept");
     }
@@ -37,15 +66,31 @@ export default function AddExpense({ visible, setVisible, categories = [] }) {
 
   useEffect(() => {
     if (watchTotal !== "") {
-      const cleanedText = watchTotal.replace(/[^0-9]/g, "");
-      setTotalFormated(
-        Number(cleanedText).toLocaleString("es-CO", {
-          style: "currency",
-          currency: "COP",
-        })
-      );
+      setTotalFormated(formatMoney(watchTotal));
     }
   }, [watchTotal]);
+
+  useEffect(() => {
+    getBudgets(token)
+      .then((response) => {
+        if (response.status === 200) {
+          setBudgets(response.data);
+        } else {
+          console.error(response.data);
+          showMessage({
+            message: "No se pudieron cargar los presupuestos",
+            type: "danger",
+          });
+        }
+      })
+      .catch((error) => {
+        console.error(error);
+        showMessage({
+          message: "No se pudieron cargar los presupuestos",
+          type: "danger",
+        });
+      });
+  }, [token]);
 
   return (
     <Modal transparent={true} visible={visible} animationType="slide">
@@ -76,9 +121,9 @@ export default function AddExpense({ visible, setVisible, categories = [] }) {
           />
           <Text className="text-sm font-bold">Categoría</Text>
           <BadgetPicker
-            categories={categories}
-            selectedCategory={selectedCategory}
-            setSelectedCategory={setSelectedCategory}
+            budgets={budgets}
+            selectedBudget={selectedBudget}
+            setSelectedBudget={setSelectedBudget}
           />
         </View>
         <View className="flex-row border-t border-gray-400">
