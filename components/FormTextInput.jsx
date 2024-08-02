@@ -1,7 +1,7 @@
 import { TextInput } from "react-native";
 import { Controller } from "react-hook-form";
 
-export const FormTextInput = ({ name, control, ...props }) => (
+export const FormTextInput = ({ name, control, rules, ...props }) => (
   <Controller
     control={control}
     render={({ field: { onChange, value, ref } }) => {
@@ -10,6 +10,6 @@ export const FormTextInput = ({ name, control, ...props }) => (
       );
     }}
     name={name}
-    rules={{ required: true }}
+    rules={rules}
   />
 );

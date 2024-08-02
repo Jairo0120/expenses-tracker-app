@@ -14,7 +14,7 @@ export default function Layout() {
           headerTintColor: "#c98b1e",
         }}
       />
-      <FlashMessage position="top" />
+      <FlashMessage position="bottom" />
     </View>
   );
 }
