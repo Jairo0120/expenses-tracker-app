@@ -1,5 +1,5 @@
-import { Modal, Text, View, Pressable } from "react-native";
-import { set, useForm, useWatch } from "react-hook-form";
+import { Modal, Text, View, Pressable, ActivityIndicator } from "react-native";
+import { useForm, useWatch } from "react-hook-form";
 import { styled } from "nativewind";
 import { useEffect, useState } from "react";
 import { FormTextInput } from "./FormTextInput";
@@ -23,6 +23,7 @@ export default function ExpenseModal({ visible, setVisible }) {
   const [totalFormated, setTotalFormated] = useState(null);
   const [selectedBudget, setSelectedBudget] = useState(null);
   const [budgets, setBudgets] = useState([]);
+  const [formEnabled, setFormEnabled] = useState(true);
   const { token } = useAuth();
   const watchTotal = useWatch({
     control,
@@ -37,6 +38,7 @@ export default function ExpenseModal({ visible, setVisible }) {
   };
 
   const onSubmit = async (data) => {
+    setFormEnabled(false);
     try {
       const response = await createExpense(token, {
         val_expense: data.total,
@@ -63,6 +65,8 @@ export default function ExpenseModal({ visible, setVisible }) {
         message: "No se pudo registrar el gasto",
         type: "danger",
       });
+    } finally {
+      setFormEnabled(true);
     }
   };
 
@@ -109,12 +113,14 @@ export default function ExpenseModal({ visible, setVisible }) {
     <Modal transparent={true} visible={visible} animationType="slide">
       <View className="flex-1 mx-5 justify-center">
         <View className="bg-white px-5 rounded-tl-xl rounded-tr-xl py-3">
+          {formEnabled || <ActivityIndicator size="large" color="#c98b1e" />}
           <Text className="text-sm font-bold">Total del gasto</Text>
           <FormTextInput
             className={
               `w-full h-12 text-sm border rounded-xl pl-5 ` +
               (errors.total ? "border-red-500" : "border-gray-400")
             }
+            editable={formEnabled}
             control={control}
             keyboardType="numeric"
             enterKeyHint="next"
@@ -137,6 +143,7 @@ export default function ExpenseModal({ visible, setVisible }) {
             }
             control={control}
             enterKeyHint="done"
+            editable={formEnabled}
             blurOnSubmit={false}
             name={"concept"}
             rules={{ required: true }}
@@ -149,6 +156,7 @@ export default function ExpenseModal({ visible, setVisible }) {
             budgets={budgets}
             selectedBudget={selectedBudget}
             setSelectedBudget={setSelectedBudget}
+            disabled={!formEnabled}
           />
         </View>
         <View className="flex-row border-t border-gray-400">
@@ -162,6 +170,7 @@ export default function ExpenseModal({ visible, setVisible }) {
           <StyledPressable
             className={`flex-1 bg-green-100 justify-center border-r
               border-gray-400 py-3 active:bg-green-200`}
+            disabled={!formEnabled}
             onPress={handleSubmit(async (data) => {
               await onSubmit(data);
             })}
@@ -171,6 +180,7 @@ export default function ExpenseModal({ visible, setVisible }) {
           <StyledPressable
             className={`flex-1 bg-green-100 justify-center
               rounded-br-xl py-3 active:bg-green-200`}
+            disabled={!formEnabled}
             onPress={handleSubmit(async (data) => {
               await onSubmit(data);
               setVisible(true);

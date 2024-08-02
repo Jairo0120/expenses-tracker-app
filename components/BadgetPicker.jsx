@@ -4,10 +4,12 @@ export default function BadgetPicker({
   budgets,
   selectedBudget,
   setSelectedBudget,
+  disabled = false,
 }) {
   return (
     <View className="flex-row mb-2 flex-wrap">
       <Pressable
+        disabled={disabled}
         className={
           `justify-center mt-2 mr-2 rounded-xl ` +
           (selectedBudget === null
@@ -20,6 +22,7 @@ export default function BadgetPicker({
       </Pressable>
       {budgets.map((budget) => (
         <Pressable
+          disabled={disabled}
           key={budget.id}
           className={
             `justify-center mt-2 mr-2 rounded-xl ` +
