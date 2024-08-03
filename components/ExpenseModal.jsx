@@ -1,5 +1,5 @@
 import { Modal, Text, View, Pressable, ActivityIndicator } from "react-native";
-import { set, useForm, useWatch } from "react-hook-form";
+import { useForm, useWatch } from "react-hook-form";
 import { styled } from "nativewind";
 import { useEffect, useState } from "react";
 import { FormTextInput } from "./FormTextInput";

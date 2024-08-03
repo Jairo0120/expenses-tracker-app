@@ -31,12 +31,15 @@ export async function createExpense(
 
 export async function getExpenses(token, filters) {
   console.log("Getting expenses", filters);
-  // const query = new URLSearchParams(filters).toString();
-  const response = await fetch(`${process.env.EXPO_PUBLIC_API_URL}/expenses`, {
-    headers: {
-      Authorization: `Bearer ${token}`,
-    },
-  });
+  const query = new URLSearchParams(filters).toString();
+  const response = await fetch(
+    `${process.env.EXPO_PUBLIC_API_URL}/expenses?${query}`,
+    {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    }
+  );
 
   const data =
     response.headers.get("Content-Type") === "application/json"
