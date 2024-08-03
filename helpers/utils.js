@@ -5,3 +5,7 @@ export function formatMoney(value) {
     currency: "COP",
   });
 }
+
+export function formatDate(date) {
+  return new Date(date).toLocaleString("es-CO");
+}

@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { FlatList, Text } from "react-native";
 import { getExpenses } from "../api/expenses";
 import { useAuth } from "../contexts/TokenContext";
+import ExpenseCard from "./ExpenseCard";
 
 export default function ExpenseList({ refreshExpenses, setRefreshExpenses }) {
   const [expenses, setExpenses] = useState([]);
@@ -32,11 +33,7 @@ export default function ExpenseList({ refreshExpenses, setRefreshExpenses }) {
       onRefresh={fetchExpenses}
       refreshing={loading}
       keyExtractor={(expense) => expense.id.toString()}
-      renderItem={({ item }) => (
-        <Text className="text-white text-xl">
-          {item.description} - {item.val_expense}
-        </Text>
-      )}
+      renderItem={({ item }) => <ExpenseCard expense={item} />}
     />
   );
 }
