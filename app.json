@@ -1,6 +1,6 @@
 {
   "expo": {
-    "name": "expenses-tracker-app",
+    "name": "Expenses Tracker",
     "slug": "expenses-tracker-app",
     "version": "1.0.0",
     "orientation": "portrait",
@@ -13,13 +13,15 @@
       "backgroundColor": "#ffffff"
     },
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier": "com.jldev.expensestrackerapp"
     },
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
-      }
+      },
+      "package": "com.jl_dev.expensestrackerapp"
     },
     "web": {
       "favicon": "./assets/favicon.png"
