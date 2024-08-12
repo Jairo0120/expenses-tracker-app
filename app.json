@@ -21,13 +21,19 @@
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
       },
-      "package": "com.jl_dev.expensestrackerapp"
+      "package": "com.jldev.expensestrackerapp"
     },
     "web": {
       "favicon": "./assets/favicon.png"
     },
     "plugins": [
-      "expo-router"
+      "expo-router",
+      [
+        "react-native-auth0",
+        {
+          "domain": "dev-fdtlvbztvibtlwj6.us.auth0.com"
+        }
+      ]
     ]
   }
 }

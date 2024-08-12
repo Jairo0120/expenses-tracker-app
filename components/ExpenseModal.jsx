@@ -4,10 +4,10 @@ import { styled } from "nativewind";
 import { useEffect, useState } from "react";
 import { FormTextInput } from "./FormTextInput";
 import { createExpense } from "../api/expenses";
-import { useAuth } from "../contexts/TokenContext";
 import { getBudgets } from "../api/catalogs";
 import { formatMoney } from "../helpers/utils";
 import { showMessage } from "react-native-flash-message";
+import { useAuth0 } from "react-native-auth0";
 import BadgetPicker from "./BadgetPicker";
 
 const StyledPressable = styled(Pressable);
@@ -28,7 +28,7 @@ export default function ExpenseModal({
   const [selectedBudget, setSelectedBudget] = useState(null);
   const [budgets, setBudgets] = useState([]);
   const [formEnabled, setFormEnabled] = useState(true);
-  const { token } = useAuth();
+  const { authorize, getCredentials } = useAuth0();
   const watchTotal = useWatch({
     control,
     name: "total",
@@ -44,7 +44,8 @@ export default function ExpenseModal({
   const onSubmit = async (data) => {
     setFormEnabled(false);
     try {
-      const response = await createExpense(token, {
+      const credentials = await getCredentials();
+      const response = await createExpense(credentials.accessToken, {
         val_expense: data.total,
         description: data.concept.trim(),
         date_expense: new Date().toISOString(),
@@ -93,26 +94,28 @@ export default function ExpenseModal({
   }, [watchTotal]);
 
   useEffect(() => {
-    getBudgets(token)
-      .then((response) => {
-        if (response.status === 200) {
-          setBudgets(response.data);
-        } else {
-          console.error(response.data);
+    getCredentials().then((token) => {
+      getBudgets(token)
+        .then((response) => {
+          if (response.status === 200) {
+            setBudgets(response.data);
+          } else {
+            console.error(response.data);
+            showMessage({
+              message: "No se pudieron cargar los presupuestos",
+              type: "danger",
+            });
+          }
+        })
+        .catch((error) => {
+          console.error(error);
           showMessage({
             message: "No se pudieron cargar los presupuestos",
             type: "danger",
           });
-        }
-      })
-      .catch((error) => {
-        console.error(error);
-        showMessage({
-          message: "No se pudieron cargar los presupuestos",
-          type: "danger",
         });
-      });
-  }, [token]);
+    });
+  }, []);
 
   return (
     <Modal transparent={true} visible={visible} animationType="slide">

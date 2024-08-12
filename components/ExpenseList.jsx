@@ -1,15 +1,15 @@
 import { useEffect, useState } from "react";
 import { FlatList, Text } from "react-native";
 import { getExpenses } from "../api/expenses";
-import { useAuth } from "../contexts/TokenContext";
 import { showMessage } from "react-native-flash-message";
+import { useAuth0 } from "react-native-auth0";
 import ExpenseCard from "./ExpenseCard";
 
 export default function ExpenseList({ refreshExpenses, setRefreshExpenses }) {
   const [expenses, setExpenses] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [isListEnd, setIsListEnd] = useState(false);
-  const { token } = useAuth();
+  const { authorize, getCredentials } = useAuth0();
 
   const refresh = async () => {
     setIsListEnd(false);
@@ -26,7 +26,8 @@ export default function ExpenseList({ refreshExpenses, setRefreshExpenses }) {
   const fetchExpenses = async (skip = 0, initialExpenses = []) => {
     setIsLoading(true);
     try {
-      const response = await getExpenses(token, {
+      const credentials = await getCredentials();
+      const response = await getExpenses(credentials.accessToken, {
         limit: 10,
         skip: skip,
       });
