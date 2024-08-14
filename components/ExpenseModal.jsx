@@ -94,8 +94,8 @@ export default function ExpenseModal({
   }, [watchTotal]);
 
   useEffect(() => {
-    getCredentials().then((token) => {
-      getBudgets(token)
+    getCredentials().then(({ accessToken }) => {
+      getBudgets(accessToken)
         .then((response) => {
           if (response.status === 200) {
             setBudgets(response.data);

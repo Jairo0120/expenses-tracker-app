@@ -1,20 +1,13 @@
-import { View } from "react-native";
-import { Stack } from "expo-router";
-import { StatusBar } from "expo-status-bar";
-import FlashMessage from "react-native-flash-message";
+import { Slot } from "expo-router";
+import { Auth0Provider } from "react-native-auth0";
 
-export default function Layout() {
+export default function Root() {
   return (
-    <View className="flex-1 bg-black">
-      <StatusBar style="light" />
-      <Stack
-        screenOptions={{
-          headerStyle: { backgroundColor: "black" },
-          headerTitle: "Expenses Tracker",
-          headerTintColor: "#c98b1e",
-        }}
-      />
-      <FlashMessage position="bottom" />
-    </View>
+    <Auth0Provider
+      domain={process.env.EXPO_PUBLIC_AUTH0_DOMAIN}
+      clientId={process.env.EXPO_PUBLIC_AUTH0_CLIENT_ID}
+    >
+      <Slot />
+    </Auth0Provider>
   );
 }

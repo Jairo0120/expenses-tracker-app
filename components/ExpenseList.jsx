@@ -37,7 +37,7 @@ export default function ExpenseList({ refreshExpenses, setRefreshExpenses }) {
         );
       }
       setExpenses([...initialExpenses, ...response.data]);
-      if (!response.data.length) {
+      if (!response.data.length || response.data.length < 10) {
         setIsListEnd(true);
       }
     } catch (error) {

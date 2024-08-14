@@ -31,7 +31,8 @@
       [
         "react-native-auth0",
         {
-          "domain": "dev-fdtlvbztvibtlwj6.us.auth0.com"
+          "domain": "dev-fdtlvbztvibtlwj6.us.auth0.com",
+          "customScheme": "expenses-tracker-app"
         }
       ]
     ]
