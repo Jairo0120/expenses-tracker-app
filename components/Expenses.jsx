@@ -27,7 +27,11 @@ export default function Expenses() {
         className="absolute right-5 bottom-5 active:opacity-50"
         onPress={() => setModalVisible(!modalVisible)}
       >
-        <PlusIcon size={60} color="#81c1f8" />
+        <PlusIcon
+          size={60}
+          color="#81c1f8"
+          style={!modalVisible ? {} : { opacity: 0.1 }}
+        />
       </StyledPressable>
     </>
   );
