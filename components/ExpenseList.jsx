@@ -5,11 +5,15 @@ import { showMessage } from "react-native-flash-message";
 import { useAuth0 } from "react-native-auth0";
 import ExpenseCard from "./ExpenseCard";
 
-export default function ExpenseList({ refreshExpenses, setRefreshExpenses }) {
+export default function ExpenseList({
+  refreshExpenses,
+  setRefreshExpenses,
+  modalVisible,
+}) {
   const [expenses, setExpenses] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [isListEnd, setIsListEnd] = useState(false);
-  const { authorize, getCredentials } = useAuth0();
+  const { getCredentials } = useAuth0();
 
   const refresh = async () => {
     setIsListEnd(false);
@@ -61,6 +65,7 @@ export default function ExpenseList({ refreshExpenses, setRefreshExpenses }) {
 
   return (
     <FlatList
+      className={`${modalVisible ? "opacity-10" : ""}`}
       data={expenses}
       onRefresh={refresh}
       refreshing={isLoading}

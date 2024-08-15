@@ -8,7 +8,7 @@ export default function ExpenseCard({ expense }) {
         <Text className="text-sm font-semibold text-dodger-blue-300">
           {expense.description}
         </Text>
-        <Text className="text-dodger-blue-200 text-xl">
+        <Text className="text-dodger-blue-100 text-xl">
           {formatMoney(expense.val_expense.toString())}
         </Text>
         <Text className="text-dodger-blue-500 text-xs">
@@ -20,8 +20,8 @@ export default function ExpenseCard({ expense }) {
           className={
             `text-sm font-semibold ` +
             (expense.budget !== null
-              ? "text-dodger-blue-400"
-              : "text-persian-red-500")
+              ? "text-dodger-blue-300"
+              : "text-persian-red-400")
           }
         >
           {expense.budget?.description || "Sin presupuesto"}

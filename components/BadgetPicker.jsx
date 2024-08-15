@@ -6,19 +6,21 @@ export default function BadgetPicker({
   setSelectedBudget,
   disabled = false,
 }) {
+  const inactiveBadge = "bg-dodger-blue-300 border border-dodger-blue-400";
+  const activeBadge =
+    "bg-dodger-blue-100 border-dodger-blue-600 border-2 shadow-lg shadow-white";
+
   return (
     <View className="flex-row mb-2 flex-wrap">
       <Pressable
         disabled={disabled}
         className={
           `justify-center mt-2 mr-2 rounded-xl ` +
-          (selectedBudget === null
-            ? "bg-gray-400 border-gray-600 border-2"
-            : "bg-gray-200 border border-gray-400")
+          (selectedBudget === null ? activeBadge : inactiveBadge)
         }
         onPress={() => setSelectedBudget(null)}
       >
-        <Text className="text-center p-2">Sin categoría</Text>
+        <Text className="text-center p-2">Sin presupuesto</Text>
       </Pressable>
       {budgets.map((budget) => (
         <Pressable
@@ -26,9 +28,7 @@ export default function BadgetPicker({
           key={budget.id}
           className={
             `justify-center mt-2 mr-2 rounded-xl ` +
-            (selectedBudget === budget.id
-              ? "bg-orange-400 border-orange-600 border-2"
-              : "bg-orange-200 border border-orange-400")
+            (selectedBudget === budget.id ? activeBadge : inactiveBadge)
           }
           onPress={() => setSelectedBudget(budget.id)}
         >
