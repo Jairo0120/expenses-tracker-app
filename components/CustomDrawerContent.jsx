@@ -23,11 +23,11 @@ const LogoutButton = () => {
   return (
     <StyledPressable
       onPress={onPress}
-      className={`bg-red-500 text-white p-2 text-center m-4
-        rounded-lg flex-row items-center justify-center active:bg-red-700`}
+      className={`bg-persian-red-800 p-2 text-center m-4
+        rounded-lg flex-row items-center justify-center active:bg-persian-red-900`}
     >
-      <SignOutIcon />
-      <Text className="text-sm font-bold ml-1">Cerrar sesión</Text>
+      <SignOutIcon color={"white"} />
+      <Text className="text-sm text-white font-bold ml-1">Cerrar sesión</Text>
     </StyledPressable>
   );
 };
