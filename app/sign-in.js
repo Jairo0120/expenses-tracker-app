@@ -25,7 +25,7 @@ export default function SignIn() {
 
   return (
     <View className="items-center justify-center flex-1">
-      <Text className="mb-4 text-lg">
+      <Text className="mb-4 text-lg text-white">
         Por favor inicie sesión para continuar
       </Text>
       <Button onPress={onPress} title="Iniciar sesión" />

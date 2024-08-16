@@ -40,6 +40,7 @@ export default function AppLayout() {
               <View style={{ backgroundColor: "black", flex: 1 }} />
             ),
             drawerLabel: "Gastos",
+            drawerActiveTintColor: "#81c1f8",
             title: "Gastos",
             headerTitleAlign: "center",
           }}

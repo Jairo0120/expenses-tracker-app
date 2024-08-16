@@ -118,104 +118,108 @@ export default function ExpenseModal({
   }, []);
 
   return (
-    <Modal transparent={true} visible={visible} animationType="slide">
-      <View className="flex-1 mx-5 justify-center">
-        <View
-          className={`rounded-xl bg-dodger-blue-950 shadow-xl
+    <View className="bg-black flex-1">
+      <Modal transparent={true} visible={visible} animationType="slide">
+        <View className="flex-1 mx-5 justify-center">
+          <View
+            className={`rounded-xl bg-dodger-blue-950 shadow-xl
             shadow-white border border-dodger-blue-800`}
-        >
-          <View className="mx-4 mt-3">
-            {formEnabled || <ActivityIndicator size="large" color="#c98b1e" />}
-            <Text className="text-sm font-bold text-white">
-              Total del gasto
-            </Text>
-            <FormTextInput
-              className={
-                `w-full h-12 text-sm border rounded-xl pl-5 text-white ` +
-                (errors.total ? "border-red-500" : "border-gray-400")
-              }
-              editable={formEnabled}
-              control={control}
-              keyboardType="numeric"
-              enterKeyHint="next"
-              name={"total"}
-              blurOnSubmit={false}
-              rules={{ required: true, pattern: /^[0-9.]+$/ }}
-              onSubmitEditing={() => setFocus("concept")}
-            />
-            {errors.total && (
-              <Text className="text-red-500">Campo numerico requerido.</Text>
-            )}
-            <Text className="text-sm font-bold text-white mb-4">
-              {totalFormated || "$ 0,00"}
-            </Text>
-            <Text className="text-sm font-bold text-white">
-              Descripción del gasto
-            </Text>
-            <FormTextInput
-              className={
-                `w-full h-12 text-sm border rounded-xl pl-5 text-white ` +
-                (errors.concept ? "border-red-500" : "border-gray-400")
-              }
-              control={control}
-              enterKeyHint="done"
-              editable={formEnabled}
-              blurOnSubmit={false}
-              name={"concept"}
-              rules={{ required: true }}
-            />
-            {errors.concept && (
-              <Text className="text-red-500">Campo requerido.</Text>
-            )}
-            <Text className="text-sm font-bold text-white mt-4">
-              Presupuesto
-            </Text>
-            <BadgetPicker
-              budgets={budgets}
-              selectedBudget={selectedBudget}
-              setSelectedBudget={setSelectedBudget}
-              disabled={!formEnabled}
-            />
-          </View>
-          <View className="flex-row border-t mt-3">
-            <StyledPressable
-              onPress={() => setVisible(!visible)}
-              className={`flex-1 bg-persian-red-900 justify-center
+          >
+            <View className="mx-4 mt-3">
+              {formEnabled || (
+                <ActivityIndicator size="large" color="#c98b1e" />
+              )}
+              <Text className="text-sm font-bold text-white">
+                Total del gasto
+              </Text>
+              <FormTextInput
+                className={
+                  `w-full h-12 text-sm border rounded-xl pl-5 text-white ` +
+                  (errors.total ? "border-red-500" : "border-gray-400")
+                }
+                editable={formEnabled}
+                control={control}
+                keyboardType="numeric"
+                enterKeyHint="next"
+                name={"total"}
+                blurOnSubmit={false}
+                rules={{ required: true, pattern: /^[0-9.]+$/ }}
+                onSubmitEditing={() => setFocus("concept")}
+              />
+              {errors.total && (
+                <Text className="text-red-500">Campo numerico requerido.</Text>
+              )}
+              <Text className="text-sm font-bold text-white mb-4">
+                {totalFormated || "$ 0,00"}
+              </Text>
+              <Text className="text-sm font-bold text-white">
+                Descripción del gasto
+              </Text>
+              <FormTextInput
+                className={
+                  `w-full h-12 text-sm border rounded-xl pl-5 text-white ` +
+                  (errors.concept ? "border-red-500" : "border-gray-400")
+                }
+                control={control}
+                enterKeyHint="done"
+                editable={formEnabled}
+                blurOnSubmit={false}
+                name={"concept"}
+                rules={{ required: true }}
+              />
+              {errors.concept && (
+                <Text className="text-red-500">Campo requerido.</Text>
+              )}
+              <Text className="text-sm font-bold text-white mt-4">
+                Presupuesto
+              </Text>
+              <BadgetPicker
+                budgets={budgets}
+                selectedBudget={selectedBudget}
+                setSelectedBudget={setSelectedBudget}
+                disabled={!formEnabled}
+              />
+            </View>
+            <View className="flex-row border-t mt-3">
+              <StyledPressable
+                onPress={() => setVisible(!visible)}
+                className={`flex-1 bg-persian-red-900 justify-center
                 py-3 active:bg-persian-red-700 border-r
                 rounded-bl-xl`}
-            >
-              <Text className="text-center font-bold text-sm text-white">
-                Cancelar
-              </Text>
-            </StyledPressable>
-            <StyledPressable
-              className={`flex-1 bg-dodger-blue-800 justify-center py-3
+              >
+                <Text className="text-center font-bold text-sm text-white">
+                  Cancelar
+                </Text>
+              </StyledPressable>
+              <StyledPressable
+                className={`flex-1 bg-dodger-blue-800 justify-center py-3
                 active:bg-dodger-blue-600 border-r`}
-              disabled={!formEnabled}
-              onPress={handleSubmit(async (data) => {
-                await onSubmit(data);
-              })}
-            >
-              <Text className="text-center text-sm font-bold text-white">
-                Guardar
-              </Text>
-            </StyledPressable>
-            <StyledPressable
-              className={`flex-1 bg-dodger-blue-800 justify-center
+                disabled={!formEnabled}
+                onPress={handleSubmit(async (data) => {
+                  await onSubmit(data);
+                })}
+              >
+                <Text className="text-center text-sm font-bold text-white">
+                  Guardar
+                </Text>
+              </StyledPressable>
+              <StyledPressable
+                className={`flex-1 bg-dodger-blue-800 justify-center
                 active:bg-dodger-blue-600 rounded-br-xl`}
-              disabled={!formEnabled}
-              onPress={handleSubmit(async (data) => {
-                await onSubmit(data);
-                setVisible(true);
-              })}
-            >
-              <Text className="text-center text-sm font-bold text-white">
-                Crear otro
-              </Text>
-            </StyledPressable>
+                disabled={!formEnabled}
+                onPress={handleSubmit(async (data) => {
+                  await onSubmit(data);
+                  setVisible(true);
+                })}
+              >
+                <Text className="text-center text-sm font-bold text-white">
+                  Crear otro
+                </Text>
+              </StyledPressable>
+            </View>
           </View>
         </View>
-      </View>
-    </Modal>
+      </Modal>
+    </View>
   );
 }
