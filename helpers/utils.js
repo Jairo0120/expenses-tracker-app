@@ -7,5 +7,14 @@ export function formatMoney(value) {
 }
 
 export function formatDate(date) {
-  return new Date(date).toLocaleString("es-CO");
+  // The date is in ISO format, but it doesn't have the timezone
+  // information. We add the "Z" to indicate that it's UTC.
+  const dateObject = new Date(date + "Z");
+  return dateObject.toLocaleString("es-CO", {
+    year: "numeric",
+    month: "short",
+    day: "2-digit",
+    hour: "2-digit",
+    minute: "2-digit",
+  });
 }
