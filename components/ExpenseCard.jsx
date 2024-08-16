@@ -1,9 +1,19 @@
-import { View, Text } from "react-native";
+import { View, Text, Pressable } from "react-native";
 import { formatMoney, formatDate } from "../helpers/utils";
+import { styled } from "nativewind";
+
+const StyledPressable = styled(Pressable);
 
 export default function ExpenseCard({ expense }) {
   return (
-    <View className="flex-row bg-dodger-blue-950 p-4 rounded-lg shadow-md mb-4 mx-3">
+    <StyledPressable
+      className={`flex-row bg-dodger-blue-950 p-4
+        rounded-lg shadow-md mb-4 mx-3
+        active:bg-dodger-blue-900`}
+      onPress={() => {
+        console.log("Pressed expense", expense);
+      }}
+    >
       <View className="flex-1">
         <Text className="text-sm font-semibold text-dodger-blue-300">
           {expense.description}
@@ -27,6 +37,6 @@ export default function ExpenseCard({ expense }) {
           {formatDate(expense.date_expense)}
         </Text>
       </View>
-    </View>
+    </StyledPressable>
   );
 }
