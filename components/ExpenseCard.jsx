@@ -11,11 +11,8 @@ export default function ExpenseCard({ expense }) {
         <Text className="text-dodger-blue-100 text-xl">
           {formatMoney(expense.val_expense.toString())}
         </Text>
-        <Text className="text-dodger-blue-500 text-xs">
-          {formatDate(expense.date_expense)}
-        </Text>
       </View>
-      <View className="flex-1 items-end">
+      <View className="flex-1 items-end justify-center">
         <Text
           className={
             `text-sm font-semibold ` +
@@ -25,6 +22,9 @@ export default function ExpenseCard({ expense }) {
           }
         >
           {expense.budget?.description || "Sin presupuesto"}
+        </Text>
+        <Text className="text-dodger-blue-500 text-xs">
+          {formatDate(expense.date_expense)}
         </Text>
       </View>
     </View>

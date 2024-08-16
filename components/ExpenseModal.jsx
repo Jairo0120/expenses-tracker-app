@@ -183,11 +183,11 @@ export default function ExpenseModal({
             <View className="flex-row border-t mt-3">
               <StyledPressable
                 onPress={() => setVisible(!visible)}
-                className={`flex-1 bg-persian-red-900 justify-center
-                py-3 active:bg-persian-red-700 border-r
+                className={`flex-1 bg-dodger-blue-400 justify-center
+                py-3 active:bg-dodger-blue-300 border-r
                 rounded-bl-xl`}
               >
-                <Text className="text-center font-bold text-sm text-white">
+                <Text className="text-center font-bold text-sm text-black">
                   Cancelar
                 </Text>
               </StyledPressable>
