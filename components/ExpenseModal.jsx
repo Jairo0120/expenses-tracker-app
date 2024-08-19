@@ -17,12 +17,14 @@ export default function ExpenseModal({
   setVisible,
   setRefreshExpenses,
   selectedExpense,
+  setSelectedExpense,
 }) {
   const {
     control,
     handleSubmit,
     setFocus,
     resetField,
+    setValue,
     formState: { errors },
   } = useForm();
   const [totalFormated, setTotalFormated] = useState(null);
@@ -36,6 +38,7 @@ export default function ExpenseModal({
     defaultValue: "",
   });
   const resetFields = () => {
+    setSelectedExpense(null);
     setTotalFormated(null);
     setSelectedBudget(null);
     resetField("total");
@@ -90,10 +93,8 @@ export default function ExpenseModal({
 
   useEffect(() => {
     if (selectedExpense) {
-      resetField("total", {
-        defaultValue: selectedExpense.val_expense.toString(),
-      });
-      resetField("concept", { defaultValue: selectedExpense.description });
+      setValue("total", selectedExpense.val_expense.toString());
+      setValue("concept", selectedExpense.description);
       setSelectedBudget(selectedExpense.budget?.id || null);
     }
   }, [selectedExpense]);

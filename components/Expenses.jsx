@@ -19,6 +19,7 @@ export default function Expenses() {
         setVisible={setModalVisible}
         setRefreshExpenses={setRefreshExpenses}
         selectedExpense={selectedExpense}
+        setSelectedExpense={setSelectedExpense}
       />
       <ExpenseList
         modalVisible={modalVisible}
