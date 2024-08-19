@@ -16,6 +16,7 @@ export default function ExpenseModal({
   visible,
   setVisible,
   setRefreshExpenses,
+  selectedExpense,
 }) {
   const {
     control,
@@ -88,34 +89,43 @@ export default function ExpenseModal({
   }, [visible]);
 
   useEffect(() => {
+    if (selectedExpense) {
+      resetField("total", {
+        defaultValue: selectedExpense.val_expense.toString(),
+      });
+      resetField("concept", { defaultValue: selectedExpense.description });
+      setSelectedBudget(selectedExpense.budget?.id || null);
+    }
+  }, [selectedExpense]);
+
+  useEffect(() => {
     if (watchTotal !== "") {
       setTotalFormated(formatMoney(watchTotal));
     }
   }, [watchTotal]);
 
   useEffect(() => {
-    getCredentials().then(({ accessToken }) => {
-      getBudgets(accessToken)
-        .then((response) => {
-          if (response.status === 200) {
-            setBudgets(response.data);
-          } else {
-            console.error(response.data);
-            showMessage({
-              message: "No se pudieron cargar los presupuestos",
-              type: "danger",
-            });
-          }
-        })
-        .catch((error) => {
-          console.error(error);
-          showMessage({
-            message: "No se pudieron cargar los presupuestos",
-            type: "danger",
-          });
+    const loadBudgets = async () => {
+      const credentials = await getCredentials();
+      const response = await getBudgets(credentials.accessToken);
+      if (response.status === 200) {
+        setBudgets(response.data);
+      } else {
+        console.error(response.data);
+        showMessage({
+          message: "No se pudieron cargar los presupuestos",
+          type: "danger",
         });
+      }
+    };
+    loadBudgets().catch((error) => {
+      console.error(error);
+      showMessage({
+        message: "No se pudieron cargar los presupuestos",
+        type: "danger",
+      });
     });
-  }, []);
+  }, [getCredentials]);
 
   return (
     <View className="bg-black flex-1">

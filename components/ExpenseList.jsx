@@ -9,6 +9,8 @@ export default function ExpenseList({
   refreshExpenses,
   setRefreshExpenses,
   modalVisible,
+  setSelectedExpense,
+  setModalVisible,
 }) {
   const [expenses, setExpenses] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
@@ -61,7 +63,7 @@ export default function ExpenseList({
       setRefreshExpenses(false);
       fetchExpenses();
     }
-  }, [refreshExpenses]);
+  }, [refreshExpenses, fetchExpenses]);
 
   return (
     <FlatList
@@ -70,7 +72,13 @@ export default function ExpenseList({
       onRefresh={refresh}
       refreshing={isLoading}
       keyExtractor={(expense) => expense.id.toString()}
-      renderItem={({ item }) => <ExpenseCard expense={item} />}
+      renderItem={({ item }) => (
+        <ExpenseCard
+          expense={item}
+          setSelectedExpense={setSelectedExpense}
+          setModalVisible={setModalVisible}
+        />
+      )}
       ListFooterComponent={
         <Text className="text-white text-center pb-2">
           {isListEnd && "No hay más gastos qué mostrar"}

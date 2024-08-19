@@ -1,9 +1,9 @@
 import { View, Text } from "react-native";
-import { StatusBar } from "expo-status-bar";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { Drawer } from "expo-router/drawer";
 import { Redirect } from "expo-router";
 import { useAuth0 } from "react-native-auth0";
+import { StatusBar } from "expo-status-bar";
 import FlashMessage from "react-native-flash-message";
 import CustomDrawerContent from "../../components/CustomDrawerContent";
 
@@ -41,8 +41,8 @@ export default function AppLayout() {
             ),
             drawerLabel: "Gastos",
             drawerActiveTintColor: "#81c1f8",
-            title: "Gastos",
-            headerTitleAlign: "center",
+            headerTitle: "Gastos",
+            headerTitleAlign: "left",
           }}
         />
       </Drawer>

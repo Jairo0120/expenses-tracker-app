@@ -10,6 +10,7 @@ const StyledPressable = styled(Pressable);
 export default function Expenses() {
   const [modalVisible, setModalVisible] = useState(false);
   const [refreshExpenses, setRefreshExpenses] = useState(true);
+  const [selectedExpense, setSelectedExpense] = useState(null);
 
   return (
     <>
@@ -17,11 +18,14 @@ export default function Expenses() {
         visible={modalVisible}
         setVisible={setModalVisible}
         setRefreshExpenses={setRefreshExpenses}
+        selectedExpense={selectedExpense}
       />
       <ExpenseList
         modalVisible={modalVisible}
         refreshExpenses={refreshExpenses}
         setRefreshExpenses={setRefreshExpenses}
+        setSelectedExpense={setSelectedExpense}
+        setModalVisible={setModalVisible}
       />
       <StyledPressable
         className="absolute right-5 bottom-5 active:opacity-50"

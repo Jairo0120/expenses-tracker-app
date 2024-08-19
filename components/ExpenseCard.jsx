@@ -4,14 +4,19 @@ import { styled } from "nativewind";
 
 const StyledPressable = styled(Pressable);
 
-export default function ExpenseCard({ expense }) {
+export default function ExpenseCard({
+  expense,
+  setSelectedExpense,
+  setModalVisible,
+}) {
   return (
     <StyledPressable
       className={`flex-row bg-dodger-blue-950 p-4
         rounded-lg shadow-md mb-4 mx-3
         active:bg-dodger-blue-900`}
       onPress={() => {
-        console.log("Pressed expense", expense);
+        setSelectedExpense(expense);
+        setModalVisible(true);
       }}
     >
       <View className="flex-1">
