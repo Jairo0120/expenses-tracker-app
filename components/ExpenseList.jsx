@@ -1,21 +1,17 @@
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { FlatList, Text } from "react-native";
 import { getExpenses } from "../api/expenses";
 import { showMessage } from "react-native-flash-message";
 import { useAuth0 } from "react-native-auth0";
+import { ExpenseModalVisibleContext } from "../contexts/ExpenseModalVisibleContext";
 import ExpenseCard from "./ExpenseCard";
 
-export default function ExpenseList({
-  refreshExpenses,
-  setRefreshExpenses,
-  modalVisible,
-  setSelectedExpense,
-  setModalVisible,
-}) {
+export default function ExpenseList({ refreshExpenses, setRefreshExpenses }) {
   const [expenses, setExpenses] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [isListEnd, setIsListEnd] = useState(false);
   const { getCredentials } = useAuth0();
+  const { modalVisible } = useContext(ExpenseModalVisibleContext);
 
   const refresh = async () => {
     setIsListEnd(false);
@@ -72,13 +68,7 @@ export default function ExpenseList({
       onRefresh={refresh}
       refreshing={isLoading}
       keyExtractor={(expense) => expense.id.toString()}
-      renderItem={({ item }) => (
-        <ExpenseCard
-          expense={item}
-          setSelectedExpense={setSelectedExpense}
-          setModalVisible={setModalVisible}
-        />
-      )}
+      renderItem={({ item }) => <ExpenseCard expense={item} />}
       ListFooterComponent={
         <Text className="text-white text-center pb-2">
           {isListEnd && "No hay más gastos qué mostrar"}

@@ -1,14 +1,16 @@
 import { View, Text, Pressable } from "react-native";
+import { useContext } from "react";
 import { formatMoney, formatDate } from "../helpers/utils";
+import { ExpenseContext } from "../contexts/ExpenseContext";
+import { ExpenseModalVisibleContext } from "../contexts/ExpenseModalVisibleContext";
 import { styled } from "nativewind";
 
 const StyledPressable = styled(Pressable);
 
-export default function ExpenseCard({
-  expense,
-  setSelectedExpense,
-  setModalVisible,
-}) {
+export default function ExpenseCard({ expense }) {
+  const { setSelectedExpense } = useContext(ExpenseContext);
+  const { setModalVisible } = useContext(ExpenseModalVisibleContext);
+
   return (
     <StyledPressable
       className={`flex-row bg-dodger-blue-950 p-4

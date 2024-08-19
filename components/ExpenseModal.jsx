@@ -1,24 +1,20 @@
 import { Modal, Text, View, Pressable, ActivityIndicator } from "react-native";
 import { useForm, useWatch } from "react-hook-form";
 import { styled } from "nativewind";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useContext } from "react";
 import { FormTextInput } from "./FormTextInput";
 import { createExpense, updateExpense, deleteExpense } from "../api/expenses";
 import { getBudgets } from "../api/catalogs";
 import { formatMoney } from "../helpers/utils";
 import { showMessage } from "react-native-flash-message";
 import { useAuth0 } from "react-native-auth0";
+import { ExpenseContext } from "../contexts/ExpenseContext";
+import { ExpenseModalVisibleContext } from "../contexts/ExpenseModalVisibleContext";
 import BadgetPicker from "./BadgetPicker";
 
 const StyledPressable = styled(Pressable);
 
-export default function ExpenseModal({
-  visible,
-  setVisible,
-  setRefreshExpenses,
-  selectedExpense,
-  setSelectedExpense,
-}) {
+export default function ExpenseModal({ setRefreshExpenses }) {
   const {
     control,
     handleSubmit,
@@ -27,6 +23,10 @@ export default function ExpenseModal({
     setValue,
     formState: { errors },
   } = useForm();
+  const { selectedExpense, setSelectedExpense } = useContext(ExpenseContext);
+  const { modalVisible, setModalVisible } = useContext(
+    ExpenseModalVisibleContext
+  );
   const [totalFormated, setTotalFormated] = useState(null);
   const [selectedBudget, setSelectedBudget] = useState(null);
   const [budgets, setBudgets] = useState([]);
@@ -60,7 +60,7 @@ export default function ExpenseModal({
           message: "Gasto registrado",
           type: "success",
         });
-        setVisible(false);
+        setModalVisible(false);
         setRefreshExpenses(true);
       } else {
         showMessage({
@@ -95,7 +95,7 @@ export default function ExpenseModal({
           message: "Gasto actualizado",
           type: "success",
         });
-        setVisible(false);
+        setModalVisible(false);
         setRefreshExpenses(true);
       } else {
         showMessage({
@@ -125,7 +125,7 @@ export default function ExpenseModal({
           message: "Gasto eliminado",
           type: "success",
         });
-        setVisible(false);
+        setModalVisible(false);
         setRefreshExpenses(true);
       } else {
         showMessage({
@@ -146,7 +146,7 @@ export default function ExpenseModal({
   };
 
   useEffect(() => {
-    if (visible) {
+    if (modalVisible) {
       const timeout = setTimeout(() => {
         setFocus("total");
       }, 100);
@@ -154,7 +154,7 @@ export default function ExpenseModal({
     } else {
       resetFields();
     }
-  }, [visible]);
+  }, [modalVisible]);
 
   useEffect(() => {
     if (selectedExpense) {
@@ -195,7 +195,7 @@ export default function ExpenseModal({
 
   return (
     <View className="bg-black flex-1">
-      <Modal transparent={true} visible={visible} animationType="slide">
+      <Modal transparent={true} visible={modalVisible} animationType="slide">
         <View className="flex-1 mx-5 justify-center">
           <View
             className={`rounded-xl bg-dodger-blue-950 shadow-xl
@@ -258,7 +258,7 @@ export default function ExpenseModal({
             </View>
             <View className="flex-row border-t mt-3">
               <StyledPressable
-                onPress={() => setVisible(!visible)}
+                onPress={() => setModalVisible(!modalVisible)}
                 className={`flex-1 bg-dodger-blue-400 justify-center
                 py-3 active:bg-dodger-blue-300 border-r
                 rounded-bl-xl`}
@@ -287,7 +287,7 @@ export default function ExpenseModal({
                     disabled={!formEnabled}
                     onPress={handleSubmit(async (data) => {
                       await onSubmitCreate(data);
-                      setVisible(true);
+                      setModalVisible(true);
                     })}
                   >
                     <Text className="text-center text-sm font-bold text-white">

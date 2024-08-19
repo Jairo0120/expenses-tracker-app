@@ -2,6 +2,8 @@ import { Pressable } from "react-native";
 import { PlusIcon } from "./Icons";
 import { styled } from "nativewind";
 import { useState } from "react";
+import { ExpenseContext } from "../contexts/ExpenseContext";
+import { ExpenseModalVisibleContext } from "../contexts/ExpenseModalVisibleContext";
 import ExpenseModal from "./ExpenseModal";
 import ExpenseList from "./ExpenseList";
 
@@ -13,31 +15,26 @@ export default function Expenses() {
   const [selectedExpense, setSelectedExpense] = useState(null);
 
   return (
-    <>
-      <ExpenseModal
-        visible={modalVisible}
-        setVisible={setModalVisible}
-        setRefreshExpenses={setRefreshExpenses}
-        selectedExpense={selectedExpense}
-        setSelectedExpense={setSelectedExpense}
-      />
-      <ExpenseList
-        modalVisible={modalVisible}
-        refreshExpenses={refreshExpenses}
-        setRefreshExpenses={setRefreshExpenses}
-        setSelectedExpense={setSelectedExpense}
-        setModalVisible={setModalVisible}
-      />
-      <StyledPressable
-        className="absolute right-5 bottom-5 active:opacity-50"
-        onPress={() => setModalVisible(!modalVisible)}
+    <ExpenseContext.Provider value={{ selectedExpense, setSelectedExpense }}>
+      <ExpenseModalVisibleContext.Provider
+        value={{ modalVisible, setModalVisible }}
       >
-        <PlusIcon
-          size={60}
-          color="#81c1f8"
-          style={!modalVisible ? {} : { opacity: 0.1 }}
+        <ExpenseModal setRefreshExpenses={setRefreshExpenses} />
+        <ExpenseList
+          refreshExpenses={refreshExpenses}
+          setRefreshExpenses={setRefreshExpenses}
         />
-      </StyledPressable>
-    </>
+        <StyledPressable
+          className="absolute right-5 bottom-5 active:opacity-50"
+          onPress={() => setModalVisible(!modalVisible)}
+        >
+          <PlusIcon
+            size={60}
+            color="#81c1f8"
+            style={!modalVisible ? {} : { opacity: 0.1 }}
+          />
+        </StyledPressable>
+      </ExpenseModalVisibleContext.Provider>
+    </ExpenseContext.Provider>
   );
 }
