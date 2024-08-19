@@ -3,7 +3,7 @@ import { useForm, useWatch } from "react-hook-form";
 import { styled } from "nativewind";
 import { useEffect, useState } from "react";
 import { FormTextInput } from "./FormTextInput";
-import { createExpense } from "../api/expenses";
+import { createExpense, updateExpense, deleteExpense } from "../api/expenses";
 import { getBudgets } from "../api/catalogs";
 import { formatMoney } from "../helpers/utils";
 import { showMessage } from "react-native-flash-message";
@@ -45,7 +45,7 @@ export default function ExpenseModal({
     resetField("concept");
   };
 
-  const onSubmit = async (data) => {
+  const onSubmitCreate = async (data) => {
     setFormEnabled(false);
     try {
       const credentials = await getCredentials();
@@ -73,6 +73,71 @@ export default function ExpenseModal({
       console.log(error);
       showMessage({
         message: "No se pudo registrar el gasto",
+        type: "danger",
+      });
+    } finally {
+      setFormEnabled(true);
+    }
+  };
+
+  const onSubmitUpdate = async (data, expense_id) => {
+    setFormEnabled(false);
+    try {
+      const credentials = await getCredentials();
+      const response = await updateExpense(credentials.accessToken, {
+        expense_id: expense_id,
+        val_expense: data.total,
+        description: data.concept.trim(),
+        budget_id: selectedBudget,
+      });
+      if (response.status === 200) {
+        showMessage({
+          message: "Gasto actualizado",
+          type: "success",
+        });
+        setVisible(false);
+        setRefreshExpenses(true);
+      } else {
+        showMessage({
+          message: "No se pudo actualizar el gasto",
+          type: "danger",
+        });
+        console.error(response.data);
+      }
+    } catch (error) {
+      console.log(error);
+      showMessage({
+        message: "No se pudo actualizar el gasto",
+        type: "danger",
+      });
+    } finally {
+      setFormEnabled(true);
+    }
+  };
+
+  const onSubmitDelete = async (expense_id) => {
+    setFormEnabled(false);
+    try {
+      const credentials = await getCredentials();
+      const response = await deleteExpense(credentials.accessToken, expense_id);
+      if (response.status === 200) {
+        showMessage({
+          message: "Gasto eliminado",
+          type: "success",
+        });
+        setVisible(false);
+        setRefreshExpenses(true);
+      } else {
+        showMessage({
+          message: "No se pudo eliminar el gasto",
+          type: "danger",
+        });
+        console.error(response.data);
+      }
+    } catch (error) {
+      console.log(error);
+      showMessage({
+        message: "No se pudo eliminar el gasto",
         type: "danger",
       });
     } finally {
@@ -202,31 +267,62 @@ export default function ExpenseModal({
                   Cancelar
                 </Text>
               </StyledPressable>
-              <StyledPressable
-                className={`flex-1 bg-dodger-blue-800 justify-center py-3
+              {selectedExpense === null ? (
+                <>
+                  <StyledPressable
+                    className={`flex-1 bg-dodger-blue-800 justify-center py-3
                 active:bg-dodger-blue-600 border-r`}
-                disabled={!formEnabled}
-                onPress={handleSubmit(async (data) => {
-                  await onSubmit(data);
-                })}
-              >
-                <Text className="text-center text-sm font-bold text-white">
-                  Guardar
-                </Text>
-              </StyledPressable>
-              <StyledPressable
-                className={`flex-1 bg-dodger-blue-800 justify-center
+                    disabled={!formEnabled}
+                    onPress={handleSubmit(async (data) => {
+                      await onSubmitCreate(data);
+                    })}
+                  >
+                    <Text className="text-center text-sm font-bold text-white">
+                      Guardar
+                    </Text>
+                  </StyledPressable>
+                  <StyledPressable
+                    className={`flex-1 bg-dodger-blue-800 justify-center
                 active:bg-dodger-blue-600 rounded-br-xl`}
-                disabled={!formEnabled}
-                onPress={handleSubmit(async (data) => {
-                  await onSubmit(data);
-                  setVisible(true);
-                })}
-              >
-                <Text className="text-center text-sm font-bold text-white">
-                  Crear otro
-                </Text>
-              </StyledPressable>
+                    disabled={!formEnabled}
+                    onPress={handleSubmit(async (data) => {
+                      await onSubmitCreate(data);
+                      setVisible(true);
+                    })}
+                  >
+                    <Text className="text-center text-sm font-bold text-white">
+                      Crear otro
+                    </Text>
+                  </StyledPressable>
+                </>
+              ) : (
+                <>
+                  <StyledPressable
+                    className={`flex-1 bg-dodger-blue-800 justify-center py-3
+                active:bg-dodger-blue-600 border-r`}
+                    disabled={!formEnabled}
+                    onPress={handleSubmit(async (data) => {
+                      await onSubmitUpdate(data, selectedExpense.id);
+                    })}
+                  >
+                    <Text className="text-center text-sm font-bold text-white">
+                      Actualizar
+                    </Text>
+                  </StyledPressable>
+                  <StyledPressable
+                    className={`flex-1 bg-persian-red-800 justify-center py-3
+                active:bg-persian-red-600 border-r`}
+                    disabled={!formEnabled}
+                    onPress={handleSubmit(async (data) => {
+                      await onSubmitDelete(selectedExpense.id);
+                    })}
+                  >
+                    <Text className="text-center text-sm font-bold text-white">
+                      Eliminar
+                    </Text>
+                  </StyledPressable>
+                </>
+              )}
             </View>
           </View>
         </View>
