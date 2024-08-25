@@ -11,3 +11,7 @@ export const SignOutIcon = (props) => {
 export const MagnifyingGlassIcon = (props) => {
   return <FontAwesome name="search" size={24} color="black" {...props} />;
 };
+
+export const RecurrentIcon = (props) => {
+  return <FontAwesome name="retweet" size={24} color="black" {...props} />;
+};

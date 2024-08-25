@@ -39,9 +39,23 @@ export default function AppLayout() {
             headerBackground: () => (
               <View style={{ backgroundColor: "black", flex: 1 }} />
             ),
+            drawerLabelStyle: { color: "white" },
             drawerLabel: "Gastos",
-            drawerActiveTintColor: "#81c1f8",
+            drawerActiveTintColor: "#bcdcfb",
             headerTitle: "Gastos",
+            headerTitleAlign: "left",
+          }}
+        />
+        <Drawer.Screen
+          name="incomes"
+          options={{
+            headerBackground: () => (
+              <View style={{ backgroundColor: "black", flex: 1 }} />
+            ),
+            drawerLabelStyle: { color: "white" },
+            drawerLabel: "Ingresos",
+            drawerActiveTintColor: "#81c1f8",
+            headerTitle: "Ingresos",
             headerTitleAlign: "left",
           }}
         />
