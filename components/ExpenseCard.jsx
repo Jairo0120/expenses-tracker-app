@@ -31,7 +31,7 @@ export default function ExpenseCard({ expense }) {
           {formatMoney(expense.val_expense.toString())}
         </Text>
       </View>
-      {expense.is_recurrent_income && (
+      {expense.is_recurrent_expense && (
         <RecurrentIcon color="#81c1f8" size={20} />
       )}
       <View className="flex-1 items-end justify-center">

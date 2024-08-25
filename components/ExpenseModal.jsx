@@ -65,6 +65,7 @@ export default function ExpenseModal({ setRefreshExpenses }) {
         description: data.concept.trim(),
         date_expense: new Date().toISOString(),
         budget_id: selectedBudget,
+        create_recurrent_expense: isRecurrentExpenseEnabled,
       });
       if (response.status === 201) {
         showMessage({
@@ -100,7 +101,6 @@ export default function ExpenseModal({ setRefreshExpenses }) {
         val_expense: data.total,
         description: data.concept.trim(),
         budget_id: selectedBudget,
-        create_recurrent_expense: isRecurrentExpenseEnabled,
       });
       if (response.status === 200) {
         showMessage({
