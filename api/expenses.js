@@ -1,13 +1,20 @@
 export async function createExpense(
   token,
-  { val_expense, description, date_expense, budget_id }
+  {
+    val_expense,
+    description,
+    date_expense,
+    budget_id,
+    create_recurrent_expense,
+  }
 ) {
   console.log(
     "Creating expense",
     val_expense,
     description,
     date_expense,
-    budget_id
+    budget_id,
+    create_recurrent_expense
   );
   const response = await fetch(`${process.env.EXPO_PUBLIC_API_URL}/expenses`, {
     method: "POST",
@@ -20,6 +27,7 @@ export async function createExpense(
       description,
       date_expense,
       budget_id,
+      create_recurrent_expense,
     }),
   });
 

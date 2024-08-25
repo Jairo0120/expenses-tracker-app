@@ -1,4 +1,11 @@
-import { Modal, Text, View, Pressable, ActivityIndicator } from "react-native";
+import {
+  Modal,
+  Text,
+  View,
+  Pressable,
+  ActivityIndicator,
+  Switch,
+} from "react-native";
 import { useForm, useWatch } from "react-hook-form";
 import { styled } from "nativewind";
 import { useEffect, useState, useContext } from "react";
@@ -44,6 +51,10 @@ export default function ExpenseModal({ setRefreshExpenses }) {
     resetField("total");
     resetField("concept");
   };
+  const [isRecurrentExpenseEnabled, setIsRecurrentExpenseEnabled] =
+    useState(false);
+  const toggleSwitch = () =>
+    setIsRecurrentExpenseEnabled((previousState) => !previousState);
 
   const onSubmitCreate = async (data) => {
     setFormEnabled(false);
@@ -89,6 +100,7 @@ export default function ExpenseModal({ setRefreshExpenses }) {
         val_expense: data.total,
         description: data.concept.trim(),
         budget_id: selectedBudget,
+        create_recurrent_expense: isRecurrentExpenseEnabled,
       });
       if (response.status === 200) {
         showMessage({
@@ -245,6 +257,22 @@ export default function ExpenseModal({ setRefreshExpenses }) {
               />
               {errors.concept && (
                 <Text className="text-red-500">Campo requerido.</Text>
+              )}
+              {selectedExpense === null && (
+                <View className="flex-row items-center">
+                  <Text className="text-sm font-bold text-white mt-4">
+                    ¿Gasto mensual?
+                  </Text>
+                  <Switch
+                    className="ml-1 mt-4"
+                    trackColor={{ false: "#767577", true: "#bcdcfb" }}
+                    thumbColor={
+                      isRecurrentExpenseEnabled ? "#1d8eeb" : "#f4f3f4"
+                    }
+                    onValueChange={toggleSwitch}
+                    value={isRecurrentExpenseEnabled}
+                  />
+                </View>
               )}
               <Text className="text-sm font-bold text-white mt-4">
                 Presupuesto

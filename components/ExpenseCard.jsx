@@ -4,6 +4,7 @@ import { formatMoney, formatDate } from "../helpers/utils";
 import { ExpenseContext } from "../contexts/ExpenseContext";
 import { ExpenseModalVisibleContext } from "../contexts/ExpenseModalVisibleContext";
 import { styled } from "nativewind";
+import { RecurrentIcon } from "./Icons";
 
 const StyledPressable = styled(Pressable);
 
@@ -15,6 +16,7 @@ export default function ExpenseCard({ expense }) {
     <StyledPressable
       className={`flex-row bg-dodger-blue-950 p-4
         rounded-lg shadow-md mb-4 mx-3
+        items-center
         active:bg-dodger-blue-900`}
       onPress={() => {
         setSelectedExpense(expense);
@@ -29,6 +31,9 @@ export default function ExpenseCard({ expense }) {
           {formatMoney(expense.val_expense.toString())}
         </Text>
       </View>
+      {expense.is_recurrent_income && (
+        <RecurrentIcon color="#81c1f8" size={20} />
+      )}
       <View className="flex-1 items-end justify-center">
         <Text
           className={
