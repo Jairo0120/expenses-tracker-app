@@ -1,4 +1,4 @@
-import { Pressable } from "react-native";
+import { Pressable, View } from "react-native";
 import { PlusIcon } from "./Icons";
 import { styled } from "nativewind";
 import { useState } from "react";
@@ -19,11 +19,13 @@ export default function MainIncomes() {
       <IncomeModalVisibleContext.Provider
         value={{ modalVisible, setModalVisible }}
       >
-        <IncomeModal setRefreshIncomes={setRefreshIncomes} />
-        <IncomeList
-          refreshIncomes={refreshIncomes}
-          setRefreshIncomes={setRefreshIncomes}
-        />
+        <View className="content-start">
+          <IncomeModal setRefreshIncomes={setRefreshIncomes} />
+          <IncomeList
+            refreshIncomes={refreshIncomes}
+            setRefreshIncomes={setRefreshIncomes}
+          />
+        </View>
         <StyledPressable
           className="absolute right-5 bottom-5 active:opacity-50"
           onPress={() => setModalVisible(!modalVisible)}

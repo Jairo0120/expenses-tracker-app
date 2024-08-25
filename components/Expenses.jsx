@@ -1,4 +1,4 @@
-import { Pressable } from "react-native";
+import { Pressable, View } from "react-native";
 import { PlusIcon } from "./Icons";
 import { styled } from "nativewind";
 import { useState } from "react";
@@ -19,11 +19,13 @@ export default function Expenses() {
       <ExpenseModalVisibleContext.Provider
         value={{ modalVisible, setModalVisible }}
       >
-        <ExpenseModal setRefreshExpenses={setRefreshExpenses} />
-        <ExpenseList
-          refreshExpenses={refreshExpenses}
-          setRefreshExpenses={setRefreshExpenses}
-        />
+        <View className="content-start">
+          <ExpenseModal setRefreshExpenses={setRefreshExpenses} />
+          <ExpenseList
+            refreshExpenses={refreshExpenses}
+            setRefreshExpenses={setRefreshExpenses}
+          />
+        </View>
         <StyledPressable
           className="absolute right-5 bottom-5 active:opacity-50"
           onPress={() => setModalVisible(!modalVisible)}
