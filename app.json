@@ -6,7 +6,7 @@
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "dark",
-    "scheme": "expenses-tracker",
+    "scheme": "expensestracker",
     "splash": {
       "image": "./assets/splash.png",
       "resizeMode": "contain",
@@ -31,8 +31,7 @@
       [
         "react-native-auth0",
         {
-          "domain": "dev-fdtlvbztvibtlwj6.us.auth0.com",
-          "customScheme": "expenses-tracker-app"
+          "domain": "dev-fdtlvbztvibtlwj6.us.auth0.com"
         }
       ]
     ]
