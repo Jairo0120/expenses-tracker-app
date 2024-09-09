@@ -31,9 +31,8 @@ export async function createSaving(
 
 export async function getSavings(token, filters) {
   console.log("Getting savings", filters);
-  const query = new URLSearchParams(filters).toString();
   const response = await fetch(
-    `${process.env.EXPO_PUBLIC_API_URL}/savings?${query}`,
+    `${process.env.EXPO_PUBLIC_API_URL}/savings/grouped-savings`,
     {
       headers: {
         Authorization: `Bearer ${token}`,

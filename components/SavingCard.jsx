@@ -14,42 +14,39 @@ export default function SavingCard({ saving }) {
 
   return (
     <StyledPressable
-      className={`flex-row bg-dodger-blue-950 p-4
+      className={`flex-col bg-dodger-blue-950 p-4
         rounded-lg shadow-md mb-4 mx-3
         items-center
         active:bg-dodger-blue-900`}
       onPress={() => {
-        setSelectedSaving(saving);
-        setModalVisible(true);
+        console.log("Pressed saving", saving);
+        // setSelectedSaving(saving);
+        // setModalVisible(true);
       }}
     >
-      <View className="flex-1">
-        <Text className="text-sm font-semibold text-dodger-blue-300">
-          {saving.description}
-        </Text>
-        <Text className="text-dodger-blue-100 text-xl">
-          {formatMoney(saving.val_saving.toString())}
-        </Text>
-      </View>
-      {saving.is_recurrent_saving && (
-        <RecurrentIcon color="#81c1f8" size={20} />
-      )}
-      <View className="flex-1 items-end justify-center">
+      <Text className="text-lg font-semibold text-dodger-blue-300">
         {saving.is_recurrent_saving && (
-          <Text
-            className={
-              `text-sm font-semibold ` +
-              (saving.budget !== null
-                ? "text-dodger-blue-300"
-                : "text-persian-red-400")
-            }
-          >
-            Ahorro recurrente
+          <RecurrentIcon color="#81c1f8" size={20} />
+        )}{" "}
+        {saving.description}
+      </Text>
+      <View className="flex-row items-center">
+        <View className="flex-1 items-end mr-2">
+          <Text className="text-sm font-semibold text-dodger-blue-400">
+            Este mes
           </Text>
-        )}
-        <Text className="text-dodger-blue-500 text-xs">
-          {formatDate(saving.date_saving)}
-        </Text>
+          <Text className="text-dodger-blue-100 text-xl">
+            {formatMoney(saving.total_last_month.toString())}
+          </Text>
+        </View>
+        <View className="flex-1 ml-2">
+          <Text className="text-sm font-semibold text-dodger-blue-400">
+            Totalizado
+          </Text>
+          <Text className="text-dodger-blue-100 text-xl">
+            {formatMoney(saving.total_global.toString())}
+          </Text>
+        </View>
       </View>
     </StyledPressable>
   );
