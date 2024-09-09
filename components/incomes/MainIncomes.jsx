@@ -1,9 +1,9 @@
 import { Pressable, View } from "react-native";
-import { PlusIcon } from "./Icons";
+import { PlusIcon } from "../Icons";
 import { styled } from "nativewind";
 import { useState } from "react";
-import { IncomeContext } from "../contexts/IncomeContext";
-import { IncomeModalVisibleContext } from "../contexts/IncomeModalVisibleContext";
+import { IncomeContext } from "../../contexts/IncomeContext";
+import { IncomeModalVisibleContext } from "../../contexts/IncomeModalVisibleContext";
 import IncomeModal from "./IncomeModal";
 import IncomeList from "./IncomeList";
 

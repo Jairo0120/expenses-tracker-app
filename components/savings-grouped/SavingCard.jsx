@@ -1,10 +1,10 @@
 import { View, Text, Pressable } from "react-native";
 import { useContext } from "react";
-import { formatMoney, formatDate } from "../helpers/utils";
-import { SavingContext } from "../contexts/SavingContext";
-import { SavingModalVisibleContext } from "../contexts/SavingModalVisibleContext";
+import { formatMoney, formatDate } from "../../helpers/utils";
+import { SavingContext } from "../../contexts/SavingContext";
+import { SavingModalVisibleContext } from "../../contexts/SavingModalVisibleContext";
 import { styled } from "nativewind";
-import { RecurrentIcon } from "./Icons";
+import { RecurrentIcon } from "../Icons";
 
 const StyledPressable = styled(Pressable);
 

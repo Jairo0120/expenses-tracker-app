@@ -1,9 +1,9 @@
 import { Pressable, View } from "react-native";
-import { PlusIcon } from "./Icons";
+import { PlusIcon } from "../Icons";
 import { styled } from "nativewind";
 import { useState } from "react";
-import { ExpenseContext } from "../contexts/ExpenseContext";
-import { ExpenseModalVisibleContext } from "../contexts/ExpenseModalVisibleContext";
+import { ExpenseContext } from "../../contexts/ExpenseContext";
+import { ExpenseModalVisibleContext } from "../../contexts/ExpenseModalVisibleContext";
 import ExpenseModal from "./ExpenseModal";
 import ExpenseList from "./ExpenseList";
 

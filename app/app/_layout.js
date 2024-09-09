@@ -66,9 +66,9 @@ export default function AppLayout() {
               <View style={{ backgroundColor: "black", flex: 1 }} />
             ),
             drawerLabelStyle: { color: "white" },
-            drawerLabel: "Ahorros",
+            drawerLabel: "Resumen ahorros",
             drawerActiveTintColor: "#81c1f8",
-            headerTitle: "Ahorros",
+            headerTitle: "Resumen ahorros",
             headerTitleAlign: "left",
           }}
         />

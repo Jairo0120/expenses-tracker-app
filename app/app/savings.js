@@ -1,5 +1,5 @@
 import { Screen } from "../../components/Screen";
-import MainSavings from "../../components/MainSavings";
+import MainSavings from "../../components/savings-grouped/MainSavings";
 
 export default function Incomes() {
   return (

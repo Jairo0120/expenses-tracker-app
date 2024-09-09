@@ -9,15 +9,19 @@ import {
 import { useForm, useWatch } from "react-hook-form";
 import { styled } from "nativewind";
 import { useEffect, useState, useContext } from "react";
-import { FormTextInput } from "./FormTextInput";
-import { createExpense, updateExpense, deleteExpense } from "../api/expenses";
-import { getBudgets } from "../api/catalogs";
-import { formatMoney } from "../helpers/utils";
+import { FormTextInput } from "../FormTextInput";
+import {
+  createExpense,
+  updateExpense,
+  deleteExpense,
+} from "../../api/expenses";
+import { getBudgets } from "../../api/catalogs";
+import { formatMoney } from "../../helpers/utils";
 import { showMessage } from "react-native-flash-message";
 import { useAuth0 } from "react-native-auth0";
-import { ExpenseContext } from "../contexts/ExpenseContext";
-import { ExpenseModalVisibleContext } from "../contexts/ExpenseModalVisibleContext";
-import BadgetPicker from "./BadgetPicker";
+import { ExpenseContext } from "../../contexts/ExpenseContext";
+import { ExpenseModalVisibleContext } from "../../contexts/ExpenseModalVisibleContext";
+import BadgetPicker from "../BadgetPicker";
 
 const StyledPressable = styled(Pressable);
 

@@ -9,17 +9,17 @@ import {
 import { useForm, useWatch } from "react-hook-form";
 import { styled } from "nativewind";
 import { useEffect, useState, useContext } from "react";
-import { FormTextInput } from "./FormTextInput";
-import { createIncome, updateIncome, deleteIncome } from "../api/incomes";
-import { formatMoney } from "../helpers/utils";
+import { FormTextInput } from "../FormTextInput";
+import { createSaving, updateSaving, deleteSaving } from "../../api/savings";
+import { formatMoney } from "../../helpers/utils";
 import { showMessage } from "react-native-flash-message";
 import { useAuth0 } from "react-native-auth0";
-import { IncomeContext } from "../contexts/IncomeContext";
-import { IncomeModalVisibleContext } from "../contexts/IncomeModalVisibleContext";
+import { SavingContext } from "../../contexts/SavingContext";
+import { SavingModalVisibleContext } from "../../contexts/SavingModalVisibleContext";
 
 const StyledPressable = styled(Pressable);
 
-export default function IncomeModal({ setRefreshIncomes }) {
+export default function SavingModal({ setRefreshSavings }) {
   const {
     control,
     handleSubmit,
@@ -28,9 +28,9 @@ export default function IncomeModal({ setRefreshIncomes }) {
     setValue,
     formState: { errors },
   } = useForm();
-  const { selectedIncome, setSelectedIncome } = useContext(IncomeContext);
+  const { selectedSaving, setSelectedSaving } = useContext(SavingContext);
   const { modalVisible, setModalVisible } = useContext(
-    IncomeModalVisibleContext
+    SavingModalVisibleContext
   );
   const [totalFormated, setTotalFormated] = useState(null);
   const [formEnabled, setFormEnabled] = useState(true);
@@ -41,37 +41,37 @@ export default function IncomeModal({ setRefreshIncomes }) {
     defaultValue: "",
   });
   const resetFields = () => {
-    setSelectedIncome(null);
+    setSelectedSaving(null);
     setTotalFormated(null);
     resetField("total");
     resetField("concept");
-    setIsRecurrentIncomeEnabled(false);
+    setIsRecurrentSavingEnabled(false);
   };
-  const [isRecurrentIncomeEnabled, setIsRecurrentIncomeEnabled] =
+  const [isRecurrentSavingEnabled, setIsRecurrentSavingEnabled] =
     useState(false);
   const toggleSwitch = () =>
-    setIsRecurrentIncomeEnabled((previousState) => !previousState);
+    setIsRecurrentSavingEnabled((previousState) => !previousState);
 
   const onSubmitCreate = async (data) => {
     setFormEnabled(false);
     try {
       const credentials = await getCredentials();
-      const response = await createIncome(credentials.accessToken, {
-        val_income: data.total,
+      const response = await createSaving(credentials.accessToken, {
+        val_saving: data.total,
         description: data.concept.trim(),
-        date_income: new Date().toISOString(),
-        create_recurrent_income: isRecurrentIncomeEnabled,
+        date_saving: new Date().toISOString(),
+        create_recurrent_saving: isRecurrentSavingEnabled,
       });
       if (response.status === 201) {
         showMessage({
-          message: "Ingreso registrado",
+          message: "Ahorro registrado",
           type: "success",
         });
         setModalVisible(false);
-        setRefreshIncomes(true);
+        setRefreshSavings(true);
       } else {
         showMessage({
-          message: "No se pudo registrar el ingreso",
+          message: "No se pudo registrar el ahorro",
           type: "danger",
         });
         console.error(response.data);
@@ -79,7 +79,7 @@ export default function IncomeModal({ setRefreshIncomes }) {
     } catch (error) {
       console.log(error);
       showMessage({
-        message: "No se pudo registrar el ingreso",
+        message: "No se pudo registrar el ahorro",
         type: "danger",
       });
     } finally {
@@ -87,25 +87,25 @@ export default function IncomeModal({ setRefreshIncomes }) {
     }
   };
 
-  const onSubmitUpdate = async (data, income_id) => {
+  const onSubmitUpdate = async (data, saving_id) => {
     setFormEnabled(false);
     try {
       const credentials = await getCredentials();
-      const response = await updateIncome(credentials.accessToken, {
-        income_id: income_id,
-        val_income: data.total,
+      const response = await updateSaving(credentials.accessToken, {
+        saving_id: saving_id,
+        val_saving: data.total,
         description: data.concept.trim(),
       });
       if (response.status === 200) {
         showMessage({
-          message: "Ingreso actualizado",
+          message: "Ahorro actualizado",
           type: "success",
         });
         setModalVisible(false);
-        setRefreshIncomes(true);
+        setRefreshSavings(true);
       } else {
         showMessage({
-          message: "No se pudo actualizar el ingreso",
+          message: "No se pudo actualizar el ahorro",
           type: "danger",
         });
         console.error(response.data);
@@ -113,7 +113,7 @@ export default function IncomeModal({ setRefreshIncomes }) {
     } catch (error) {
       console.log(error);
       showMessage({
-        message: "No se pudo actualizar el ingreso",
+        message: "No se pudo actualizar el ahorro",
         type: "danger",
       });
     } finally {
@@ -121,21 +121,21 @@ export default function IncomeModal({ setRefreshIncomes }) {
     }
   };
 
-  const onSubmitDelete = async (income_id) => {
+  const onSubmitDelete = async (saving_id) => {
     setFormEnabled(false);
     try {
       const credentials = await getCredentials();
-      const response = await deleteIncome(credentials.accessToken, income_id);
+      const response = await deleteSaving(credentials.accessToken, saving_id);
       if (response.status === 200) {
         showMessage({
-          message: "Ingreso eliminado",
+          message: "Ahorro eliminado",
           type: "success",
         });
         setModalVisible(false);
-        setRefreshIncomes(true);
+        setRefreshSavings(true);
       } else {
         showMessage({
-          message: "No se pudo eliminar el ingreso",
+          message: "No se pudo eliminar el ahorro",
           type: "danger",
         });
         console.error(response.data);
@@ -143,7 +143,7 @@ export default function IncomeModal({ setRefreshIncomes }) {
     } catch (error) {
       console.log(error);
       showMessage({
-        message: "No se pudo eliminar el ingreso",
+        message: "No se pudo eliminar el ahorro",
         type: "danger",
       });
     } finally {
@@ -163,11 +163,11 @@ export default function IncomeModal({ setRefreshIncomes }) {
   }, [modalVisible]);
 
   useEffect(() => {
-    if (selectedIncome) {
-      setValue("total", selectedIncome.val_income.toString());
-      setValue("concept", selectedIncome.description);
+    if (selectedSaving) {
+      setValue("total", selectedSaving.val_saving.toString());
+      setValue("concept", selectedSaving.description);
     }
-  }, [selectedIncome]);
+  }, [selectedSaving]);
 
   useEffect(() => {
     if (watchTotal !== "") {
@@ -188,7 +188,7 @@ export default function IncomeModal({ setRefreshIncomes }) {
                 <ActivityIndicator size="large" color="#c98b1e" />
               )}
               <Text className="text-sm font-bold text-white">
-                Total del ingreso
+                Total del ahorro
               </Text>
               <FormTextInput
                 className={
@@ -211,7 +211,7 @@ export default function IncomeModal({ setRefreshIncomes }) {
                 {totalFormated || "$ 0,00"}
               </Text>
               <Text className="text-sm font-bold text-white">
-                Descripción del ingreso
+                Descripción del ahorro
               </Text>
               <FormTextInput
                 className={
@@ -228,19 +228,19 @@ export default function IncomeModal({ setRefreshIncomes }) {
               {errors.concept && (
                 <Text className="text-red-500">Campo requerido.</Text>
               )}
-              {selectedIncome === null && (
+              {selectedSaving === null && (
                 <View className="flex-row items-center">
                   <Text className="text-sm font-bold text-white mt-4">
-                    ¿Ingreso mensual?
+                    ¿Ahorro mensual?
                   </Text>
                   <Switch
                     className="ml-1 mt-4"
                     trackColor={{ false: "#767577", true: "#bcdcfb" }}
                     thumbColor={
-                      isRecurrentIncomeEnabled ? "#1d8eeb" : "#f4f3f4"
+                      isRecurrentSavingEnabled ? "#1d8eeb" : "#f4f3f4"
                     }
                     onValueChange={toggleSwitch}
-                    value={isRecurrentIncomeEnabled}
+                    value={isRecurrentSavingEnabled}
                   />
                 </View>
               )}
@@ -256,7 +256,7 @@ export default function IncomeModal({ setRefreshIncomes }) {
                   Cancelar
                 </Text>
               </StyledPressable>
-              {selectedIncome === null ? (
+              {selectedSaving === null ? (
                 <>
                   <StyledPressable
                     className={`flex-1 bg-dodger-blue-800 justify-center py-3
@@ -291,7 +291,7 @@ export default function IncomeModal({ setRefreshIncomes }) {
                 active:bg-dodger-blue-600 border-r`}
                     disabled={!formEnabled}
                     onPress={handleSubmit(async (data) => {
-                      await onSubmitUpdate(data, selectedIncome.id);
+                      await onSubmitUpdate(data, selectedSaving.id);
                     })}
                   >
                     <Text className="text-center text-sm font-bold text-white">
@@ -303,7 +303,7 @@ export default function IncomeModal({ setRefreshIncomes }) {
                 active:bg-persian-red-600 border-r`}
                     disabled={!formEnabled}
                     onPress={handleSubmit(async (data) => {
-                      await onSubmitDelete(selectedIncome.id);
+                      await onSubmitDelete(selectedSaving.id);
                     })}
                   >
                     <Text className="text-center text-sm font-bold text-white">

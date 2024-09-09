@@ -1,9 +1,9 @@
 import { useContext, useEffect, useState } from "react";
 import { FlatList, Text } from "react-native";
-import { getSavings } from "../api/savings";
+import { getSavings } from "../../api/savings";
 import { showMessage } from "react-native-flash-message";
 import { useAuth0 } from "react-native-auth0";
-import { SavingModalVisibleContext } from "../contexts/SavingModalVisibleContext";
+import { SavingModalVisibleContext } from "../../contexts/SavingModalVisibleContext";
 import SavingCard from "./SavingCard";
 
 export default function SavingList({ refreshSavings, setRefreshSavings }) {

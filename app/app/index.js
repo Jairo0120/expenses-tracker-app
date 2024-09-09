@@ -1,5 +1,5 @@
 import { Screen } from "../../components/Screen";
-import Expenses from "../../components/Expenses";
+import Expenses from "../../components/expenses/Expenses";
 
 export default function Index() {
   return (
