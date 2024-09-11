@@ -14,8 +14,8 @@ import { createIncome, updateIncome, deleteIncome } from "../../api/incomes";
 import { formatMoney } from "../../helpers/utils";
 import { showMessage } from "react-native-flash-message";
 import { useAuth0 } from "react-native-auth0";
-import { IncomeContext } from "../../contexts/IncomeContext";
-import { IncomeModalVisibleContext } from "../../contexts/IncomeModalVisibleContext";
+import { IncomeContext } from "../../contexts/incomes/IncomeContext";
+import { IncomeModalVisibleContext } from "../../contexts/incomes/IncomeModalVisibleContext";
 
 const StyledPressable = styled(Pressable);
 

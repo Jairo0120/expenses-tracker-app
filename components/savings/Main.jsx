@@ -2,26 +2,28 @@ import { Pressable, View } from "react-native";
 import { PlusIcon } from "../Icons";
 import { styled } from "nativewind";
 import { useState } from "react";
-import { SavingContext } from "../../contexts/SavingContext";
-import { SavingModalVisibleContext } from "../../contexts/SavingModalVisibleContext";
-import SavingModal from "./SavingModal";
-import SavingList from "./SavingList";
+import { SavingContext } from "../../contexts/savings/SavingContext";
+import { SavingModalVisibleContext } from "../../contexts/savings/SavingModalVisibleContext";
+import SavingIndividualModal from "./SavingIndividualModal";
+import SavingIndividualList from "./SavingIndividualList";
 
 const StyledPressable = styled(Pressable);
 
-export default function MainSavings() {
+export default function Main() {
   const [modalVisible, setModalVisible] = useState(false);
   const [refreshSavings, setRefreshSavings] = useState(true);
   const [selectedSaving, setSelectedSaving] = useState(null);
 
   return (
-    <SavingContext.Provider value={{ selectedSaving, setSelectedSaving }}>
+    <SavingContext.Provider
+      value={{ selectedSaving, setSelectedSaving }}
+    >
       <SavingModalVisibleContext.Provider
         value={{ modalVisible, setModalVisible }}
       >
         <View className="content-start">
-          <SavingModal setRefreshSavings={setRefreshSavings} />
-          <SavingList
+          <SavingIndividualModal setRefreshSavings={setRefreshSavings} />
+          <SavingIndividualList
             refreshSavings={refreshSavings}
             setRefreshSavings={setRefreshSavings}
           />

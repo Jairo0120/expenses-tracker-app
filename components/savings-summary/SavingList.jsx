@@ -3,7 +3,7 @@ import { FlatList, Text } from "react-native";
 import { getGroupedSavings } from "../../api/savings";
 import { showMessage } from "react-native-flash-message";
 import { useAuth0 } from "react-native-auth0";
-import { SavingModalVisibleContext } from "../../contexts/SavingModalVisibleContext";
+import { SavingModalVisibleContext } from "../../contexts/savings-summary/SavingModalVisibleContext";
 import SavingCard from "./SavingCard";
 
 export default function SavingList({ refreshSavings, setRefreshSavings }) {

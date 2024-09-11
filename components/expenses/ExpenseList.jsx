@@ -3,7 +3,7 @@ import { FlatList, Text } from "react-native";
 import { getExpenses } from "../../api/expenses";
 import { showMessage } from "react-native-flash-message";
 import { useAuth0 } from "react-native-auth0";
-import { ExpenseModalVisibleContext } from "../../contexts/ExpenseModalVisibleContext";
+import { ExpenseModalVisibleContext } from "../../contexts/expenses/ExpenseModalVisibleContext";
 import ExpenseCard from "./ExpenseCard";
 
 export default function ExpenseList({ refreshExpenses, setRefreshExpenses }) {

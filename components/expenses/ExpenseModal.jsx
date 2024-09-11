@@ -19,8 +19,8 @@ import { getBudgets } from "../../api/catalogs";
 import { formatMoney } from "../../helpers/utils";
 import { showMessage } from "react-native-flash-message";
 import { useAuth0 } from "react-native-auth0";
-import { ExpenseContext } from "../../contexts/ExpenseContext";
-import { ExpenseModalVisibleContext } from "../../contexts/ExpenseModalVisibleContext";
+import { ExpenseContext } from "../../contexts/expenses/ExpenseContext";
+import { ExpenseModalVisibleContext } from "../../contexts/expenses/ExpenseModalVisibleContext";
 import BadgetPicker from "../BadgetPicker";
 
 const StyledPressable = styled(Pressable);

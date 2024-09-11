@@ -14,12 +14,12 @@ import { createSaving, updateSaving, deleteSaving } from "../../api/savings";
 import { formatMoney } from "../../helpers/utils";
 import { showMessage } from "react-native-flash-message";
 import { useAuth0 } from "react-native-auth0";
-import { SavingContext } from "../../contexts/SavingContext";
-import { SavingModalVisibleContext } from "../../contexts/SavingModalVisibleContext";
+import { SavingContext } from "../../contexts/savings/SavingContext";
+import { SavingModalVisibleContext } from "../../contexts/savings/SavingModalVisibleContext";
 
 const StyledPressable = styled(Pressable);
 
-export default function SavingModal({ setRefreshSavings }) {
+export default function SavingIndividualModal({ setRefreshSavings }) {
   const {
     control,
     handleSubmit,
@@ -28,7 +28,9 @@ export default function SavingModal({ setRefreshSavings }) {
     setValue,
     formState: { errors },
   } = useForm();
-  const { selectedSaving, setSelectedSaving } = useContext(SavingContext);
+  const { selectedSaving, setSelectedSaving } = useContext(
+    SavingContext
+  );
   const { modalVisible, setModalVisible } = useContext(
     SavingModalVisibleContext
   );
@@ -165,7 +167,7 @@ export default function SavingModal({ setRefreshSavings }) {
   useEffect(() => {
     if (selectedSaving) {
       setValue("total", selectedSaving.val_saving.toString());
-      setValue("concept", selectedSaving.description);
+      setValue("concept", selectedSaving.saving_type.description);
     }
   }, [selectedSaving]);
 

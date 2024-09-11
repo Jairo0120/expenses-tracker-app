@@ -1,10 +1,10 @@
 import { Screen } from "../../components/Screen";
-import MainIncomes from "../../components/incomes/MainIncomes";
+import Main from "../../components/incomes/Main";
 
 export default function Incomes() {
   return (
     <Screen>
-      <MainIncomes />
+      <Main />
     </Screen>
   );
 }

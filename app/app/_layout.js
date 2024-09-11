@@ -60,7 +60,7 @@ export default function AppLayout() {
           }}
         />
         <Drawer.Screen
-          name="savings"
+          name="savings-summary"
           options={{
             headerBackground: () => (
               <View style={{ backgroundColor: "black", flex: 1 }} />
@@ -73,7 +73,7 @@ export default function AppLayout() {
           }}
         />
         <Drawer.Screen
-          name="individual-savings"
+          name="savings"
           options={{
             headerBackground: () => (
               <View style={{ backgroundColor: "black", flex: 1 }} />

@@ -3,7 +3,7 @@ import { FlatList, Text } from "react-native";
 import { getIncomes } from "../../api/incomes";
 import { showMessage } from "react-native-flash-message";
 import { useAuth0 } from "react-native-auth0";
-import { IncomeModalVisibleContext } from "../../contexts/IncomeModalVisibleContext";
+import { IncomeModalVisibleContext } from "../../contexts/incomes/IncomeModalVisibleContext";
 import IncomeCard from "./IncomeCard";
 
 export default function IncomeList({ refreshIncomes, setRefreshIncomes }) {

@@ -3,7 +3,7 @@ import { FlatList, Text } from "react-native";
 import { getSavings } from "../../api/savings";
 import { showMessage } from "react-native-flash-message";
 import { useAuth0 } from "react-native-auth0";
-import { SavingIndividualModalVisibleContext } from "../../contexts/SavingIndividualModalVisibleContext";
+import { SavingModalVisibleContext } from "../../contexts/savings/SavingModalVisibleContext";
 import SavingIndividualCard from "./SavingIndividualCard";
 
 export default function SavingIndividualList({
@@ -14,7 +14,7 @@ export default function SavingIndividualList({
   const [isLoading, setIsLoading] = useState(false);
   const [isListEnd, setIsListEnd] = useState(false);
   const { getCredentials } = useAuth0();
-  const { modalVisible } = useContext(SavingIndividualModalVisibleContext);
+  const { modalVisible } = useContext(SavingModalVisibleContext);
 
   const refresh = async () => {
     setIsListEnd(false);

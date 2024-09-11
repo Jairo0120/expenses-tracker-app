@@ -1,6 +1,6 @@
 import { createContext } from "react";
 
-export const SavingIndividualModalVisibleContext = createContext({
+export const SavingModalVisibleContext = createContext({
   modalVisible: false,
   setModalVisible: () => {},
 });

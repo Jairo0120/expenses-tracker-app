@@ -14,12 +14,12 @@ import { createSaving, updateSaving, deleteSaving } from "../../api/savings";
 import { formatMoney } from "../../helpers/utils";
 import { showMessage } from "react-native-flash-message";
 import { useAuth0 } from "react-native-auth0";
-import { SavingIndividualContext } from "../../contexts/SavingIndividualContext";
-import { SavingIndividualModalVisibleContext } from "../../contexts/SavingIndividualModalVisibleContext";
+import { SavingContext } from "../../contexts/savings-summary/SavingContext";
+import { SavingModalVisibleContext } from "../../contexts/savings-summary/SavingModalVisibleContext";
 
 const StyledPressable = styled(Pressable);
 
-export default function SavingIndividualModal({ setRefreshSavings }) {
+export default function SavingModal({ setRefreshSavings }) {
   const {
     control,
     handleSubmit,
@@ -28,11 +28,9 @@ export default function SavingIndividualModal({ setRefreshSavings }) {
     setValue,
     formState: { errors },
   } = useForm();
-  const { selectedSaving, setSelectedSaving } = useContext(
-    SavingIndividualContext
-  );
+  const { selectedSaving, setSelectedSaving } = useContext(SavingContext);
   const { modalVisible, setModalVisible } = useContext(
-    SavingIndividualModalVisibleContext
+    SavingModalVisibleContext
   );
   const [totalFormated, setTotalFormated] = useState(null);
   const [formEnabled, setFormEnabled] = useState(true);
@@ -167,7 +165,7 @@ export default function SavingIndividualModal({ setRefreshSavings }) {
   useEffect(() => {
     if (selectedSaving) {
       setValue("total", selectedSaving.val_saving.toString());
-      setValue("concept", selectedSaving.saving_type.description);
+      setValue("concept", selectedSaving.description);
     }
   }, [selectedSaving]);
 

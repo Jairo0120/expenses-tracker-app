@@ -1,16 +1,16 @@
 import { View, Text, Pressable } from "react-native";
 import { useContext } from "react";
 import { formatMoney, formatDate } from "../../helpers/utils";
-import { SavingIndividualContext } from "../../contexts/SavingIndividualContext";
-import { SavingIndividualModalVisibleContext } from "../../contexts/SavingIndividualModalVisibleContext";
+import { SavingContext } from "../../contexts/savings/SavingContext";
+import { SavingModalVisibleContext } from "../../contexts/savings/SavingModalVisibleContext";
 import { styled } from "nativewind";
 import { RecurrentIcon } from "../Icons";
 
 const StyledPressable = styled(Pressable);
 
 export default function SavingIndividualCard({ saving }) {
-  const { setSelectedSaving } = useContext(SavingIndividualContext);
-  const { setModalVisible } = useContext(SavingIndividualModalVisibleContext);
+  const { setSelectedSaving } = useContext(SavingContext);
+  const { setModalVisible } = useContext(SavingModalVisibleContext);
 
   return (
     <StyledPressable

@@ -2,14 +2,14 @@ import { Pressable, View } from "react-native";
 import { PlusIcon } from "../Icons";
 import { styled } from "nativewind";
 import { useState } from "react";
-import { IncomeContext } from "../../contexts/IncomeContext";
-import { IncomeModalVisibleContext } from "../../contexts/IncomeModalVisibleContext";
+import { IncomeContext } from "../../contexts/incomes/IncomeContext";
+import { IncomeModalVisibleContext } from "../../contexts/incomes/IncomeModalVisibleContext";
 import IncomeModal from "./IncomeModal";
 import IncomeList from "./IncomeList";
 
 const StyledPressable = styled(Pressable);
 
-export default function MainIncomes() {
+export default function Main() {
   const [modalVisible, setModalVisible] = useState(false);
   const [refreshIncomes, setRefreshIncomes] = useState(true);
   const [selectedIncome, setSelectedIncome] = useState(null);

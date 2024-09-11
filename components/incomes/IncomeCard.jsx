@@ -1,8 +1,8 @@
 import { View, Text, Pressable } from "react-native";
 import { useContext } from "react";
 import { formatMoney, formatDate } from "../../helpers/utils";
-import { IncomeContext } from "../../contexts/IncomeContext";
-import { IncomeModalVisibleContext } from "../../contexts/IncomeModalVisibleContext";
+import { IncomeContext } from "../../contexts/incomes/IncomeContext";
+import { IncomeModalVisibleContext } from "../../contexts/incomes/IncomeModalVisibleContext";
 import { styled } from "nativewind";
 import { RecurrentIcon } from "../Icons";
 

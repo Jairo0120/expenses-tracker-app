@@ -1,6 +1,6 @@
 import { createContext } from "react";
 
-export const SavingIndividualContext = createContext({
+export const SavingContext = createContext({
   saving: null,
   setSavingIndividual: () => {},
 });

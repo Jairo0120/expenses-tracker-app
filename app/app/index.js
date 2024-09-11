@@ -1,10 +1,10 @@
 import { Screen } from "../../components/Screen";
-import Expenses from "../../components/expenses/Expenses";
+import Main from "../../components/expenses/Main";
 
 export default function Index() {
   return (
     <Screen>
-      <Expenses />
+      <Main />
     </Screen>
   );
 }

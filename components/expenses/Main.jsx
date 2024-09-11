@@ -2,14 +2,14 @@ import { Pressable, View } from "react-native";
 import { PlusIcon } from "../Icons";
 import { styled } from "nativewind";
 import { useState } from "react";
-import { ExpenseContext } from "../../contexts/ExpenseContext";
-import { ExpenseModalVisibleContext } from "../../contexts/ExpenseModalVisibleContext";
+import { ExpenseContext } from "../../contexts/expenses/ExpenseContext";
+import { ExpenseModalVisibleContext } from "../../contexts/expenses/ExpenseModalVisibleContext";
 import ExpenseModal from "./ExpenseModal";
 import ExpenseList from "./ExpenseList";
 
 const StyledPressable = styled(Pressable);
 
-export default function Expenses() {
+export default function Main() {
   const [modalVisible, setModalVisible] = useState(false);
   const [refreshExpenses, setRefreshExpenses] = useState(true);
   const [selectedExpense, setSelectedExpense] = useState(null);
