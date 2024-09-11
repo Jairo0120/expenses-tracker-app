@@ -4,8 +4,8 @@ import { styled } from "nativewind";
 import { useState } from "react";
 import { SavingContext } from "../../contexts/savings/SavingContext";
 import { SavingModalVisibleContext } from "../../contexts/savings/SavingModalVisibleContext";
-import SavingIndividualModal from "./SavingIndividualModal";
-import SavingIndividualList from "./SavingIndividualList";
+import SavingModal from "./SavingModal";
+import SavingList from "./SavingList";
 
 const StyledPressable = styled(Pressable);
 
@@ -15,15 +15,13 @@ export default function Main() {
   const [selectedSaving, setSelectedSaving] = useState(null);
 
   return (
-    <SavingContext.Provider
-      value={{ selectedSaving, setSelectedSaving }}
-    >
+    <SavingContext.Provider value={{ selectedSaving, setSelectedSaving }}>
       <SavingModalVisibleContext.Provider
         value={{ modalVisible, setModalVisible }}
       >
         <View className="content-start">
-          <SavingIndividualModal setRefreshSavings={setRefreshSavings} />
-          <SavingIndividualList
+          <SavingModal setRefreshSavings={setRefreshSavings} />
+          <SavingList
             refreshSavings={refreshSavings}
             setRefreshSavings={setRefreshSavings}
           />

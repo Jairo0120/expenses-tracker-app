@@ -8,7 +8,7 @@ import { RecurrentIcon } from "../Icons";
 
 const StyledPressable = styled(Pressable);
 
-export default function SavingIndividualCard({ saving }) {
+export default function SavingCard({ saving }) {
   const { setSelectedSaving } = useContext(SavingContext);
   const { setModalVisible } = useContext(SavingModalVisibleContext);
 

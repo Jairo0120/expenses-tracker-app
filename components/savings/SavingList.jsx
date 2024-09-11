@@ -4,12 +4,9 @@ import { getSavings } from "../../api/savings";
 import { showMessage } from "react-native-flash-message";
 import { useAuth0 } from "react-native-auth0";
 import { SavingModalVisibleContext } from "../../contexts/savings/SavingModalVisibleContext";
-import SavingIndividualCard from "./SavingIndividualCard";
+import SavingCard from "./SavingCard";
 
-export default function SavingIndividualList({
-  refreshSavings,
-  setRefreshSavings,
-}) {
+export default function SavingList({ refreshSavings, setRefreshSavings }) {
   const [savings, setSavings] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [isListEnd, setIsListEnd] = useState(false);
@@ -71,7 +68,7 @@ export default function SavingIndividualList({
       onRefresh={refresh}
       refreshing={isLoading}
       keyExtractor={(saving) => saving.id.toString()}
-      renderItem={({ item }) => <SavingIndividualCard saving={item} />}
+      renderItem={({ item }) => <SavingCard saving={item} />}
       ListFooterComponent={
         <Text className="text-white text-center pb-2">
           {isListEnd && "No hay más ahorros qué mostrar"}

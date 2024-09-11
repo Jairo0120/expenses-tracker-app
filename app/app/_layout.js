@@ -37,7 +37,7 @@ export default function AppLayout() {
           name="index"
           options={{
             headerBackground: () => (
-              <View style={{ backgroundColor: "black", flex: 1 }} />
+              <View style={{ backgroundColor: "#171717", flex: 1 }} />
             ),
             drawerLabelStyle: { color: "white" },
             drawerLabel: "Gastos",
@@ -50,7 +50,7 @@ export default function AppLayout() {
           name="incomes"
           options={{
             headerBackground: () => (
-              <View style={{ backgroundColor: "black", flex: 1 }} />
+              <View style={{ backgroundColor: "#171717", flex: 1 }} />
             ),
             drawerLabelStyle: { color: "white" },
             drawerLabel: "Ingresos",
@@ -60,23 +60,10 @@ export default function AppLayout() {
           }}
         />
         <Drawer.Screen
-          name="savings-summary"
+          name="savings/(tabs)"
           options={{
             headerBackground: () => (
-              <View style={{ backgroundColor: "black", flex: 1 }} />
-            ),
-            drawerLabelStyle: { color: "white" },
-            drawerLabel: "Resumen ahorros",
-            drawerActiveTintColor: "#81c1f8",
-            headerTitle: "Resumen ahorros",
-            headerTitleAlign: "left",
-          }}
-        />
-        <Drawer.Screen
-          name="savings"
-          options={{
-            headerBackground: () => (
-              <View style={{ backgroundColor: "black", flex: 1 }} />
+              <View style={{ backgroundColor: "#171717", flex: 1 }} />
             ),
             drawerLabelStyle: { color: "white" },
             drawerLabel: "Ahorros",

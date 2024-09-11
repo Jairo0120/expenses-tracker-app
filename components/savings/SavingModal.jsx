@@ -19,7 +19,7 @@ import { SavingModalVisibleContext } from "../../contexts/savings/SavingModalVis
 
 const StyledPressable = styled(Pressable);
 
-export default function SavingIndividualModal({ setRefreshSavings }) {
+export default function SavingModal({ setRefreshSavings }) {
   const {
     control,
     handleSubmit,
@@ -28,9 +28,7 @@ export default function SavingIndividualModal({ setRefreshSavings }) {
     setValue,
     formState: { errors },
   } = useForm();
-  const { selectedSaving, setSelectedSaving } = useContext(
-    SavingContext
-  );
+  const { selectedSaving, setSelectedSaving } = useContext(SavingContext);
   const { modalVisible, setModalVisible } = useContext(
     SavingModalVisibleContext
   );
