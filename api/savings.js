@@ -31,6 +31,29 @@ export async function createSaving(
 
 export async function getSavings(token, filters) {
   console.log("Getting savings", filters);
+  const query = new URLSearchParams(filters).toString();
+  const response = await fetch(
+    `${process.env.EXPO_PUBLIC_API_URL}/savings?${query}`,
+    {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    }
+  );
+
+  const data =
+    response.headers.get("Content-Type") === "application/json"
+      ? await response.json()
+      : await response.text();
+
+  return {
+    status: response.status,
+    data: data,
+  };
+}
+
+export async function getGroupedSavings(token, filters) {
+  console.log("Getting grouped savings", filters);
   const response = await fetch(
     `${process.env.EXPO_PUBLIC_API_URL}/savings/grouped-savings`,
     {

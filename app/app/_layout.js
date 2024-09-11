@@ -72,6 +72,19 @@ export default function AppLayout() {
             headerTitleAlign: "left",
           }}
         />
+        <Drawer.Screen
+          name="individual-savings"
+          options={{
+            headerBackground: () => (
+              <View style={{ backgroundColor: "black", flex: 1 }} />
+            ),
+            drawerLabelStyle: { color: "white" },
+            drawerLabel: "Ahorros",
+            drawerActiveTintColor: "#81c1f8",
+            headerTitle: "Ahorros",
+            headerTitleAlign: "left",
+          }}
+        />
       </Drawer>
       <FlashMessage position="bottom" />
     </GestureHandlerRootView>

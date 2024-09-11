@@ -1,17 +1,20 @@
 import { useContext, useEffect, useState } from "react";
 import { FlatList, Text } from "react-native";
-import { getGroupedSavings } from "../../api/savings";
+import { getSavings } from "../../api/savings";
 import { showMessage } from "react-native-flash-message";
 import { useAuth0 } from "react-native-auth0";
-import { SavingModalVisibleContext } from "../../contexts/SavingModalVisibleContext";
-import SavingCard from "./SavingCard";
+import { SavingIndividualModalVisibleContext } from "../../contexts/SavingIndividualModalVisibleContext";
+import SavingIndividualCard from "./SavingIndividualCard";
 
-export default function SavingList({ refreshSavings, setRefreshSavings }) {
+export default function SavingIndividualList({
+  refreshSavings,
+  setRefreshSavings,
+}) {
   const [savings, setSavings] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [isListEnd, setIsListEnd] = useState(false);
   const { getCredentials } = useAuth0();
-  const { modalVisible } = useContext(SavingModalVisibleContext);
+  const { modalVisible } = useContext(SavingIndividualModalVisibleContext);
 
   const refresh = async () => {
     setIsListEnd(false);
@@ -29,7 +32,7 @@ export default function SavingList({ refreshSavings, setRefreshSavings }) {
     setIsLoading(true);
     try {
       const credentials = await getCredentials();
-      const response = await getGroupedSavings(credentials.accessToken, {
+      const response = await getSavings(credentials.accessToken, {
         limit: 10,
         skip: skip,
       });
@@ -68,7 +71,7 @@ export default function SavingList({ refreshSavings, setRefreshSavings }) {
       onRefresh={refresh}
       refreshing={isLoading}
       keyExtractor={(saving) => saving.id.toString()}
-      renderItem={({ item }) => <SavingCard saving={item} />}
+      renderItem={({ item }) => <SavingIndividualCard saving={item} />}
       ListFooterComponent={
         <Text className="text-white text-center pb-2">
           {isListEnd && "No hay más ahorros qué mostrar"}
