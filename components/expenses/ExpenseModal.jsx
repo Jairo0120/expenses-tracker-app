@@ -21,7 +21,7 @@ import { showMessage } from "react-native-flash-message";
 import { useAuth0 } from "react-native-auth0";
 import { ExpenseContext } from "../../contexts/expenses/ExpenseContext";
 import { ExpenseModalVisibleContext } from "../../contexts/expenses/ExpenseModalVisibleContext";
-import BadgetPicker from "../BadgetPicker";
+import BadgetPicker from "./BadgetPicker";
 
 const StyledPressable = styled(Pressable);
 
