@@ -28,6 +28,18 @@ export const HomeIcon = (props) => {
 export const CheckIcon = (props) => {
   return <FontAwesome name="check" size={24} color="black" {...props} />;
 };
+
 export const RemoveIcon = (props) => {
   return <FontAwesome name="remove" size={24} color="black" {...props} />;
+};
+
+export const MoneyIcon = (props) => {
+  return (
+    <FontAwesome6
+      name="money-bill-trend-up"
+      size={24}
+      color="black"
+      {...props}
+    />
+  );
 };

@@ -47,7 +47,7 @@ export default function AppLayout() {
           }}
         />
         <Drawer.Screen
-          name="incomes"
+          name="incomes/(tabs)"
           options={{
             headerBackground: () => (
               <View style={{ backgroundColor: "#171717", flex: 1 }} />
