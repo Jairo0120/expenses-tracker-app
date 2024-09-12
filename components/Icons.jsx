@@ -24,3 +24,10 @@ export const SavingIcon = (props) => {
 export const HomeIcon = (props) => {
   return <FontAwesome name="home" size={24} color="black" {...props} />;
 };
+
+export const CheckIcon = (props) => {
+  return <FontAwesome name="check" size={24} color="black" {...props} />;
+};
+export const RemoveIcon = (props) => {
+  return <FontAwesome name="remove" size={24} color="black" {...props} />;
+};
