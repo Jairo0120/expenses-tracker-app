@@ -13,6 +13,7 @@ import { showMessage } from "react-native-flash-message";
 import { useAuth0 } from "react-native-auth0";
 import { BudgetContext } from "../../contexts/budgets/BudgetContext";
 import { BudgetModalVisibleContext } from "../../contexts/budgets/BudgetModalVisibleContext";
+import { ReloadBudgetsContext } from "../../contexts/budgets/ReloadBudgetsContext";
 
 const StyledPressable = styled(Pressable);
 
@@ -29,6 +30,7 @@ export default function BudgetModal({ setRefreshBudgets }) {
   const { modalVisible, setModalVisible } = useContext(
     BudgetModalVisibleContext
   );
+  const { setReloadBudgets } = useContext(ReloadBudgetsContext);
   const [totalFormated, setTotalFormated] = useState(null);
   const [formEnabled, setFormEnabled] = useState(true);
   const { getCredentials } = useAuth0();
@@ -59,6 +61,7 @@ export default function BudgetModal({ setRefreshBudgets }) {
         });
         setModalVisible(false);
         setRefreshBudgets(true);
+        setReloadBudgets(true);
       } else {
         showMessage({
           message: "No se pudo registrar el presupuesto",
@@ -93,6 +96,7 @@ export default function BudgetModal({ setRefreshBudgets }) {
         });
         setModalVisible(false);
         setRefreshBudgets(true);
+        setReloadBudgets(true);
       } else {
         showMessage({
           message: "No se pudo actualizar el presupuesto",
@@ -126,6 +130,7 @@ export default function BudgetModal({ setRefreshBudgets }) {
         });
         setModalVisible(false);
         setRefreshBudgets(true);
+        setReloadBudgets(true);
       } else {
         showMessage({
           message: "No se pudo eliminar el presupuesto",

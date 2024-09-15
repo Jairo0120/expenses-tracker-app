@@ -21,6 +21,7 @@ import { showMessage } from "react-native-flash-message";
 import { useAuth0 } from "react-native-auth0";
 import { ExpenseContext } from "../../contexts/expenses/ExpenseContext";
 import { ExpenseModalVisibleContext } from "../../contexts/expenses/ExpenseModalVisibleContext";
+import { ReloadBudgetsContext } from "../../contexts/budgets/ReloadBudgetsContext";
 import BadgetPicker from "./BadgetPicker";
 
 const StyledPressable = styled(Pressable);
@@ -38,6 +39,7 @@ export default function ExpenseModal({ setRefreshExpenses }) {
   const { modalVisible, setModalVisible } = useContext(
     ExpenseModalVisibleContext
   );
+  const { reloadBudgets, setReloadBudgets } = useContext(ReloadBudgetsContext);
   const [totalFormated, setTotalFormated] = useState(null);
   const [selectedBudget, setSelectedBudget] = useState(null);
   const [budgets, setBudgets] = useState([]);
@@ -200,14 +202,17 @@ export default function ExpenseModal({ setRefreshExpenses }) {
         });
       }
     };
-    loadBudgets().catch((error) => {
-      console.error(error);
-      showMessage({
-        message: "No se pudieron cargar los presupuestos",
-        type: "danger",
+    if (reloadBudgets) {
+      setReloadBudgets(false);
+      loadBudgets().catch((error) => {
+        console.error(error);
+        showMessage({
+          message: "No se pudieron cargar los presupuestos",
+          type: "danger",
+        });
       });
-    });
-  }, [getCredentials]);
+    }
+  }, [getCredentials, reloadBudgets]);
 
   return (
     <View className="bg-black flex-1">
