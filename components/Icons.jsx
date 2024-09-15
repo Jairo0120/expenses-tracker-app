@@ -54,3 +54,7 @@ export const ExpenseIcon = (props) => {
     />
   );
 };
+
+export const BudgetIcon = (props) => {
+  return <FontAwesome6 name="list-check" size={24} color="black" {...props} />;
+};

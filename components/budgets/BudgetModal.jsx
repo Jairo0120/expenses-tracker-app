@@ -1,31 +1,18 @@
-import {
-  Modal,
-  Text,
-  View,
-  Pressable,
-  ActivityIndicator,
-  Switch,
-} from "react-native";
+import { Modal, Text, View, Pressable, ActivityIndicator } from "react-native";
 import { useForm, useWatch } from "react-hook-form";
 import { styled } from "nativewind";
 import { useEffect, useState, useContext } from "react";
 import { FormTextInput } from "../FormTextInput";
-import {
-  createExpense,
-  updateExpense,
-  deleteExpense,
-} from "../../api/expenses";
-import { getBudgets } from "../../api/budgets";
+import { createBudget, updateBudget, deleteBudget } from "../../api/budgets";
 import { formatMoney } from "../../helpers/utils";
 import { showMessage } from "react-native-flash-message";
 import { useAuth0 } from "react-native-auth0";
-import { ExpenseContext } from "../../contexts/expenses/ExpenseContext";
-import { ExpenseModalVisibleContext } from "../../contexts/expenses/ExpenseModalVisibleContext";
-import BadgetPicker from "./BadgetPicker";
+import { BudgetContext } from "../../contexts/budgets/BudgetContext";
+import { BudgetModalVisibleContext } from "../../contexts/budgets/BudgetModalVisibleContext";
 
 const StyledPressable = styled(Pressable);
 
-export default function ExpenseModal({ setRefreshExpenses }) {
+export default function BudgetModal({ setRefreshBudgets }) {
   const {
     control,
     handleSubmit,
@@ -34,13 +21,11 @@ export default function ExpenseModal({ setRefreshExpenses }) {
     setValue,
     formState: { errors },
   } = useForm();
-  const { selectedExpense, setSelectedExpense } = useContext(ExpenseContext);
+  const { selectedBudget, setSelectedBudget } = useContext(BudgetContext);
   const { modalVisible, setModalVisible } = useContext(
-    ExpenseModalVisibleContext
+    BudgetModalVisibleContext
   );
   const [totalFormated, setTotalFormated] = useState(null);
-  const [selectedBudget, setSelectedBudget] = useState(null);
-  const [budgets, setBudgets] = useState([]);
   const [formEnabled, setFormEnabled] = useState(true);
   const { getCredentials } = useAuth0();
   const watchTotal = useWatch({
@@ -49,38 +34,30 @@ export default function ExpenseModal({ setRefreshExpenses }) {
     defaultValue: "",
   });
   const resetFields = () => {
-    setSelectedExpense(null);
-    setTotalFormated(null);
     setSelectedBudget(null);
+    setTotalFormated(null);
     resetField("total");
     resetField("concept");
   };
-  const [isRecurrentExpenseEnabled, setIsRecurrentExpenseEnabled] =
-    useState(false);
-  const toggleSwitch = () =>
-    setIsRecurrentExpenseEnabled((previousState) => !previousState);
 
   const onSubmitCreate = async (data) => {
     setFormEnabled(false);
     try {
       const credentials = await getCredentials();
-      const response = await createExpense(credentials.accessToken, {
-        val_expense: data.total,
+      const response = await createBudget(credentials.accessToken, {
+        val_budget: data.total,
         description: data.concept.trim(),
-        date_expense: new Date().toISOString(),
-        budget_id: selectedBudget,
-        create_recurrent_expense: isRecurrentExpenseEnabled,
       });
       if (response.status === 201) {
         showMessage({
-          message: "Gasto registrado",
+          message: "Presupuesto registrado",
           type: "success",
         });
         setModalVisible(false);
-        setRefreshExpenses(true);
+        setRefreshBudgets(true);
       } else {
         showMessage({
-          message: "No se pudo registrar el gasto",
+          message: "No se pudo registrar el presupuesto",
           type: "danger",
         });
         console.error(response.data);
@@ -88,7 +65,7 @@ export default function ExpenseModal({ setRefreshExpenses }) {
     } catch (error) {
       console.log(error);
       showMessage({
-        message: "No se pudo registrar el gasto",
+        message: "No se pudo registrar el presupuesto",
         type: "danger",
       });
     } finally {
@@ -96,26 +73,25 @@ export default function ExpenseModal({ setRefreshExpenses }) {
     }
   };
 
-  const onSubmitUpdate = async (data, expense_id) => {
+  const onSubmitUpdate = async (data, budget_id) => {
     setFormEnabled(false);
     try {
       const credentials = await getCredentials();
-      const response = await updateExpense(credentials.accessToken, {
-        expense_id: expense_id,
-        val_expense: data.total,
+      const response = await updateBudget(credentials.accessToken, {
+        budget_id: budget_id,
+        val_budget: data.total,
         description: data.concept.trim(),
-        budget_id: selectedBudget,
       });
       if (response.status === 200) {
         showMessage({
-          message: "Gasto actualizado",
+          message: "Presupuesto actualizado",
           type: "success",
         });
         setModalVisible(false);
-        setRefreshExpenses(true);
+        setRefreshBudgets(true);
       } else {
         showMessage({
-          message: "No se pudo actualizar el gasto",
+          message: "No se pudo actualizar el presupuesto",
           type: "danger",
         });
         console.error(response.data);
@@ -123,7 +99,7 @@ export default function ExpenseModal({ setRefreshExpenses }) {
     } catch (error) {
       console.log(error);
       showMessage({
-        message: "No se pudo actualizar el gasto",
+        message: "No se pudo actualizar el presupuesto",
         type: "danger",
       });
     } finally {
@@ -131,21 +107,21 @@ export default function ExpenseModal({ setRefreshExpenses }) {
     }
   };
 
-  const onSubmitDelete = async (expense_id) => {
+  const onSubmitDelete = async (budget_id) => {
     setFormEnabled(false);
     try {
       const credentials = await getCredentials();
-      const response = await deleteExpense(credentials.accessToken, expense_id);
+      const response = await deleteBudget(credentials.accessToken, budget_id);
       if (response.status === 200) {
         showMessage({
-          message: "Gasto eliminado",
+          message: "Presupuesto eliminado",
           type: "success",
         });
         setModalVisible(false);
-        setRefreshExpenses(true);
+        setRefreshBudgets(true);
       } else {
         showMessage({
-          message: "No se pudo eliminar el gasto",
+          message: "No se pudo eliminar el presupuesto",
           type: "danger",
         });
         console.error(response.data);
@@ -153,7 +129,7 @@ export default function ExpenseModal({ setRefreshExpenses }) {
     } catch (error) {
       console.log(error);
       showMessage({
-        message: "No se pudo eliminar el gasto",
+        message: "No se pudo eliminar el presupuesto",
         type: "danger",
       });
     } finally {
@@ -173,41 +149,17 @@ export default function ExpenseModal({ setRefreshExpenses }) {
   }, [modalVisible]);
 
   useEffect(() => {
-    if (selectedExpense) {
-      setValue("total", selectedExpense.val_expense.toString());
-      setValue("concept", selectedExpense.description);
-      setSelectedBudget(selectedExpense.budget?.id || null);
+    if (selectedBudget) {
+      setValue("total", selectedBudget.val_budget.toString());
+      setValue("concept", selectedBudget.description);
     }
-  }, [selectedExpense]);
+  }, [selectedBudget]);
 
   useEffect(() => {
     if (watchTotal !== "") {
       setTotalFormated(formatMoney(watchTotal));
     }
   }, [watchTotal]);
-
-  useEffect(() => {
-    const loadBudgets = async () => {
-      const credentials = await getCredentials();
-      const response = await getBudgets(credentials.accessToken);
-      if (response.status === 200) {
-        setBudgets(response.data);
-      } else {
-        console.error(response.data);
-        showMessage({
-          message: "No se pudieron cargar los presupuestos",
-          type: "danger",
-        });
-      }
-    };
-    loadBudgets().catch((error) => {
-      console.error(error);
-      showMessage({
-        message: "No se pudieron cargar los presupuestos",
-        type: "danger",
-      });
-    });
-  }, [getCredentials]);
 
   return (
     <View className="bg-black flex-1">
@@ -222,7 +174,7 @@ export default function ExpenseModal({ setRefreshExpenses }) {
                 <ActivityIndicator size="large" color="#c98b1e" />
               )}
               <Text className="text-sm font-bold text-white">
-                Total del gasto
+                Total del presupuesto
               </Text>
               <FormTextInput
                 className={
@@ -245,7 +197,7 @@ export default function ExpenseModal({ setRefreshExpenses }) {
                 {totalFormated || "$ 0,00"}
               </Text>
               <Text className="text-sm font-bold text-white">
-                Descripción del gasto
+                Descripción del presupuesto
               </Text>
               <FormTextInput
                 className={
@@ -262,31 +214,6 @@ export default function ExpenseModal({ setRefreshExpenses }) {
               {errors.concept && (
                 <Text className="text-red-500">Campo requerido.</Text>
               )}
-              {selectedExpense === null && (
-                <View className="flex-row items-center">
-                  <Text className="text-sm font-bold text-white mt-4">
-                    ¿Gasto mensual?
-                  </Text>
-                  <Switch
-                    className="ml-1 mt-4"
-                    trackColor={{ false: "#767577", true: "#bcdcfb" }}
-                    thumbColor={
-                      isRecurrentExpenseEnabled ? "#1d8eeb" : "#f4f3f4"
-                    }
-                    onValueChange={toggleSwitch}
-                    value={isRecurrentExpenseEnabled}
-                  />
-                </View>
-              )}
-              <Text className="text-sm font-bold text-white mt-4">
-                Presupuesto
-              </Text>
-              <BadgetPicker
-                budgets={budgets}
-                selectedBudget={selectedBudget}
-                setSelectedBudget={setSelectedBudget}
-                disabled={!formEnabled}
-              />
             </View>
             <View className="flex-row border-t mt-3">
               <StyledPressable
@@ -299,7 +226,7 @@ export default function ExpenseModal({ setRefreshExpenses }) {
                   Cancelar
                 </Text>
               </StyledPressable>
-              {selectedExpense === null ? (
+              {selectedBudget === null ? (
                 <>
                   <StyledPressable
                     className={`flex-1 bg-dodger-blue-800 justify-center py-3
@@ -334,7 +261,7 @@ export default function ExpenseModal({ setRefreshExpenses }) {
                 active:bg-dodger-blue-600 border-r`}
                     disabled={!formEnabled}
                     onPress={handleSubmit(async (data) => {
-                      await onSubmitUpdate(data, selectedExpense.id);
+                      await onSubmitUpdate(data, selectedBudget.id);
                     })}
                   >
                     <Text className="text-center text-sm font-bold text-white">
@@ -346,7 +273,7 @@ export default function ExpenseModal({ setRefreshExpenses }) {
                 active:bg-persian-red-600 border-r`}
                     disabled={!formEnabled}
                     onPress={handleSubmit(async (data) => {
-                      await onSubmitDelete(selectedExpense.id);
+                      await onSubmitDelete(selectedBudget.id);
                     })}
                   >
                     <Text className="text-center text-sm font-bold text-white">

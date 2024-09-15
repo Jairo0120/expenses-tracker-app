@@ -1,5 +1,9 @@
 import { Tabs } from "expo-router";
-import { ExpenseIcon, RecurrentIcon } from "../../../../components/Icons";
+import {
+  ExpenseIcon,
+  RecurrentIcon,
+  BudgetIcon,
+} from "../../../../components/Icons";
 
 export default function TabLayout() {
   return (
@@ -28,6 +32,14 @@ export default function TabLayout() {
           headerShown: false,
           title: "Gastos recurrentes",
           tabBarIcon: ({ color }) => <RecurrentIcon size={28} color={color} />,
+        }}
+      />
+      <Tabs.Screen
+        name="budgets"
+        options={{
+          headerShown: false,
+          title: "Presupuestos",
+          tabBarIcon: ({ color }) => <BudgetIcon size={28} color={color} />,
         }}
       />
     </Tabs>
