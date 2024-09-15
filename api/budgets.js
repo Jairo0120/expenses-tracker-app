@@ -1,5 +1,26 @@
 export async function getBudgets(token) {
   console.log("Getting budgets...");
+  const response = await fetch(`${process.env.EXPO_PUBLIC_API_URL}/budgets`, {
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
+    },
+  });
+
+  const data =
+    response.headers.get("Content-Type") === "application/json"
+      ? await response.json()
+      : await response.text();
+
+  return {
+    status: response.status,
+    data: data,
+  };
+}
+
+export async function getRecurrentBudgets(token) {
+  console.log("Getting budgets...");
   const response = await fetch(
     `${process.env.EXPO_PUBLIC_API_URL}/recurrent_budgets`,
     {
@@ -22,7 +43,10 @@ export async function getBudgets(token) {
   };
 }
 
-export async function createBudget(token, { val_budget, description }) {
+export async function createRecurrentBudget(
+  token,
+  { val_budget, description }
+) {
   console.log("Creating budget", val_budget, description);
   const response = await fetch(
     `${process.env.EXPO_PUBLIC_API_URL}/recurrent_budgets`,
@@ -45,7 +69,7 @@ export async function createBudget(token, { val_budget, description }) {
   };
 }
 
-export async function updateBudget(
+export async function updateRecurrentBudget(
   token,
   { budget_id, val_budget, description }
 ) {
@@ -71,7 +95,7 @@ export async function updateBudget(
   };
 }
 
-export async function deleteBudget(token, budget_id) {
+export async function deleteRecurrentBudget(token, budget_id) {
   console.log("Deleting budget", budget_id);
   const response = await fetch(
     `${process.env.EXPO_PUBLIC_API_URL}/recurrent_budgets/${budget_id}`,

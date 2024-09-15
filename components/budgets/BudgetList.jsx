@@ -1,6 +1,6 @@
 import { useContext, useEffect, useState } from "react";
 import { FlatList, Text } from "react-native";
-import { getBudgets } from "../../api/budgets";
+import { getRecurrentBudgets } from "../../api/budgets";
 import { showMessage } from "react-native-flash-message";
 import { useAuth0 } from "react-native-auth0";
 import { BudgetModalVisibleContext } from "../../contexts/budgets/BudgetModalVisibleContext";
@@ -29,7 +29,7 @@ export default function BudgetList({ refreshBudgets, setRefreshBudgets }) {
     setIsLoading(true);
     try {
       const credentials = await getCredentials();
-      const response = await getBudgets(credentials.accessToken, {
+      const response = await getRecurrentBudgets(credentials.accessToken, {
         limit: 10,
         skip: skip,
       });

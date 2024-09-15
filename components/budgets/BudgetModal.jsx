@@ -3,7 +3,11 @@ import { useForm, useWatch } from "react-hook-form";
 import { styled } from "nativewind";
 import { useEffect, useState, useContext } from "react";
 import { FormTextInput } from "../FormTextInput";
-import { createBudget, updateBudget, deleteBudget } from "../../api/budgets";
+import {
+  createRecurrentBudget,
+  updateRecurrentBudget,
+  deleteRecurrentBudget,
+} from "../../api/budgets";
 import { formatMoney } from "../../helpers/utils";
 import { showMessage } from "react-native-flash-message";
 import { useAuth0 } from "react-native-auth0";
@@ -44,7 +48,7 @@ export default function BudgetModal({ setRefreshBudgets }) {
     setFormEnabled(false);
     try {
       const credentials = await getCredentials();
-      const response = await createBudget(credentials.accessToken, {
+      const response = await createRecurrentBudget(credentials.accessToken, {
         val_budget: data.total,
         description: data.concept.trim(),
       });
@@ -77,7 +81,7 @@ export default function BudgetModal({ setRefreshBudgets }) {
     setFormEnabled(false);
     try {
       const credentials = await getCredentials();
-      const response = await updateBudget(credentials.accessToken, {
+      const response = await updateRecurrentBudget(credentials.accessToken, {
         budget_id: budget_id,
         val_budget: data.total,
         description: data.concept.trim(),
@@ -111,7 +115,10 @@ export default function BudgetModal({ setRefreshBudgets }) {
     setFormEnabled(false);
     try {
       const credentials = await getCredentials();
-      const response = await deleteBudget(credentials.accessToken, budget_id);
+      const response = await deleteRecurrentBudget(
+        credentials.accessToken,
+        budget_id
+      );
       if (response.status === 200) {
         showMessage({
           message: "Presupuesto eliminado",
