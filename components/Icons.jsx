@@ -43,3 +43,14 @@ export const MoneyIcon = (props) => {
     />
   );
 };
+
+export const ExpenseIcon = (props) => {
+  return (
+    <FontAwesome6
+      name="money-bill-transfer"
+      size={24}
+      color="black"
+      {...props}
+    />
+  );
+};

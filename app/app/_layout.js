@@ -30,11 +30,11 @@ export default function AppLayout() {
             width: 200,
           },
         }}
-        initialRouteName="index"
+        initialRouteName="expenses/(tabs)"
         drawerContent={CustomDrawerContent}
       >
         <Drawer.Screen
-          name="index"
+          name="expenses/(tabs)"
           options={{
             headerBackground: () => (
               <View style={{ backgroundColor: "#171717", flex: 1 }} />
