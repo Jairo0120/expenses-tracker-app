@@ -4,12 +4,19 @@ import { Drawer } from "expo-router/drawer";
 import { Redirect } from "expo-router";
 import { useAuth0 } from "react-native-auth0";
 import { StatusBar } from "expo-status-bar";
+import { MyHeader } from "./header";
+import { useState } from "react";
 import FlashMessage from "react-native-flash-message";
 import CustomDrawerContent from "../../components/CustomDrawerContent";
+import { ExpenseSummaryContext } from "../../contexts/expenses/ExpenseSummaryContext";
 
 export default function AppLayout() {
   const { user, isLoading } = useAuth0();
   const loggedIn = user !== undefined && user !== null;
+  const [expenseSummary, setExpenseSummary] = useState({
+    total: 0,
+    budget: 0,
+  });
 
   if (isLoading) {
     return <Text>Loading...</Text>;
@@ -20,60 +27,54 @@ export default function AppLayout() {
   }
 
   return (
-    <GestureHandlerRootView style={{ flex: 1 }}>
-      <StatusBar style="light" />
-      <Drawer
-        screenOptions={{
-          headerTintColor: "#3da1f3",
-          drawerStyle: {
-            backgroundColor: "#0a2647",
-            width: 200,
-          },
-        }}
-        initialRouteName="expenses/(tabs)"
-        drawerContent={CustomDrawerContent}
-      >
-        <Drawer.Screen
-          name="expenses/(tabs)"
-          options={{
-            headerBackground: () => (
-              <View style={{ backgroundColor: "#171717", flex: 1 }} />
+    <ExpenseSummaryContext.Provider
+      value={{ expenseSummary, setExpenseSummary }}
+    >
+      <GestureHandlerRootView style={{ flex: 1 }}>
+        <StatusBar style="light" />
+        <Drawer
+          screenOptions={{
+            drawerStyle: {
+              backgroundColor: "#0a2647",
+              width: 200,
+            },
+            header: ({ options, navigation }) => (
+              <MyHeader {...options} navigation={navigation} />
             ),
-            drawerLabelStyle: { color: "white" },
-            drawerLabel: "Gastos",
-            drawerActiveTintColor: "#bcdcfb",
-            headerTitle: "Gastos",
-            headerTitleAlign: "left",
           }}
-        />
-        <Drawer.Screen
-          name="incomes/(tabs)"
-          options={{
-            headerBackground: () => (
-              <View style={{ backgroundColor: "#171717", flex: 1 }} />
-            ),
-            drawerLabelStyle: { color: "white" },
-            drawerLabel: "Ingresos",
-            drawerActiveTintColor: "#81c1f8",
-            headerTitle: "Ingresos",
-            headerTitleAlign: "left",
-          }}
-        />
-        <Drawer.Screen
-          name="savings/(tabs)"
-          options={{
-            headerBackground: () => (
-              <View style={{ backgroundColor: "#171717", flex: 1 }} />
-            ),
-            drawerLabelStyle: { color: "white" },
-            drawerLabel: "Ahorros",
-            drawerActiveTintColor: "#81c1f8",
-            headerTitle: "Ahorros",
-            headerTitleAlign: "left",
-          }}
-        />
-      </Drawer>
-      <FlashMessage position="bottom" />
-    </GestureHandlerRootView>
+          initialRouteName="expenses/(tabs)"
+          drawerContent={CustomDrawerContent}
+        >
+          <Drawer.Screen
+            name="expenses/(tabs)"
+            options={{
+              drawerLabelStyle: { color: "white" },
+              drawerLabel: "Gastos",
+              drawerActiveTintColor: "#bcdcfb",
+              headerTitle: "Gastos",
+            }}
+          />
+          <Drawer.Screen
+            name="incomes/(tabs)"
+            options={{
+              drawerLabelStyle: { color: "white" },
+              drawerLabel: "Ingresos",
+              drawerActiveTintColor: "#81c1f8",
+              headerTitle: "Ingresos",
+            }}
+          />
+          <Drawer.Screen
+            name="savings/(tabs)"
+            options={{
+              drawerLabelStyle: { color: "white" },
+              drawerLabel: "Ahorros",
+              drawerActiveTintColor: "#81c1f8",
+              headerTitle: "Ahorros",
+            }}
+          />
+        </Drawer>
+        <FlashMessage position="bottom" />
+      </GestureHandlerRootView>
+    </ExpenseSummaryContext.Provider>
   );
 }
