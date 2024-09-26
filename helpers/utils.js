@@ -3,6 +3,7 @@ export function formatMoney(value) {
   return Number(cleanedText).toLocaleString("es-CO", {
     style: "currency",
     currency: "COP",
+    maximumFractionDigits: 0,
   });
 }
 

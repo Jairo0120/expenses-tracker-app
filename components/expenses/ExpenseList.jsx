@@ -4,6 +4,8 @@ import { getExpenses } from "../../api/expenses";
 import { showMessage } from "react-native-flash-message";
 import { useAuth0 } from "react-native-auth0";
 import { ExpenseModalVisibleContext } from "../../contexts/expenses/ExpenseModalVisibleContext";
+import { ExpenseSummaryContext } from "../../contexts/expenses/ExpenseSummaryContext";
+import { getCycleStatus } from "../../api/cycles";
 import ExpenseCard from "./ExpenseCard";
 
 export default function ExpenseList({ refreshExpenses, setRefreshExpenses }) {
@@ -12,10 +14,12 @@ export default function ExpenseList({ refreshExpenses, setRefreshExpenses }) {
   const [isListEnd, setIsListEnd] = useState(false);
   const { getCredentials } = useAuth0();
   const { modalVisible } = useContext(ExpenseModalVisibleContext);
+  const { setExpenseSummary } = useContext(ExpenseSummaryContext);
 
   const refresh = async () => {
     setIsListEnd(false);
     fetchExpenses();
+    fetchCycleStatus();
   };
 
   const loadMoreExpenses = async () => {
@@ -53,11 +57,33 @@ export default function ExpenseList({ refreshExpenses, setRefreshExpenses }) {
     }
   };
 
+  const fetchCycleStatus = async () => {
+    try {
+      const credentials = await getCredentials();
+      const response = await getCycleStatus(credentials.accessToken, {
+        cycleId: null,
+      });
+      if (response.status !== 200) {
+        throw new Error(
+          `Error al obtener el estado del ciclo desde el API. Status: ${response.status}`
+        );
+      }
+      setExpenseSummary(response.data);
+    } catch (error) {
+      showMessage({
+        message: "Error al obtener el estado del ciclo",
+        type: "danger",
+      });
+      console.error(error);
+    }
+  };
+
   useEffect(() => {
     if (refreshExpenses) {
       setIsListEnd(false);
       setRefreshExpenses(false);
       fetchExpenses();
+      fetchCycleStatus();
     }
   }, [refreshExpenses, fetchExpenses]);
 

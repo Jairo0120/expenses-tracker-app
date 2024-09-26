@@ -14,8 +14,8 @@ export default function AppLayout() {
   const { user, isLoading } = useAuth0();
   const loggedIn = user !== undefined && user !== null;
   const [expenseSummary, setExpenseSummary] = useState({
-    total: 0,
-    budget: 0,
+    spent: 0,
+    available: 0,
   });
 
   if (isLoading) {
