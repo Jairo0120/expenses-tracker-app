@@ -26,8 +26,8 @@ export async function getCycleStatus(token, filters) {
     return {
       status: response.status,
       data: {
-        spent: data.total_recurrent_expenses + data.total_expenses,
-        available: 0,
+        totalExpenses: data.total_recurrent_expenses + data.total_expenses,
+        moneyAvailable: 0,
       },
     };
   }
@@ -39,8 +39,8 @@ export async function getCycleStatus(token, filters) {
   return {
     status: response.status,
     data: {
-      spent: totalSpent,
-      available: moneyAvailable,
+      totalExpenses: totalSpent,
+      moneyAvailable: moneyAvailable,
     },
   };
 }

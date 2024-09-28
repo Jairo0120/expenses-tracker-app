@@ -1,4 +1,4 @@
-import { View, Text } from "react-native";
+import { Text } from "react-native";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { Drawer } from "expo-router/drawer";
 import { Redirect } from "expo-router";
@@ -14,8 +14,8 @@ export default function AppLayout() {
   const { user, isLoading } = useAuth0();
   const loggedIn = user !== undefined && user !== null;
   const [expenseSummary, setExpenseSummary] = useState({
-    spent: 0,
-    available: 0,
+    totalExpenses: 0,
+    moneyAvailable: 0,
   });
 
   if (isLoading) {
