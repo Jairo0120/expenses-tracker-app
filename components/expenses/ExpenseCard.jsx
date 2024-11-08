@@ -15,7 +15,7 @@ export default function ExpenseCard({ expense }) {
   return (
     <StyledPressable
       className={`flex-row bg-dodger-blue-950 p-4
-        rounded-lg shadow-md mb-4 mx-3
+        rounded-lg shadow-md mb-3 mx-3
         items-center
         active:bg-dodger-blue-900`}
       onPress={() => {

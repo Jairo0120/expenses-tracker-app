@@ -1,5 +1,5 @@
 export async function getCycleStatus(token, filters) {
-  console.log("Getting incomes", filters);
+  console.log("Getting cycle status", filters);
   const query = new URLSearchParams(filters).toString();
   const response = await fetch(
     `${process.env.EXPO_PUBLIC_API_URL}/cycles/cycle-status?${query}`,
@@ -7,7 +7,7 @@ export async function getCycleStatus(token, filters) {
       headers: {
         Authorization: `Bearer ${token}`,
       },
-    }
+    },
   );
 
   const data =
@@ -42,5 +42,27 @@ export async function getCycleStatus(token, filters) {
       totalExpenses: totalSpent,
       moneyAvailable: moneyAvailable,
     },
+  };
+}
+
+export async function getCycleList(token) {
+  console.log("Getting cycles");
+  const response = await fetch(
+    `${process.env.EXPO_PUBLIC_API_URL}/cycles/list-cycles`,
+    {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    },
+  );
+
+  const data =
+    response.headers.get("Content-Type") === "application/json"
+      ? await response.json()
+      : await response.text();
+
+  return {
+    status: response.status,
+    data: data,
   };
 }

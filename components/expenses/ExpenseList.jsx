@@ -5,8 +5,13 @@ import { showMessage } from "react-native-flash-message";
 import { useAuth0 } from "react-native-auth0";
 import { ExpenseModalVisibleContext } from "../../contexts/expenses/ExpenseModalVisibleContext";
 import { ExpenseSummaryContext } from "../../contexts/expenses/ExpenseSummaryContext";
+import { CycleListContext } from "../../contexts/cycles/CycleListContext";
+import { CycleContext } from "../../contexts/cycles/CycleContext";
 import { getCycleStatus } from "../../api/cycles";
+import { formatShortDate } from "../../helpers/utils";
 import ExpenseCard from "./ExpenseCard";
+import { View, StyleSheet } from "react-native";
+import { Dropdown } from "react-native-element-dropdown";
 
 export default function ExpenseList({ refreshExpenses, setRefreshExpenses }) {
   const [expenses, setExpenses] = useState([]);
@@ -15,6 +20,34 @@ export default function ExpenseList({ refreshExpenses, setRefreshExpenses }) {
   const { getCredentials } = useAuth0();
   const { modalVisible } = useContext(ExpenseModalVisibleContext);
   const { setExpenseSummary } = useContext(ExpenseSummaryContext);
+  const { cycleList } = useContext(CycleListContext);
+  const { selectedCycle, setSelectedCycle } = useContext(CycleContext);
+  const [isFocus, setIsFocus] = useState(false);
+
+  const dropdownStyle = StyleSheet.create({
+    itemText: {
+      fontSize: 14,
+      paddingVertical: 0,
+    },
+    dropdown: {
+      height: 35,
+      borderColor: "gray",
+      borderRadius: 8,
+      paddingHorizontal: 8,
+      paddingVertical: 8,
+      backgroundColor: "white",
+    },
+    selectedTextStyle: {
+      fontSize: 14,
+    },
+    placeholderStyle: {
+      fontSize: 14,
+    },
+    inputSearchStyle: {
+      height: 40,
+      fontSize: 16,
+    },
+  });
 
   const refresh = async () => {
     setIsListEnd(false);
@@ -36,10 +69,12 @@ export default function ExpenseList({ refreshExpenses, setRefreshExpenses }) {
       const response = await getExpenses(credentials.accessToken, {
         limit: 10,
         skip: skip,
+        ...(selectedCycle && { cycle_id: selectedCycle }),
       });
       if (response.status !== 200) {
+        console.error(response.data);
         throw new Error(
-          `Error al obtener los gastos desde el API. Status: ${response.status}`
+          `Error al obtener los gastos desde el API. Status: ${response.status}`,
         );
       }
       setExpenses([...initialExpenses, ...response.data]);
@@ -61,11 +96,11 @@ export default function ExpenseList({ refreshExpenses, setRefreshExpenses }) {
     try {
       const credentials = await getCredentials();
       const response = await getCycleStatus(credentials.accessToken, {
-        cycleId: null,
+        ...(selectedCycle && { cycle_id: selectedCycle }),
       });
       if (response.status !== 200) {
         throw new Error(
-          `Error al obtener el estado del ciclo desde el API. Status: ${response.status}`
+          `Error al obtener el estado del ciclo desde el API. Status: ${response.status}`,
         );
       }
       setExpenseSummary(response.data);
@@ -79,6 +114,10 @@ export default function ExpenseList({ refreshExpenses, setRefreshExpenses }) {
   };
 
   useEffect(() => {
+    refresh();
+  }, [selectedCycle]);
+
+  useEffect(() => {
     if (refreshExpenses) {
       setIsListEnd(false);
       setRefreshExpenses(false);
@@ -88,27 +127,56 @@ export default function ExpenseList({ refreshExpenses, setRefreshExpenses }) {
   }, [refreshExpenses, fetchExpenses]);
 
   return (
-    <FlatList
-      className={`${modalVisible ? "opacity-10" : ""}`}
-      data={expenses}
-      onRefresh={refresh}
-      refreshing={isLoading}
-      keyExtractor={(expense) => expense.id.toString()}
-      renderItem={({ item }) => <ExpenseCard expense={item} />}
-      ListFooterComponent={
-        <Text className="text-white text-center pb-2">
-          {isListEnd && "No hay más gastos qué mostrar"}
-        </Text>
-      }
-      ListEmptyComponent={
-        <Text className="text-white text-center pt-2">
-          {!isLoading && expenses.length === 0
-            ? "No hay gastos qué mostrar"
-            : ""}
-        </Text>
-      }
-      onEndReachedThreshold={0.2}
-      onEndReached={loadMoreExpenses}
-    />
+    <View className="flex-col">
+      <View className="mb-3 mx-3 flex-row">
+        <Dropdown
+          style={[dropdownStyle.dropdown, isFocus && { borderColor: "blue" }]}
+          className="basis-2/6"
+          selectedTextStyle={dropdownStyle.selectedTextStyle}
+          inputSearchStyle={dropdownStyle.inputSearchStyle}
+          itemTextStyle={dropdownStyle.itemText}
+          itemContainerStyle={{ padding: 0, height: 55 }}
+          data={cycleList}
+          search
+          maxHeight={300}
+          labelField="label"
+          valueField="value"
+          searchPlaceholder="Buscar..."
+          placeholder={formatShortDate(new Date())}
+          placeholderStyle={dropdownStyle.placeholderStyle}
+          value={selectedCycle}
+          onFocus={() => setIsFocus(true)}
+          onBlur={() => setIsFocus(false)}
+          onChange={(item) => {
+            setSelectedCycle(item.value);
+            setIsFocus(false);
+          }}
+        />
+      </View>
+      <View>
+        <FlatList
+          className={`${modalVisible ? "opacity-10" : ""}`}
+          data={expenses}
+          onRefresh={refresh}
+          refreshing={isLoading}
+          keyExtractor={(expense) => expense.id.toString()}
+          renderItem={({ item }) => <ExpenseCard expense={item} />}
+          ListFooterComponent={
+            <Text className="text-white text-center pb-2">
+              {isListEnd && "No hay más gastos qué mostrar"}
+            </Text>
+          }
+          ListEmptyComponent={
+            <Text className="text-white text-center pt-2">
+              {!isLoading && expenses.length === 0
+                ? "No hay gastos qué mostrar"
+                : ""}
+            </Text>
+          }
+          onEndReachedThreshold={0.2}
+          onEndReached={loadMoreExpenses}
+        />
+      </View>
+    </View>
   );
 }

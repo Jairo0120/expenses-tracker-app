@@ -12,6 +12,7 @@ export function MyHeader(options) {
       title={options.headerTitle}
       headerStyle={{
         backgroundColor: "#171717",
+        height: 70,
       }}
       headerTintColor="#3da1f3"
       headerRight={() => <ExpenseSummary />}

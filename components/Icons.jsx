@@ -62,3 +62,7 @@ export const BudgetIcon = (props) => {
 export const BarsIcon = (props) => {
   return <FontAwesome name="bars" size={24} color="black" {...props} />;
 };
+
+export const FilterIcon = (props) => {
+  return <FontAwesome name="filter" size={24} color="black" {...props} />;
+};

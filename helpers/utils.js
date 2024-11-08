@@ -19,3 +19,14 @@ export function formatDate(date) {
     minute: "2-digit",
   });
 }
+
+export function formatShortDate(date) {
+  const dateObject = new Date(date);
+  const formatedDate = dateObject.toLocaleString("es-CO", {
+    timeZone: "UTC",
+    year: "numeric",
+    month: "short",
+  });
+
+  return formatedDate[0].toUpperCase() + formatedDate.slice(1);
+}

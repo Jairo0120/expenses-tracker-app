@@ -6,7 +6,7 @@ export async function createExpense(
     date_expense,
     budget_id,
     create_recurrent_expense,
-  }
+  },
 ) {
   console.log(
     "Creating expense",
@@ -14,7 +14,7 @@ export async function createExpense(
     description,
     date_expense,
     budget_id,
-    create_recurrent_expense
+    create_recurrent_expense,
   );
   const response = await fetch(`${process.env.EXPO_PUBLIC_API_URL}/expenses`, {
     method: "POST",
@@ -46,7 +46,7 @@ export async function getExpenses(token, filters) {
       headers: {
         Authorization: `Bearer ${token}`,
       },
-    }
+    },
   );
 
   const data =
@@ -62,7 +62,7 @@ export async function getExpenses(token, filters) {
 
 export async function updateExpense(
   token,
-  { expense_id, val_expense, description, budget_id }
+  { expense_id, val_expense, description, budget_id },
 ) {
   console.log("Updating expense", val_expense, description, budget_id);
   const response = await fetch(
@@ -78,7 +78,7 @@ export async function updateExpense(
         description,
         budget_id,
       }),
-    }
+    },
   );
 
   return {
@@ -96,7 +96,7 @@ export async function deleteExpense(token, expense_id) {
       headers: {
         Authorization: `Bearer ${token}`,
       },
-    }
+    },
   );
 
   return {
@@ -113,7 +113,7 @@ export async function getRecurrentExpenses(token, filters) {
       headers: {
         Authorization: `Bearer ${token}`,
       },
-    }
+    },
   );
 
   const data =
@@ -129,7 +129,7 @@ export async function getRecurrentExpenses(token, filters) {
 
 export async function createRecurrentExpense(
   token,
-  { val_expense, description }
+  { val_expense, description },
 ) {
   console.log("Creating recurrent expense", val_expense, description);
   const response = await fetch(
@@ -144,7 +144,7 @@ export async function createRecurrentExpense(
         val_expense,
         description,
       }),
-    }
+    },
   );
 
   return {
@@ -155,7 +155,7 @@ export async function createRecurrentExpense(
 
 export async function updateRecurrentExpense(
   token,
-  { recurrent_expense_id, val_expense, description, enabled }
+  { recurrent_expense_id, val_expense, description, enabled },
 ) {
   console.log("Updating expense", val_expense, description, enabled);
   const response = await fetch(
@@ -171,7 +171,7 @@ export async function updateRecurrentExpense(
         description,
         enabled,
       }),
-    }
+    },
   );
 
   return {
@@ -189,7 +189,7 @@ export async function deleteRecurrentExpense(token, recurrent_expense_id) {
       headers: {
         Authorization: `Bearer ${token}`,
       },
-    }
+    },
   );
 
   return {
