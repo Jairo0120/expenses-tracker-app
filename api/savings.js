@@ -1,13 +1,14 @@
 export async function createSaving(
   token,
-  { val_saving, description, date_saving, create_recurrent_saving }
+  { val_saving, description, date_saving, create_recurrent_saving, cycle_id },
 ) {
   console.log(
     "Creating saving",
     val_saving,
     description,
     date_saving,
-    create_recurrent_saving
+    create_recurrent_saving,
+    cycle_id,
   );
   const response = await fetch(`${process.env.EXPO_PUBLIC_API_URL}/savings`, {
     method: "POST",
@@ -20,6 +21,7 @@ export async function createSaving(
       description,
       date_saving,
       create_recurrent_saving,
+      ...(cycle_id && { cycle_id }),
     }),
   });
 
@@ -38,7 +40,7 @@ export async function getSavings(token, filters) {
       headers: {
         Authorization: `Bearer ${token}`,
       },
-    }
+    },
   );
 
   const data =
@@ -60,7 +62,7 @@ export async function getGroupedSavings(token, filters) {
       headers: {
         Authorization: `Bearer ${token}`,
       },
-    }
+    },
   );
 
   const data =
@@ -76,7 +78,7 @@ export async function getGroupedSavings(token, filters) {
 
 export async function updateSaving(
   token,
-  { saving_id, val_saving, description }
+  { saving_id, val_saving, description },
 ) {
   console.log("Updating saving", val_saving, description);
   const response = await fetch(
@@ -91,7 +93,7 @@ export async function updateSaving(
         val_saving,
         description,
       }),
-    }
+    },
   );
 
   return {
@@ -109,7 +111,7 @@ export async function deleteSaving(token, saving_id) {
       headers: {
         Authorization: `Bearer ${token}`,
       },
-    }
+    },
   );
 
   return {
@@ -127,7 +129,7 @@ export async function getRecurrentSavings(token, filters) {
       headers: {
         Authorization: `Bearer ${token}`,
       },
-    }
+    },
   );
 
   const data =
@@ -143,7 +145,7 @@ export async function getRecurrentSavings(token, filters) {
 
 export async function createRecurrentSaving(
   token,
-  { val_saving, description }
+  { val_saving, description },
 ) {
   console.log("Creating recurrent saving", val_saving, description);
   const response = await fetch(
@@ -158,7 +160,7 @@ export async function createRecurrentSaving(
         val_saving,
         description,
       }),
-    }
+    },
   );
 
   return {
@@ -169,7 +171,7 @@ export async function createRecurrentSaving(
 
 export async function updateRecurrentSaving(
   token,
-  { recurrent_saving_id, val_saving, description, enabled }
+  { recurrent_saving_id, val_saving, description, enabled },
 ) {
   console.log("Updating recurrent saving", val_saving, description, enabled);
   const response = await fetch(
@@ -185,7 +187,7 @@ export async function updateRecurrentSaving(
         description,
         enabled,
       }),
-    }
+    },
   );
 
   return {
@@ -203,7 +205,7 @@ export async function deleteRecurrentSaving(token, recurrent_saving_id) {
       headers: {
         Authorization: `Bearer ${token}`,
       },
-    }
+    },
   );
 
   return {

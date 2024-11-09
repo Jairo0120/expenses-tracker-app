@@ -16,6 +16,7 @@ import { showMessage } from "react-native-flash-message";
 import { useAuth0 } from "react-native-auth0";
 import { SavingContext } from "../../contexts/savings/SavingContext";
 import { SavingModalVisibleContext } from "../../contexts/savings/SavingModalVisibleContext";
+import { CycleContext } from "../../contexts/cycles/CycleContext";
 
 const StyledPressable = styled(Pressable);
 
@@ -30,11 +31,12 @@ export default function SavingModal({ setRefreshSavings }) {
   } = useForm();
   const { selectedSaving, setSelectedSaving } = useContext(SavingContext);
   const { modalVisible, setModalVisible } = useContext(
-    SavingModalVisibleContext
+    SavingModalVisibleContext,
   );
   const [totalFormated, setTotalFormated] = useState(null);
   const [formEnabled, setFormEnabled] = useState(true);
   const { getCredentials } = useAuth0();
+  const { selectedCycle } = useContext(CycleContext);
   const watchTotal = useWatch({
     control,
     name: "total",
@@ -61,6 +63,7 @@ export default function SavingModal({ setRefreshSavings }) {
         description: data.concept.trim(),
         date_saving: new Date().toISOString(),
         create_recurrent_saving: isRecurrentSavingEnabled,
+        cycle_id: selectedCycle,
       });
       if (response.status === 201) {
         showMessage({

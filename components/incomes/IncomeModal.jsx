@@ -16,6 +16,7 @@ import { showMessage } from "react-native-flash-message";
 import { useAuth0 } from "react-native-auth0";
 import { IncomeContext } from "../../contexts/incomes/IncomeContext";
 import { IncomeModalVisibleContext } from "../../contexts/incomes/IncomeModalVisibleContext";
+import { CycleContext } from "../../contexts/cycles/CycleContext";
 
 const StyledPressable = styled(Pressable);
 
@@ -30,11 +31,12 @@ export default function IncomeModal({ setRefreshIncomes }) {
   } = useForm();
   const { selectedIncome, setSelectedIncome } = useContext(IncomeContext);
   const { modalVisible, setModalVisible } = useContext(
-    IncomeModalVisibleContext
+    IncomeModalVisibleContext,
   );
   const [totalFormated, setTotalFormated] = useState(null);
   const [formEnabled, setFormEnabled] = useState(true);
   const { getCredentials } = useAuth0();
+  const { selectedCycle } = useContext(CycleContext);
   const watchTotal = useWatch({
     control,
     name: "total",
@@ -61,6 +63,7 @@ export default function IncomeModal({ setRefreshIncomes }) {
         description: data.concept.trim(),
         date_income: new Date().toISOString(),
         create_recurrent_income: isRecurrentIncomeEnabled,
+        cycle_id: selectedCycle,
       });
       if (response.status === 201) {
         showMessage({

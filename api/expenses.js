@@ -6,6 +6,7 @@ export async function createExpense(
     date_expense,
     budget_id,
     create_recurrent_expense,
+    cycle_id,
   },
 ) {
   console.log(
@@ -15,6 +16,7 @@ export async function createExpense(
     date_expense,
     budget_id,
     create_recurrent_expense,
+    cycle_id,
   );
   const response = await fetch(`${process.env.EXPO_PUBLIC_API_URL}/expenses`, {
     method: "POST",
@@ -28,6 +30,7 @@ export async function createExpense(
       date_expense,
       budget_id,
       create_recurrent_expense,
+      ...(cycle_id && { cycle_id }),
     }),
   });
 

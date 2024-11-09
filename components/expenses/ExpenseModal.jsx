@@ -21,6 +21,7 @@ import { showMessage } from "react-native-flash-message";
 import { useAuth0 } from "react-native-auth0";
 import { ExpenseContext } from "../../contexts/expenses/ExpenseContext";
 import { ExpenseModalVisibleContext } from "../../contexts/expenses/ExpenseModalVisibleContext";
+import { CycleContext } from "../../contexts/cycles/CycleContext";
 import { ReloadBudgetsContext } from "../../contexts/budgets/ReloadBudgetsContext";
 import BadgetPicker from "./BadgetPicker";
 
@@ -37,7 +38,7 @@ export default function ExpenseModal({ setRefreshExpenses }) {
   } = useForm();
   const { selectedExpense, setSelectedExpense } = useContext(ExpenseContext);
   const { modalVisible, setModalVisible } = useContext(
-    ExpenseModalVisibleContext
+    ExpenseModalVisibleContext,
   );
   const { reloadBudgets, setReloadBudgets } = useContext(ReloadBudgetsContext);
   const [totalFormated, setTotalFormated] = useState(null);
@@ -45,6 +46,7 @@ export default function ExpenseModal({ setRefreshExpenses }) {
   const [budgets, setBudgets] = useState([]);
   const [formEnabled, setFormEnabled] = useState(true);
   const { getCredentials } = useAuth0();
+  const { selectedCycle } = useContext(CycleContext);
   const watchTotal = useWatch({
     control,
     name: "total",
@@ -72,6 +74,7 @@ export default function ExpenseModal({ setRefreshExpenses }) {
         date_expense: new Date().toISOString(),
         budget_id: selectedBudget,
         create_recurrent_expense: isRecurrentExpenseEnabled,
+        cycle_id: selectedCycle,
       });
       if (response.status === 201) {
         showMessage({

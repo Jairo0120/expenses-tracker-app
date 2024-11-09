@@ -1,13 +1,14 @@
 export async function createIncome(
   token,
-  { val_income, description, date_income, create_recurrent_income }
+  { val_income, description, date_income, create_recurrent_income, cycle_id },
 ) {
   console.log(
     "Creating income",
     val_income,
     description,
     date_income,
-    create_recurrent_income
+    create_recurrent_income,
+    cycle_id,
   );
   const response = await fetch(`${process.env.EXPO_PUBLIC_API_URL}/incomes`, {
     method: "POST",
@@ -20,6 +21,7 @@ export async function createIncome(
       description,
       date_income,
       create_recurrent_income,
+      ...(cycle_id && { cycle_id }),
     }),
   });
 
@@ -38,7 +40,7 @@ export async function getIncomes(token, filters) {
       headers: {
         Authorization: `Bearer ${token}`,
       },
-    }
+    },
   );
 
   const data =
@@ -54,7 +56,7 @@ export async function getIncomes(token, filters) {
 
 export async function updateIncome(
   token,
-  { income_id, val_income, description }
+  { income_id, val_income, description },
 ) {
   console.log("Updating income", val_income, description);
   const response = await fetch(
@@ -69,7 +71,7 @@ export async function updateIncome(
         val_income,
         description,
       }),
-    }
+    },
   );
 
   return {
@@ -87,7 +89,7 @@ export async function deleteIncome(token, income_id) {
       headers: {
         Authorization: `Bearer ${token}`,
       },
-    }
+    },
   );
 
   return {
@@ -105,7 +107,7 @@ export async function getRecurrentIncomes(token, filters) {
       headers: {
         Authorization: `Bearer ${token}`,
       },
-    }
+    },
   );
 
   const data =
@@ -121,7 +123,7 @@ export async function getRecurrentIncomes(token, filters) {
 
 export async function createRecurrentIncome(
   token,
-  { val_income, description }
+  { val_income, description },
 ) {
   console.log("Creating recurrent income", val_income, description);
   const response = await fetch(
@@ -136,7 +138,7 @@ export async function createRecurrentIncome(
         val_income,
         description,
       }),
-    }
+    },
   );
 
   return {
@@ -147,7 +149,7 @@ export async function createRecurrentIncome(
 
 export async function updateRecurrentIncome(
   token,
-  { recurrent_income_id, val_income, description, enabled }
+  { recurrent_income_id, val_income, description, enabled },
 ) {
   console.log("Updating recurrent income", val_income, description);
   const response = await fetch(
@@ -163,7 +165,7 @@ export async function updateRecurrentIncome(
         description,
         enabled,
       }),
-    }
+    },
   );
 
   return {
@@ -181,7 +183,7 @@ export async function deleteRecurrentIncome(token, recurrent_income_id) {
       headers: {
         Authorization: `Bearer ${token}`,
       },
-    }
+    },
   );
 
   return {
