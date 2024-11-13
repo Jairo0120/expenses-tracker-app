@@ -128,7 +128,7 @@ export default function SavingList({ refreshSavings, setRefreshSavings }) {
       </View>
       <View>
         <FlatList
-          className={`${modalVisible ? "opacity-10" : ""}`}
+          className={`${modalVisible ? "opacity-10" : ""} mb-36`}
           data={savings}
           onRefresh={refresh}
           refreshing={isLoading}

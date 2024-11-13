@@ -158,7 +158,7 @@ export default function ExpenseList({ refreshExpenses, setRefreshExpenses }) {
       </View>
       <View>
         <FlatList
-          className={`${modalVisible ? "opacity-10" : ""}`}
+          className={`${modalVisible ? "opacity-10" : ""} mb-36`}
           data={expenses}
           onRefresh={refresh}
           refreshing={isLoading}
