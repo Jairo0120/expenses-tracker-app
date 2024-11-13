@@ -12,6 +12,7 @@ import { formatShortDate } from "../../helpers/utils";
 import ExpenseCard from "./ExpenseCard";
 import { View, StyleSheet } from "react-native";
 import { Dropdown } from "react-native-element-dropdown";
+import { ReloadBudgetsContext } from "../../contexts/budgets/ReloadBudgetsContext";
 
 export default function ExpenseList({ refreshExpenses, setRefreshExpenses }) {
   const [expenses, setExpenses] = useState([]);
@@ -23,6 +24,7 @@ export default function ExpenseList({ refreshExpenses, setRefreshExpenses }) {
   const { cycleList } = useContext(CycleListContext);
   const { selectedCycle, setSelectedCycle } = useContext(CycleContext);
   const [isFocus, setIsFocus] = useState(false);
+  const { setReloadBudgets } = useContext(ReloadBudgetsContext);
 
   const dropdownStyle = StyleSheet.create({
     itemText: {
@@ -115,6 +117,7 @@ export default function ExpenseList({ refreshExpenses, setRefreshExpenses }) {
 
   useEffect(() => {
     refresh();
+    setReloadBudgets(true);
   }, [selectedCycle]);
 
   useEffect(() => {

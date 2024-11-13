@@ -194,7 +194,7 @@ export default function ExpenseModal({ setRefreshExpenses }) {
   useEffect(() => {
     const loadBudgets = async () => {
       const credentials = await getCredentials();
-      const response = await getBudgets(credentials.accessToken);
+      const response = await getBudgets(credentials.accessToken, selectedCycle);
       if (response.status === 200) {
         setBudgets(response.data);
       } else {
