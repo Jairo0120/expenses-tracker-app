@@ -8,7 +8,7 @@ import {
 import { ReloadBudgetsContext } from "../../../../contexts/budgets/ReloadBudgetsContext";
 
 export default function TabLayout() {
-  const [reloadBudgets, setReloadBudgets] = useState(true);
+  const [reloadBudgets, setReloadBudgets] = useState(false);
   return (
     <ReloadBudgetsContext.Provider value={{ reloadBudgets, setReloadBudgets }}>
       <Tabs

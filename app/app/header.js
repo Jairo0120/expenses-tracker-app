@@ -5,7 +5,7 @@ import { DrawerActions } from "@react-navigation/native";
 import { BarsIcon } from "../../components/Icons";
 import ExpenseSummary from "../../components/expenses/ExpenseSummary";
 
-export function MyHeader(options) {
+export default function MyHeader(options) {
   const navigation = useNavigation();
   return (
     <Header

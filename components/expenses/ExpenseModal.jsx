@@ -24,6 +24,7 @@ import { ExpenseModalVisibleContext } from "../../contexts/expenses/ExpenseModal
 import { CycleContext } from "../../contexts/cycles/CycleContext";
 import { ReloadBudgetsContext } from "../../contexts/budgets/ReloadBudgetsContext";
 import BadgetPicker from "./BadgetPicker";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 
 const StyledPressable = styled(Pressable);
 
@@ -47,6 +48,7 @@ export default function ExpenseModal({ setRefreshExpenses }) {
   const [formEnabled, setFormEnabled] = useState(true);
   const { getCredentials } = useAuth0();
   const { selectedCycle } = useContext(CycleContext);
+  const queryClient = useQueryClient();
   const watchTotal = useWatch({
     control,
     name: "total",
@@ -63,6 +65,23 @@ export default function ExpenseModal({ setRefreshExpenses }) {
     useState(false);
   const toggleSwitch = () =>
     setIsRecurrentExpenseEnabled((previousState) => !previousState);
+  const { status, data } = useQuery({
+    queryKey: ["budgets"],
+    queryFn: async () => {
+      const credentials = await getCredentials();
+      const response = await getBudgets(credentials.accessToken, selectedCycle);
+      if (response.status !== 200) {
+        console.error(response.data);
+        showMessage({
+          message: "No se pudieron cargar los presupuestos",
+          type: "danger",
+        });
+        throw new Error("No se pudieron cargar los presupuestos");
+      }
+      console.log("Budgets loaded.");
+      return response.data;
+    },
+  });
 
   const onSubmitCreate = async (data) => {
     setFormEnabled(false);
@@ -192,30 +211,15 @@ export default function ExpenseModal({ setRefreshExpenses }) {
   }, [watchTotal]);
 
   useEffect(() => {
-    const loadBudgets = async () => {
-      const credentials = await getCredentials();
-      const response = await getBudgets(credentials.accessToken, selectedCycle);
-      if (response.status === 200) {
-        setBudgets(response.data);
-      } else {
-        console.error(response.data);
-        showMessage({
-          message: "No se pudieron cargar los presupuestos",
-          type: "danger",
-        });
-      }
-    };
+    console.log(status);
+    if (status === "success") {
+      setBudgets(data);
+    }
     if (reloadBudgets) {
       setReloadBudgets(false);
-      loadBudgets().catch((error) => {
-        console.error(error);
-        showMessage({
-          message: "No se pudieron cargar los presupuestos",
-          type: "danger",
-        });
-      });
+      queryClient.invalidateQueries({ queryKey: ["budgets"] });
     }
-  }, [getCredentials, reloadBudgets]);
+  }, [status, data, reloadBudgets]);
 
   return (
     <View className="bg-black flex-1">
