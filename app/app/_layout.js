@@ -4,7 +4,7 @@ import { Drawer } from "expo-router/drawer";
 import { Redirect } from "expo-router";
 import { useAuth0 } from "react-native-auth0";
 import { StatusBar } from "expo-status-bar";
-import MyHeader from "./header";
+import MyHeader from "../../components/header";
 import { useEffect, useState } from "react";
 import FlashMessage from "react-native-flash-message";
 import CustomDrawerContent from "../../components/CustomDrawerContent";

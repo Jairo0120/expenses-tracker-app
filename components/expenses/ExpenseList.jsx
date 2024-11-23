@@ -13,6 +13,7 @@ import ExpenseCard from "./ExpenseCard";
 import { View, StyleSheet } from "react-native";
 import { Dropdown } from "react-native-element-dropdown";
 import { ReloadBudgetsContext } from "../../contexts/budgets/ReloadBudgetsContext";
+import { useQuery } from "@tanstack/react-query";
 
 export default function ExpenseList({ refreshExpenses, setRefreshExpenses }) {
   const [expenses, setExpenses] = useState([]);

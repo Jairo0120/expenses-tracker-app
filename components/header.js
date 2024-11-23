@@ -2,8 +2,8 @@ import { Header } from "@react-navigation/elements";
 import { Pressable } from "react-native";
 import { useNavigation } from "expo-router";
 import { DrawerActions } from "@react-navigation/native";
-import { BarsIcon } from "../../components/Icons";
-import ExpenseSummary from "../../components/expenses/ExpenseSummary";
+import { BarsIcon } from "./Icons";
+import ExpenseSummary from "./expenses/ExpenseSummary";
 
 export default function MyHeader(options) {
   const navigation = useNavigation();
