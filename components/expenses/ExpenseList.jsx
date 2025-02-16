@@ -12,7 +12,7 @@ import ExpenseCard from "./ExpenseCard";
 import { View, StyleSheet } from "react-native";
 import { Dropdown } from "react-native-element-dropdown";
 import { ReloadBudgetsContext } from "../../contexts/budgets/ReloadBudgetsContext";
-import useAuthentication from "../../hooks/useAuthentication";
+import { useAuth0 } from "react-native-auth0";
 
 export default function ExpenseList({ refreshExpenses, setRefreshExpenses }) {
   const [expenses, setExpenses] = useState([]);
@@ -24,7 +24,7 @@ export default function ExpenseList({ refreshExpenses, setRefreshExpenses }) {
   const { selectedCycle, setSelectedCycle } = useContext(CycleContext);
   const [isFocus, setIsFocus] = useState(false);
   const { setReloadBudgets } = useContext(ReloadBudgetsContext);
-  const { getToken } = useAuthentication();
+  const { getCredentials } = useAuth0();
 
   const dropdownStyle = StyleSheet.create({
     itemText: {
@@ -67,12 +67,8 @@ export default function ExpenseList({ refreshExpenses, setRefreshExpenses }) {
   const fetchExpenses = async (skip = 0, initialExpenses = []) => {
     setIsLoading(true);
     try {
-      const token = await getToken();
-      if (!token) {
-        return;
-      }
-      console.log("Calling getExpenses with token", token);
-      const response = await getExpenses(token, {
+      const credentials = await getCredentials();
+      const response = await getExpenses(credentials.accessToken, {
         limit: 10,
         skip: skip,
         ...(selectedCycle && { cycle_id: selectedCycle }),
@@ -101,12 +97,8 @@ export default function ExpenseList({ refreshExpenses, setRefreshExpenses }) {
 
   const fetchCycleStatus = async () => {
     try {
-      const token = await getToken();
-      if (!token) {
-        return;
-      }
-      console.log("Calling getCycleStatus with token", token);
-      const response = await getCycleStatus(token, {
+      const credentials = await getCredentials();
+      const response = await getCycleStatus(credentials.accessToken, {
         ...(selectedCycle && { cycle_id: selectedCycle }),
       });
       console.log("Called getCycleStatus");

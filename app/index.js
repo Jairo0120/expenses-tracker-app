@@ -17,6 +17,7 @@ export default function Index() {
           await authorize({
             audience: process.env.EXPO_PUBLIC_AUTH0_AUDIENCE,
             nonce: process.env.EXPO_PUBLIC_AUTH0_NONCE,
+            scope: "openid profile email offline_access",
           });
         }
         router.replace("/app/expenses");

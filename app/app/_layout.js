@@ -15,7 +15,7 @@ import { DevToolsBubble } from "react-native-react-query-devtools";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { PersistQueryClientProvider } from "@tanstack/react-query-persist-client";
 import { createAsyncStoragePersister } from "@tanstack/query-async-storage-persister";
-import useAuthentication from "../../hooks/useAuthentication";
+import { useAuth0 } from "react-native-auth0";
 
 const queryClient = new QueryClient();
 const asyncStoragePersister = createAsyncStoragePersister({
@@ -28,15 +28,12 @@ export default function AppLayout() {
     moneyAvailable: 0,
   });
   const [cycleList, setCycleList] = useState([]);
-  const { getToken } = useAuthentication();
+  const { getCredentials } = useAuth0();
 
   const fetchCycleList = async () => {
     try {
-      const token = await getToken();
-      if (!token) {
-        return;
-      }
-      const response = await getCycleList(token);
+      const token = await getCredentials();
+      const response = await getCycleList(token.accessToken);
       if (response.status !== 200) {
         throw new Error(
           `Error al obtener la lista de ciclos desde el API. Status: ${response.status}`,
