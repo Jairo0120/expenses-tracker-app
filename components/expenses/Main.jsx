@@ -12,7 +12,7 @@ const StyledPressable = styled(Pressable);
 
 export default function Main() {
   const [modalVisible, setModalVisible] = useState(false);
-  const [refreshExpenses, setRefreshExpenses] = useState(true);
+  const [refreshExpenses, setRefreshExpenses] = useState(false);
   const [selectedExpense, setSelectedExpense] = useState(null);
   const [selectedCycle, setSelectedCycle] = useState(null);
 

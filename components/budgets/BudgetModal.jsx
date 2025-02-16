@@ -28,7 +28,7 @@ export default function BudgetModal({ setRefreshBudgets }) {
   } = useForm();
   const { selectedBudget, setSelectedBudget } = useContext(BudgetContext);
   const { modalVisible, setModalVisible } = useContext(
-    BudgetModalVisibleContext
+    BudgetModalVisibleContext,
   );
   const { setReloadBudgets } = useContext(ReloadBudgetsContext);
   const [totalFormated, setTotalFormated] = useState(null);
@@ -121,7 +121,7 @@ export default function BudgetModal({ setRefreshBudgets }) {
       const credentials = await getCredentials();
       const response = await deleteRecurrentBudget(
         credentials.accessToken,
-        budget_id
+        budget_id,
       );
       if (response.status === 200) {
         showMessage({

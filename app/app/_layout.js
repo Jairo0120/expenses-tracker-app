@@ -1,8 +1,5 @@
-import { Text } from "react-native";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { Drawer } from "expo-router/drawer";
-import { Redirect } from "expo-router";
-import { useAuth0 } from "react-native-auth0";
 import { StatusBar } from "expo-status-bar";
 import MyHeader from "../../components/header";
 import { useEffect, useState } from "react";
@@ -18,6 +15,7 @@ import { DevToolsBubble } from "react-native-react-query-devtools";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { PersistQueryClientProvider } from "@tanstack/react-query-persist-client";
 import { createAsyncStoragePersister } from "@tanstack/query-async-storage-persister";
+import useAuthentication from "../../hooks/useAuthentication";
 
 const queryClient = new QueryClient();
 const asyncStoragePersister = createAsyncStoragePersister({
@@ -25,18 +23,20 @@ const asyncStoragePersister = createAsyncStoragePersister({
 });
 
 export default function AppLayout() {
-  const { user, isLoading, getCredentials } = useAuth0();
-  const loggedIn = user !== undefined && user !== null;
   const [expenseSummary, setExpenseSummary] = useState({
     totalExpenses: 0,
     moneyAvailable: 0,
   });
   const [cycleList, setCycleList] = useState([]);
+  const { getToken } = useAuthentication();
 
   const fetchCycleList = async () => {
     try {
-      const credentials = await getCredentials();
-      const response = await getCycleList(credentials.accessToken);
+      const token = await getToken();
+      if (!token) {
+        return;
+      }
+      const response = await getCycleList(token);
       if (response.status !== 200) {
         throw new Error(
           `Error al obtener la lista de ciclos desde el API. Status: ${response.status}`,
@@ -60,14 +60,6 @@ export default function AppLayout() {
   useEffect(() => {
     fetchCycleList();
   }, []);
-
-  if (isLoading) {
-    return <Text>Loading...</Text>;
-  }
-
-  if (!loggedIn) {
-    return <Redirect href="/" />;
-  }
 
   return (
     <PersistQueryClientProvider
@@ -121,7 +113,7 @@ export default function AppLayout() {
                 }}
               />
             </Drawer>
-            <DevToolsBubble />
+            {/* <DevToolsBubble /> */}
             <FlashMessage position="bottom" />
           </GestureHandlerRootView>
         </CycleListContext.Provider>

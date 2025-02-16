@@ -38,7 +38,7 @@ export default function RecurrentExpenseList({
       });
       if (response.status !== 200) {
         throw new Error(
-          `Error al obtener los gastos recurrentes desde el API. Status: ${response.status}`
+          `Error al obtener los gastos recurrentes desde el API. Status: ${response.status}`,
         );
       }
       setRecurrentExpenses([...initialExpenses, ...response.data]);

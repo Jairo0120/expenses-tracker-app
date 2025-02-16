@@ -35,7 +35,7 @@ export default function BudgetList({ refreshBudgets, setRefreshBudgets }) {
       });
       if (response.status !== 200) {
         throw new Error(
-          `Error al obtener los presupuestos desde el API. Status: ${response.status}`
+          `Error al obtener los presupuestos desde el API. Status: ${response.status}`,
         );
       }
       setBudgets([...initialBudgets, ...response.data]);

@@ -211,7 +211,6 @@ export default function ExpenseModal({ setRefreshExpenses }) {
   }, [watchTotal]);
 
   useEffect(() => {
-    console.log(status);
     if (status === "success") {
       setBudgets(data);
     }

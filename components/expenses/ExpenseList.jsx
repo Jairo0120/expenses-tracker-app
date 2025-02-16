@@ -2,7 +2,6 @@ import { useContext, useEffect, useState } from "react";
 import { FlatList, Text } from "react-native";
 import { getExpenses } from "../../api/expenses";
 import { showMessage } from "react-native-flash-message";
-import { useAuth0 } from "react-native-auth0";
 import { ExpenseModalVisibleContext } from "../../contexts/expenses/ExpenseModalVisibleContext";
 import { ExpenseSummaryContext } from "../../contexts/expenses/ExpenseSummaryContext";
 import { CycleListContext } from "../../contexts/cycles/CycleListContext";
@@ -13,19 +12,19 @@ import ExpenseCard from "./ExpenseCard";
 import { View, StyleSheet } from "react-native";
 import { Dropdown } from "react-native-element-dropdown";
 import { ReloadBudgetsContext } from "../../contexts/budgets/ReloadBudgetsContext";
-import { useQuery } from "@tanstack/react-query";
+import useAuthentication from "../../hooks/useAuthentication";
 
 export default function ExpenseList({ refreshExpenses, setRefreshExpenses }) {
   const [expenses, setExpenses] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [isListEnd, setIsListEnd] = useState(false);
-  const { getCredentials } = useAuth0();
   const { modalVisible } = useContext(ExpenseModalVisibleContext);
   const { setExpenseSummary } = useContext(ExpenseSummaryContext);
   const { cycleList } = useContext(CycleListContext);
   const { selectedCycle, setSelectedCycle } = useContext(CycleContext);
   const [isFocus, setIsFocus] = useState(false);
   const { setReloadBudgets } = useContext(ReloadBudgetsContext);
+  const { getToken } = useAuthentication();
 
   const dropdownStyle = StyleSheet.create({
     itemText: {
@@ -68,12 +67,17 @@ export default function ExpenseList({ refreshExpenses, setRefreshExpenses }) {
   const fetchExpenses = async (skip = 0, initialExpenses = []) => {
     setIsLoading(true);
     try {
-      const credentials = await getCredentials();
-      const response = await getExpenses(credentials.accessToken, {
+      const token = await getToken();
+      if (!token) {
+        return;
+      }
+      console.log("Calling getExpenses with token", token);
+      const response = await getExpenses(token, {
         limit: 10,
         skip: skip,
         ...(selectedCycle && { cycle_id: selectedCycle }),
       });
+      console.log("Called getExpenses");
       if (response.status !== 200) {
         console.error(response.data);
         throw new Error(
@@ -97,10 +101,15 @@ export default function ExpenseList({ refreshExpenses, setRefreshExpenses }) {
 
   const fetchCycleStatus = async () => {
     try {
-      const credentials = await getCredentials();
-      const response = await getCycleStatus(credentials.accessToken, {
+      const token = await getToken();
+      if (!token) {
+        return;
+      }
+      console.log("Calling getCycleStatus with token", token);
+      const response = await getCycleStatus(token, {
         ...(selectedCycle && { cycle_id: selectedCycle }),
       });
+      console.log("Called getCycleStatus");
       if (response.status !== 200) {
         throw new Error(
           `Error al obtener el estado del ciclo desde el API. Status: ${response.status}`,

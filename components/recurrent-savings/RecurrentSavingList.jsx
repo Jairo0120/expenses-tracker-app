@@ -38,7 +38,7 @@ export default function RecurrentSavingList({
       });
       if (response.status !== 200) {
         throw new Error(
-          `Error al obtener los ahorros desde el API. Status: ${response.status}`
+          `Error al obtener los ahorros desde el API. Status: ${response.status}`,
         );
       }
       setRecurrentSavings([...initialSavings, ...response.data]);

@@ -33,10 +33,10 @@ export default function RecurrentExpenseModal({ setRefreshRecurrentExpenses }) {
     formState: { errors },
   } = useForm();
   const { selectedRecurrentExpense, setSelectedRecurrentExpense } = useContext(
-    RecurrentExpenseContext
+    RecurrentExpenseContext,
   );
   const { modalVisible, setModalVisible } = useContext(
-    RecurrentExpenseModalVisibleContext
+    RecurrentExpenseModalVisibleContext,
   );
   const [totalFormated, setTotalFormated] = useState(null);
   const [formEnabled, setFormEnabled] = useState(true);
@@ -131,7 +131,7 @@ export default function RecurrentExpenseModal({ setRefreshRecurrentExpenses }) {
       const credentials = await getCredentials();
       const response = await deleteRecurrentExpense(
         credentials.accessToken,
-        recurrent_expense_id
+        recurrent_expense_id,
       );
       if (response.status === 200) {
         showMessage({

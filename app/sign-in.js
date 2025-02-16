@@ -1,15 +1,22 @@
-import { Pressable, Button, View, Text } from "react-native";
-import { useAuth0, Auth0Provider } from "react-native-auth0";
+import { Button, View, Text } from "react-native";
+import { useAuth0 } from "react-native-auth0";
 import { useEffect } from "react";
 
 export default function SignIn() {
   const { authorize } = useAuth0();
 
   useEffect(() => {
-    authorize({
-      audience: process.env.EXPO_PUBLIC_AUTH0_AUDIENCE,
-      nonce: process.env.EXPO_PUBLIC_AUTH0_NONCE,
-    });
+    const authorizer = async () => {
+      try {
+        await authorize({
+          audience: process.env.EXPO_PUBLIC_AUTH0_AUDIENCE,
+          nonce: process.env.EXPO_PUBLIC_AUTH0_NONCE,
+        });
+      } catch (e) {
+        console.log(e);
+      }
+    };
+    authorizer();
   }, []);
 
   const onPress = async () => {

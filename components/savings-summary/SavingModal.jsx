@@ -30,7 +30,7 @@ export default function SavingModal({ setRefreshSavings }) {
   } = useForm();
   const { selectedSaving, setSelectedSaving } = useContext(SavingContext);
   const { modalVisible, setModalVisible } = useContext(
-    SavingModalVisibleContext
+    SavingModalVisibleContext,
   );
   const [totalFormated, setTotalFormated] = useState(null);
   const [formEnabled, setFormEnabled] = useState(true);

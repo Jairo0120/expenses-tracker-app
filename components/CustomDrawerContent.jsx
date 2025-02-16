@@ -1,6 +1,7 @@
 import { View, Pressable, Text } from "react-native";
 import { useAuth0 } from "react-native-auth0";
 import { styled } from "nativewind";
+import { useRouter } from "expo-router";
 import {
   DrawerContentScrollView,
   DrawerItemList,
@@ -11,12 +12,14 @@ const StyledPressable = styled(Pressable);
 
 const LogoutButton = () => {
   const { clearSession } = useAuth0();
+  const router = useRouter();
 
   const onPress = async () => {
     try {
       await clearSession();
+      return router.replace("/");
     } catch (e) {
-      console.log(e);
+      console.error(e);
     }
   };
 

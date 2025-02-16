@@ -33,10 +33,10 @@ export default function RecurrentSavingModal({ setRefreshRecurrentSavings }) {
     formState: { errors },
   } = useForm();
   const { selectedRecurrentSaving, setSelectedRecurrentSaving } = useContext(
-    RecurrentSavingContext
+    RecurrentSavingContext,
   );
   const { modalVisible, setModalVisible } = useContext(
-    RecurrentSavingModalVisibleContext
+    RecurrentSavingModalVisibleContext,
   );
   const [totalFormated, setTotalFormated] = useState(null);
   const [formEnabled, setFormEnabled] = useState(true);
@@ -132,7 +132,7 @@ export default function RecurrentSavingModal({ setRefreshRecurrentSavings }) {
       const credentials = await getCredentials();
       const response = await deleteRecurrentSaving(
         credentials.accessToken,
-        recurrent_saving_id
+        recurrent_saving_id,
       );
       if (response.status === 200) {
         showMessage({

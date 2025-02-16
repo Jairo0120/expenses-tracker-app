@@ -33,10 +33,10 @@ export default function RecurrentIncomeModal({ setRefreshRecurrentIncomes }) {
     formState: { errors },
   } = useForm();
   const { selectedRecurrentIncome, setSelectedRecurrentIncome } = useContext(
-    RecurrentIncomeContext
+    RecurrentIncomeContext,
   );
   const { modalVisible, setModalVisible } = useContext(
-    RecurrentIncomeModalVisibleContext
+    RecurrentIncomeModalVisibleContext,
   );
   const [totalFormated, setTotalFormated] = useState(null);
   const [formEnabled, setFormEnabled] = useState(true);
@@ -132,7 +132,7 @@ export default function RecurrentIncomeModal({ setRefreshRecurrentIncomes }) {
       const credentials = await getCredentials();
       const response = await deleteRecurrentIncome(
         credentials.accessToken,
-        recurrent_income_id
+        recurrent_income_id,
       );
       if (response.status === 200) {
         showMessage({
