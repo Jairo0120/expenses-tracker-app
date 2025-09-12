@@ -26,7 +26,7 @@ export default function BadgetPicker({
           }
           onPress={() => setSelectedBudget(null)}
         >
-          <Text className="text-center p-2">N/A</Text>
+          <Text className="text-center p-2 text-xs leading-tight">Sin{'\n'}presupuesto</Text>
         </Pressable>
         {budgets.map((budget) => (
           <Pressable

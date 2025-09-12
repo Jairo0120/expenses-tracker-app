@@ -34,11 +34,13 @@ export default function Main() {
           className="absolute right-5 bottom-5 active:opacity-50"
           onPress={() => setModalVisible(!modalVisible)}
         >
-          <PlusIcon
-            size={60}
-            color="#81c1f8"
-            style={!modalVisible ? {} : { opacity: 0.1 }}
-          />
+          <View className="bg-gradient-to-br from-blue-400 to-blue-600 rounded-full shadow-sm shadow-blue-500/30 p-3">
+            <PlusIcon
+              size={50}
+              color="white"
+              style={!modalVisible ? {} : { opacity: 0.1 }}
+            />
+          </View>
         </StyledPressable>
       </RecurrentSavingModalVisibleContext.Provider>
     </RecurrentSavingContext.Provider>
