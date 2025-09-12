@@ -1,4 +1,4 @@
-import { Text, View, Pressable } from "react-native";
+import { Text, View, Pressable, ScrollView } from "react-native";
 
 export default function BadgetPicker({
   budgets,
@@ -8,33 +8,40 @@ export default function BadgetPicker({
 }) {
   const inactiveBadge = "bg-dodger-blue-300 border border-dodger-blue-400";
   const activeBadge =
-    "bg-dodger-blue-100 border-dodger-blue-600 border-2 shadow-lg shadow-white";
+    "bg-dodger-blue-100 border-dodger-blue-600 border-2 shadow-sm shadow-white";
 
   return (
-    <View className="flex-row mb-2 flex-wrap">
-      <Pressable
-        disabled={disabled}
-        className={
-          `justify-center mt-2 mr-2 rounded-xl ` +
-          (selectedBudget === null ? activeBadge : inactiveBadge)
-        }
-        onPress={() => setSelectedBudget(null)}
-      >
-        <Text className="text-center p-2">Sin presupuesto</Text>
-      </Pressable>
-      {budgets.map((budget) => (
+    <ScrollView 
+      horizontal 
+      showsHorizontalScrollIndicator={false}
+      className="mb-2"
+      contentContainerStyle={{ paddingVertical: 8 }}
+    >
+      <View className="flex-row">
         <Pressable
           disabled={disabled}
-          key={budget.id}
           className={
             `justify-center mt-2 mr-2 rounded-xl ` +
-            (selectedBudget === budget.id ? activeBadge : inactiveBadge)
+            (selectedBudget === null ? activeBadge : inactiveBadge)
           }
-          onPress={() => setSelectedBudget(budget.id)}
+          onPress={() => setSelectedBudget(null)}
         >
-          <Text className="text-center p-2">{budget.description}</Text>
+          <Text className="text-center p-2">N/A</Text>
         </Pressable>
-      ))}
-    </View>
+        {budgets.map((budget) => (
+          <Pressable
+            disabled={disabled}
+            key={budget.id}
+            className={
+              `justify-center mt-2 mr-2 rounded-xl ` +
+              (selectedBudget === budget.id ? activeBadge : inactiveBadge)
+            }
+            onPress={() => setSelectedBudget(budget.id)}
+          >
+            <Text className="text-center p-2">{budget.description}</Text>
+          </Pressable>
+        ))}
+      </View>
+    </ScrollView>
   );
 }
