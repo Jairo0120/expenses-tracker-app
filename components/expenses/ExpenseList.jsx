@@ -1,6 +1,7 @@
 import { useContext, useEffect, useState } from "react";
 import { FlatList, Text } from "react-native";
 import { getExpenses } from "../../api/expenses";
+import { getBudgets } from "../../api/budgets";
 import { showMessage } from "react-native-flash-message";
 import { ExpenseModalVisibleContext } from "../../contexts/expenses/ExpenseModalVisibleContext";
 import { ExpenseSummaryContext } from "../../contexts/expenses/ExpenseSummaryContext";
@@ -13,6 +14,8 @@ import { View, StyleSheet } from "react-native";
 import { Dropdown } from "react-native-element-dropdown";
 import { ReloadBudgetsContext } from "../../contexts/budgets/ReloadBudgetsContext";
 import { useAuth0 } from "react-native-auth0";
+import BadgetPicker from "./BadgetPicker";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 
 export default function ExpenseList({ refreshExpenses, setRefreshExpenses }) {
   const [expenses, setExpenses] = useState([]);
@@ -23,8 +26,26 @@ export default function ExpenseList({ refreshExpenses, setRefreshExpenses }) {
   const { cycleList } = useContext(CycleListContext);
   const { selectedCycle, setSelectedCycle } = useContext(CycleContext);
   const [isFocus, setIsFocus] = useState(false);
-  const { setReloadBudgets } = useContext(ReloadBudgetsContext);
+  const { reloadBudgets, setReloadBudgets } = useContext(ReloadBudgetsContext);
   const { getCredentials } = useAuth0();
+  const [selectedBudget, setSelectedBudget] = useState(null);
+  const [budgets, setBudgets] = useState([]);
+  const queryClient = useQueryClient();
+
+  const { status, data } = useQuery({
+    queryKey: ["budgets"],
+    queryFn: async () => {
+      const credentials = await getCredentials();
+      const response = await getBudgets(credentials.accessToken, selectedCycle);
+      if (response.status !== 200) {
+        console.error(response.data);
+        throw new Error("No se pudieron cargar los presupuestos");
+      }
+      console.log("Budgets loaded.");
+      return response.data;
+    },
+    enabled: !!selectedCycle,
+  });
 
   const dropdownStyle = StyleSheet.create({
     itemText: {
@@ -131,12 +152,22 @@ export default function ExpenseList({ refreshExpenses, setRefreshExpenses }) {
     }
   }, [refreshExpenses, fetchExpenses]);
 
+  useEffect(() => {
+    if (status === "success") {
+      setBudgets(data);
+    }
+    if (reloadBudgets) {
+      setReloadBudgets(false);
+      queryClient.invalidateQueries({ queryKey: ["budgets"] });
+    }
+  }, [status, data, reloadBudgets]);
+
   return (
     <View className="flex-col">
-      <View className="mb-3 mx-3 flex-row">
+      <View className="mb-1 -mt-4 mx-3 flex-row items-center">
         <Dropdown
           style={[dropdownStyle.dropdown, isFocus && { borderColor: "blue" }]}
-          className="basis-2/6"
+          className="basis-2/6 mr-3"
           selectedTextStyle={dropdownStyle.selectedTextStyle}
           inputSearchStyle={dropdownStyle.inputSearchStyle}
           itemTextStyle={dropdownStyle.itemText}
@@ -157,6 +188,14 @@ export default function ExpenseList({ refreshExpenses, setRefreshExpenses }) {
             setIsFocus(false);
           }}
         />
+        <View className="flex-1">
+          <BadgetPicker
+            budgets={budgets}
+            selectedBudget={selectedBudget}
+            setSelectedBudget={setSelectedBudget}
+            disabled={false}
+          />
+        </View>
       </View>
       <View>
         <FlatList
