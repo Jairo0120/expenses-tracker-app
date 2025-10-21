@@ -10,12 +10,14 @@ import { useForm, useWatch } from "react-hook-form";
 import { styled } from "nativewind";
 import { useEffect, useState, useContext } from "react";
 import { FormTextInput } from "../FormTextInput";
+import { useSQLiteContext } from "expo-sqlite";
 import {
   createExpense,
   updateExpense,
   deleteExpense,
 } from "../../api/expenses";
 import { getBudgets } from "../../api/budgets";
+import { getBudgets as getBudgetsFromDB } from "../../db/budgets";
 import { formatMoney } from "../../helpers/utils";
 import { showMessage } from "react-native-flash-message";
 import { useAuth0 } from "react-native-auth0";
@@ -41,6 +43,7 @@ export default function ExpenseModal({ setRefreshExpenses }) {
   const { modalVisible, setModalVisible } = useContext(
     ExpenseModalVisibleContext,
   );
+  const db = useSQLiteContext();
   const { reloadBudgets, setReloadBudgets } = useContext(ReloadBudgetsContext);
   const [totalFormated, setTotalFormated] = useState(null);
   const [selectedBudget, setSelectedBudget] = useState(null);
@@ -70,6 +73,7 @@ export default function ExpenseModal({ setRefreshExpenses }) {
     queryFn: async () => {
       const credentials = await getCredentials();
       const response = await getBudgets(credentials.accessToken, selectedCycle);
+      const s = await getBudgetsFromDB(db);
       if (response.status !== 200) {
         console.error(response.data);
         showMessage({
