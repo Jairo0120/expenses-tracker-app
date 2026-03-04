@@ -11,8 +11,8 @@ export default function BadgetPicker({
     "bg-dodger-blue-100 border-dodger-blue-600 border-2 shadow-sm shadow-white";
 
   return (
-    <ScrollView 
-      horizontal 
+    <ScrollView
+      horizontal
       showsHorizontalScrollIndicator={false}
       className="mb-2"
       contentContainerStyle={{ paddingVertical: 8 }}
@@ -22,11 +22,21 @@ export default function BadgetPicker({
           disabled={disabled}
           className={
             `justify-center mt-2 mr-2 rounded-xl ` +
-            (selectedBudget === null ? activeBadge : inactiveBadge)
+            (selectedBudget === 0 ? activeBadge : inactiveBadge)
           }
-          onPress={() => setSelectedBudget(null)}
+          onPress={() => setSelectedBudget(selectedBudget === 0 ? null : 0)}
         >
-          <Text className="text-center p-2 leading-tight">Sin pres...</Text>
+          <View className="px-2 py-1">
+            <Text
+              className="text-center leading-tight font-semibold"
+              style={{ fontSize: 11 }}
+            >
+              Sin ppto.
+            </Text>
+            <Text className="text-center leading-tight" style={{ fontSize: 9 }}>
+              $0 / $0
+            </Text>
+          </View>
         </Pressable>
         {budgets.map((budget) => (
           <Pressable
@@ -36,9 +46,21 @@ export default function BadgetPicker({
               `justify-center mt-2 mr-2 rounded-xl ` +
               (selectedBudget === budget.id ? activeBadge : inactiveBadge)
             }
-            onPress={() => setSelectedBudget(budget.id)}
+            onPress={() =>
+              setSelectedBudget(selectedBudget === budget.id ? null : budget.id)
+            }
           >
-            <Text className="text-center p-2">{budget.description}</Text>
+            <View className="px-2 py-1">
+              <Text
+                className="text-center font-semibold"
+                style={{ fontSize: 11 }}
+              >
+                {budget.description}
+              </Text>
+              <Text className="text-center" style={{ fontSize: 9 }}>
+                $1,35M / $2M
+              </Text>
+            </View>
           </Pressable>
         ))}
       </View>

@@ -93,6 +93,7 @@ export default function ExpenseList({ refreshExpenses, setRefreshExpenses }) {
         limit: 10,
         skip: skip,
         ...(selectedCycle && { cycle_id: selectedCycle }),
+        ...(selectedBudget !== null && { budget_id: selectedBudget }),
       });
       console.log("Called getExpenses");
       if (response.status !== 200) {
@@ -137,6 +138,10 @@ export default function ExpenseList({ refreshExpenses, setRefreshExpenses }) {
       console.error(error);
     }
   };
+
+  useEffect(() => {
+    refresh();
+  }, [selectedBudget]);
 
   useEffect(() => {
     refresh();
