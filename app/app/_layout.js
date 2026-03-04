@@ -11,7 +11,6 @@ import { getCycleList } from "../../api/cycles";
 import { showMessage } from "react-native-flash-message";
 import { formatShortDate } from "../../helpers/utils";
 import { QueryClient } from "@tanstack/react-query";
-import { DevToolsBubble } from "react-native-react-query-devtools";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { PersistQueryClientProvider } from "@tanstack/react-query-persist-client";
 import { createAsyncStoragePersister } from "@tanstack/query-async-storage-persister";

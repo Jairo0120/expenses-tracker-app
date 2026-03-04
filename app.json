@@ -17,6 +17,7 @@
       "bundleIdentifier": "com.jldev.expensestrackerapp"
     },
     "android": {
+      "edgeToEdgeEnabled": true,
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
@@ -33,7 +34,8 @@
         {
           "domain": "dev-fdtlvbztvibtlwj6.us.auth0.com"
         }
-      ]
+      ],
+      "expo-font"
     ]
   }
 }

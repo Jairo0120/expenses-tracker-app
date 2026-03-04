@@ -11,8 +11,10 @@ export default function Index() {
   const authorizer = async () => {
     console.log("index.js: authorizer");
     try {
-      const currentCredentials = await getCredentials();
-      if (!currentCredentials) {
+      try {
+        await getCredentials();
+      } catch (e) {
+        console.error(e);
         await authorize({
           audience: process.env.EXPO_PUBLIC_AUTH0_AUDIENCE,
           nonce: process.env.EXPO_PUBLIC_AUTH0_NONCE,
@@ -38,7 +40,11 @@ export default function Index() {
     <View className="items-center justify-center flex-1">
       {isLoading && <ActivityIndicator />}
       {!isLoading && (user == null || user !== undefined) && (
-        <Button onPress={authorizer} title="Iniciar sesión" />
+        <>
+          <Button onPress={authorizer} title="Iniciar sesión" />
+          <View className="h-4" />
+          <Button onPress={authorizer} title="Continuar offline" />
+        </>
       )}
     </View>
   );
