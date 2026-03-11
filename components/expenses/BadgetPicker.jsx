@@ -1,4 +1,5 @@
 import { Text, View, Pressable, ScrollView } from "react-native";
+import { formatShortMoney } from "../../helpers/utils";
 
 export default function BadgetPicker({
   budgets,
@@ -58,7 +59,8 @@ export default function BadgetPicker({
                 {budget.description}
               </Text>
               <Text className="text-center" style={{ fontSize: 9 }}>
-                $1,35M / $2M
+                {formatShortMoney(budget.total_spent)} /{" "}
+                {formatShortMoney(budget.val_budget)}
               </Text>
             </View>
           </Pressable>

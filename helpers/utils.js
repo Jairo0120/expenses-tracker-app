@@ -7,6 +7,33 @@ export function formatMoney(value) {
   });
 }
 
+export function formatShortMoney(value) {
+  const numberValue = typeof value === "number" ? value : Number(value);
+  if (!Number.isFinite(numberValue)) return "0";
+
+  const sign = numberValue < 0 ? "-" : "";
+  const abs = Math.abs(numberValue);
+
+  let divisor = 1;
+  let suffix = "";
+  if (abs >= 1_000_000) {
+    divisor = 1_000_000;
+    suffix = "M";
+  } else if (abs >= 1_000) {
+    divisor = 1_000;
+    suffix = "K";
+  }
+
+  const scaled = abs / divisor;
+  const ceiled = Math.ceil(scaled * 100) / 100;
+
+  const text = ceiled
+    .toFixed(2)
+    .replace(/\.?0+$/, "");
+
+  return `${sign}${text}${suffix}`;
+}
+
 export function formatDate(date) {
   // The date is in ISO format, but it doesn't have the timezone
   // information. We add the "Z" to indicate that it's UTC.
