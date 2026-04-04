@@ -3,10 +3,14 @@
   "version": "1.0.0",
   "main": "expo-router/entry",
   "scripts": {
-    "start": "expo start",
-    "android": "expo run:android",
-    "ios": "expo run:ios",
-    "web": "expo start --web",
+    "start": "dotenv -e .env.dev -e .env -- expo start",
+    "android": "dotenv -e .env.dev -e .env -- expo run:android",
+    "android:prebuild:dev": "dotenv -e .env.dev -e .env -- expo prebuild --platform android",
+    "android:prebuild:release": "dotenv -e .env.release -e .env -- expo prebuild --platform android",
+    "android:dev": "dotenv -e .env.dev -e .env -- expo prebuild --platform android && dotenv -e .env.dev -e .env -- expo run:android --variant debug",
+    "android:release": "dotenv -e .env.release -e .env -- expo prebuild --platform android && dotenv -e .env.release -e .env -- expo run:android --variant release",
+    "ios": "dotenv -e .env.dev -e .env -- expo run:ios",
+    "web": "dotenv -e .env.dev -e .env -- expo start --web",
     "lint": "eslint ."
   },
   "dependencies": {
@@ -46,6 +50,7 @@
     "@babel/core": "^7.20.0",
     "@eslint/js": "^8.57.1",
     "@tanstack/eslint-plugin-query": "^5.60.1",
+    "dotenv-cli": "^11.0.0",
     "eslint": "^8.57.1",
     "eslint-config-expo": "~10.0.0",
     "eslint-config-prettier": "^9.1.0",

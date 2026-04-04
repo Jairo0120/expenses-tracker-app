@@ -1,5 +1,6 @@
 export async function getBudgets(token, cycleId = null) {
   console.log("Getting budgets...", cycleId);
+  console.log(process.env.EXPO_PUBLIC_API_URL)
   var cycleFilters = "";
   if (cycleId) {
     cycleFilters = new URLSearchParams({ cycle_id: cycleId }).toString();
