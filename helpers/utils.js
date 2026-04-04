@@ -7,6 +7,28 @@ export function formatMoney(value) {
   });
 }
 
+/**
+ * Digits only for money input. Locale-formatted amounts use "." as thousands
+ * separator (es-CO); keeping dots in the string makes Number("12.345") === 12.345.
+ */
+export function parseMoneyInputText(text) {
+  return text.replace(/\D/g, "");
+}
+
+/** Formatted COP for a controlled money TextInput; empty when nothing entered. */
+export function formatMoneyInputDisplay(value) {
+  if (value === "" || value === null || value === undefined) return "";
+  const digits = String(value).replace(/\D/g, "");
+  if (digits === "") return "";
+  const n = Number(digits);
+  if (!Number.isFinite(n)) return "";
+  return n.toLocaleString("es-CO", {
+    style: "currency",
+    currency: "COP",
+    maximumFractionDigits: 0,
+  });
+}
+
 export function formatShortMoney(value) {
   const numberValue = typeof value === "number" ? value : Number(value);
   if (!Number.isFinite(numberValue)) return "0";
