@@ -7,6 +7,7 @@ import FlashMessage from "react-native-flash-message";
 import CustomDrawerContent from "../../components/CustomDrawerContent";
 import { ExpenseSummaryContext } from "../../contexts/expenses/ExpenseSummaryContext";
 import { CycleListContext } from "../../contexts/cycles/CycleListContext";
+import { CycleContext } from "../../contexts/cycles/CycleContext";
 import { getCycleList } from "../../api/cycles";
 import { showMessage } from "react-native-flash-message";
 import { formatShortDate } from "../../helpers/utils";
@@ -27,6 +28,7 @@ export default function AppLayout() {
     moneyAvailable: 0,
   });
   const [cycleList, setCycleList] = useState([]);
+  const [selectedCycle, setSelectedCycle] = useState(null);
   const { getCredentials } = useAuth0();
 
   const fetchCycleList = async () => {
@@ -66,6 +68,7 @@ export default function AppLayout() {
         value={{ expenseSummary, setExpenseSummary }}
       >
         <CycleListContext.Provider value={{ cycleList, setCycleList }}>
+        <CycleContext.Provider value={{ selectedCycle, setSelectedCycle }}>
           <GestureHandlerRootView style={{ flex: 1 }}>
             <StatusBar style="light" />
             <Drawer
@@ -112,6 +115,7 @@ export default function AppLayout() {
             {/* <DevToolsBubble /> */}
             <FlashMessage position="bottom" />
           </GestureHandlerRootView>
+        </CycleContext.Provider>
         </CycleListContext.Provider>
       </ExpenseSummaryContext.Provider>
     </PersistQueryClientProvider>
