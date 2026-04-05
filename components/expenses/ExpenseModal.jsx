@@ -34,7 +34,7 @@ import { useQuery, useQueryClient } from "@tanstack/react-query";
 
 const StyledPressable = styled(Pressable);
 
-export default function ExpenseModal({ setRefreshExpenses }) {
+export default function ExpenseModal() {
   const {
     control,
     handleSubmit,
@@ -99,7 +99,8 @@ export default function ExpenseModal({ setRefreshExpenses }) {
           type: "success",
         });
         setModalVisible(false);
-        setRefreshExpenses(true);
+        queryClient.invalidateQueries({ queryKey: ["expenses"] });
+        queryClient.invalidateQueries({ queryKey: ["cycleStatus"] });
       } else {
         showMessage({
           message: "No se pudo registrar el gasto",
@@ -134,7 +135,8 @@ export default function ExpenseModal({ setRefreshExpenses }) {
           type: "success",
         });
         setModalVisible(false);
-        setRefreshExpenses(true);
+        queryClient.invalidateQueries({ queryKey: ["expenses"] });
+        queryClient.invalidateQueries({ queryKey: ["cycleStatus"] });
       } else {
         showMessage({
           message: "No se pudo actualizar el gasto",
@@ -164,7 +166,8 @@ export default function ExpenseModal({ setRefreshExpenses }) {
           type: "success",
         });
         setModalVisible(false);
-        setRefreshExpenses(true);
+        queryClient.invalidateQueries({ queryKey: ["expenses"] });
+        queryClient.invalidateQueries({ queryKey: ["cycleStatus"] });
       } else {
         showMessage({
           message: "No se pudo eliminar el gasto",
@@ -216,7 +219,7 @@ export default function ExpenseModal({ setRefreshExpenses }) {
   }, [status, data, reloadBudgets]);
 
   return (
-    <View className="bg-black flex-1">
+    <View>
       <Modal transparent={true} visible={modalVisible} animationType="slide">
         <KeyboardAvoidingView
           className="flex-1 mx-5"
@@ -229,159 +232,161 @@ export default function ExpenseModal({ setRefreshExpenses }) {
             shadow-white border border-dodger-blue-800`}
             >
               <View className="mx-4 mt-3">
-              {formEnabled || (
-                <ActivityIndicator size="large" color="#c98b1e" />
-              )}
-              <Text className="text-sm font-bold text-white">
-                Total del gasto
-              </Text>
-              <Controller
-                control={control}
-                name="total"
-                rules={{ required: true, pattern: /^[0-9]+$/ }}
-                render={({ field: { onChange, value, ref } }) => (
-                  <TextInput
-                    ref={ref}
-                    className={
-                      `w-full h-12 text-sm border rounded-xl pl-5 text-white ` +
-                      (errors.total ? "border-red-500" : "border-gray-400")
-                    }
-                    editable={formEnabled}
-                    keyboardType="numeric"
-                    enterKeyHint="next"
-                    blurOnSubmit={false}
-                    placeholder="$ 0,00"
-                    placeholderTextColor="#9ca3af"
-                    value={formatMoneyInputDisplay(value)}
-                    onChangeText={(text) =>
-                      onChange(parseMoneyInputText(text))
-                    }
-                    onSubmitEditing={() => setFocus("concept")}
-                  />
+                {formEnabled || (
+                  <ActivityIndicator size="large" color="#c98b1e" />
                 )}
-              />
-              {errors.total && (
-                <Text className="text-red-500">Campo numerico requerido.</Text>
-              )}
-              <Text className="text-sm font-bold text-white mt-3">
-                Descripción del gasto
-              </Text>
-              <FormTextInput
-                className={
-                  `w-full h-12 text-sm border rounded-xl pl-5 text-white ` +
-                  (errors.concept ? "border-red-500" : "border-gray-400")
-                }
-                control={control}
-                enterKeyHint="done"
-                editable={formEnabled}
-                blurOnSubmit={false}
-                name={"concept"}
-                rules={{ required: true }}
-              />
-              {errors.concept && (
-                <Text className="text-red-500">Campo requerido.</Text>
-              )}
-              <Text className="text-sm font-bold text-white mt-4">
-                Presupuesto
-              </Text>
-              <Controller
-                control={control}
-                name="budget"
-                render={({ field: { onChange, value } }) => (
-                  <BadgetPicker
-                    budgets={budgets}
-                    selectedBudget={value ?? null}
-                    setSelectedBudget={onChange}
-                    disabled={!formEnabled}
-                  />
-                )}
-              />
-              {selectedExpense === null && (
-                <View className="flex-row items-center">
-                  <Text className="text-sm font-bold text-white mt-4">
-                    ¿Gasto mensual?
+                <Text className="text-sm font-bold text-white">
+                  Total del gasto
+                </Text>
+                <Controller
+                  control={control}
+                  name="total"
+                  rules={{ required: true, pattern: /^[0-9]+$/ }}
+                  render={({ field: { onChange, value, ref } }) => (
+                    <TextInput
+                      ref={ref}
+                      className={
+                        `w-full h-12 text-sm border rounded-xl pl-5 text-white ` +
+                        (errors.total ? "border-red-500" : "border-gray-400")
+                      }
+                      editable={formEnabled}
+                      keyboardType="numeric"
+                      enterKeyHint="next"
+                      blurOnSubmit={false}
+                      placeholder="$ 0,00"
+                      placeholderTextColor="#9ca3af"
+                      value={formatMoneyInputDisplay(value)}
+                      onChangeText={(text) =>
+                        onChange(parseMoneyInputText(text))
+                      }
+                      onSubmitEditing={() => setFocus("concept")}
+                    />
+                  )}
+                />
+                {errors.total && (
+                  <Text className="text-red-500">
+                    Campo numerico requerido.
                   </Text>
-                  <Switch
-                    className="ml-1 mt-4"
-                    trackColor={{ false: "#767577", true: "#bcdcfb" }}
-                    thumbColor={
-                      isRecurrentExpenseEnabled ? "#1d8eeb" : "#f4f3f4"
-                    }
-                    onValueChange={toggleSwitch}
-                    value={isRecurrentExpenseEnabled}
-                  />
-                </View>
-              )}
-            </View>
-            <View className="flex-row border-t mt-3">
-              <StyledPressable
-                onPress={() => setModalVisible(!modalVisible)}
-                className={`flex-1 bg-dodger-blue-400 justify-center
+                )}
+                <Text className="text-sm font-bold text-white mt-3">
+                  Descripción del gasto
+                </Text>
+                <FormTextInput
+                  className={
+                    `w-full h-12 text-sm border rounded-xl pl-5 text-white ` +
+                    (errors.concept ? "border-red-500" : "border-gray-400")
+                  }
+                  control={control}
+                  enterKeyHint="done"
+                  editable={formEnabled}
+                  blurOnSubmit={false}
+                  name={"concept"}
+                  rules={{ required: true }}
+                />
+                {errors.concept && (
+                  <Text className="text-red-500">Campo requerido.</Text>
+                )}
+                <Text className="text-sm font-bold text-white mt-4">
+                  Presupuesto
+                </Text>
+                <Controller
+                  control={control}
+                  name="budget"
+                  render={({ field: { onChange, value } }) => (
+                    <BadgetPicker
+                      budgets={budgets}
+                      selectedBudget={value ?? null}
+                      setSelectedBudget={onChange}
+                      disabled={!formEnabled}
+                    />
+                  )}
+                />
+                {selectedExpense === null && (
+                  <View className="flex-row items-center">
+                    <Text className="text-sm font-bold text-white">
+                      ¿Gasto mensual?
+                    </Text>
+                    <Switch
+                      className="ml-1"
+                      trackColor={{ false: "#767577", true: "#bcdcfb" }}
+                      thumbColor={
+                        isRecurrentExpenseEnabled ? "#1d8eeb" : "#f4f3f4"
+                      }
+                      onValueChange={toggleSwitch}
+                      value={isRecurrentExpenseEnabled}
+                    />
+                  </View>
+                )}
+              </View>
+              <View className="flex-row border-t mt-3">
+                <StyledPressable
+                  onPress={() => setModalVisible(!modalVisible)}
+                  className={`flex-1 bg-dodger-blue-400 justify-center
                 py-3 active:bg-dodger-blue-300 border-r
                 rounded-bl-xl`}
-              >
-                <Text className="text-center font-bold text-sm text-black">
-                  Cancelar
-                </Text>
-              </StyledPressable>
-              {selectedExpense === null ? (
-                <>
-                  <StyledPressable
-                    className={`flex-1 bg-dodger-blue-800 justify-center py-3
+                >
+                  <Text className="text-center font-bold text-sm text-black">
+                    Cancelar
+                  </Text>
+                </StyledPressable>
+                {selectedExpense === null ? (
+                  <>
+                    <StyledPressable
+                      className={`flex-1 bg-dodger-blue-800 justify-center py-3
                 active:bg-dodger-blue-600 border-r`}
-                    disabled={!formEnabled}
-                    onPress={handleSubmit(async (data) => {
-                      await onSubmitCreate(data);
-                    })}
-                  >
-                    <Text className="text-center text-sm font-bold text-white">
-                      Guardar
-                    </Text>
-                  </StyledPressable>
-                  <StyledPressable
-                    className={`flex-1 bg-dodger-blue-800 justify-center
+                      disabled={!formEnabled}
+                      onPress={handleSubmit(async (data) => {
+                        await onSubmitCreate(data);
+                      })}
+                    >
+                      <Text className="text-center text-sm font-bold text-white">
+                        Guardar
+                      </Text>
+                    </StyledPressable>
+                    <StyledPressable
+                      className={`flex-1 bg-dodger-blue-800 justify-center
                 active:bg-dodger-blue-600 rounded-br-xl`}
-                    disabled={!formEnabled}
-                    onPress={handleSubmit(async (data) => {
-                      await onSubmitCreate(data);
-                      setModalVisible(true);
-                    })}
-                  >
-                    <Text className="text-center text-sm font-bold text-white">
-                      Crear otro
-                    </Text>
-                  </StyledPressable>
-                </>
-              ) : (
-                <>
-                  <StyledPressable
-                    className={`flex-1 bg-dodger-blue-800 justify-center py-3
+                      disabled={!formEnabled}
+                      onPress={handleSubmit(async (data) => {
+                        await onSubmitCreate(data);
+                        setModalVisible(true);
+                      })}
+                    >
+                      <Text className="text-center text-sm font-bold text-white">
+                        Crear otro
+                      </Text>
+                    </StyledPressable>
+                  </>
+                ) : (
+                  <>
+                    <StyledPressable
+                      className={`flex-1 bg-dodger-blue-800 justify-center py-3
                 active:bg-dodger-blue-600 border-r`}
-                    disabled={!formEnabled}
-                    onPress={handleSubmit(async (data) => {
-                      await onSubmitUpdate(data, selectedExpense.id);
-                    })}
-                  >
-                    <Text className="text-center text-sm font-bold text-white">
-                      Actualizar
-                    </Text>
-                  </StyledPressable>
-                  <StyledPressable
-                    className={`flex-1 bg-persian-red-800 justify-center py-3
+                      disabled={!formEnabled}
+                      onPress={handleSubmit(async (data) => {
+                        await onSubmitUpdate(data, selectedExpense.id);
+                      })}
+                    >
+                      <Text className="text-center text-sm font-bold text-white">
+                        Actualizar
+                      </Text>
+                    </StyledPressable>
+                    <StyledPressable
+                      className={`flex-1 bg-persian-red-800 justify-center py-3
                 active:bg-persian-red-600 border-r`}
-                    disabled={!formEnabled}
-                    onPress={handleSubmit(async (data) => {
-                      await onSubmitDelete(selectedExpense.id);
-                    })}
-                  >
-                    <Text className="text-center text-sm font-bold text-white">
-                      Eliminar
-                    </Text>
-                  </StyledPressable>
-                </>
-              )}
+                      disabled={!formEnabled}
+                      onPress={handleSubmit(async (data) => {
+                        await onSubmitDelete(selectedExpense.id);
+                      })}
+                    >
+                      <Text className="text-center text-sm font-bold text-white">
+                        Eliminar
+                      </Text>
+                    </StyledPressable>
+                  </>
+                )}
+              </View>
             </View>
-          </View>
           </View>
         </KeyboardAvoidingView>
       </Modal>

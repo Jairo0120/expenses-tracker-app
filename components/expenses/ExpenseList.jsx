@@ -1,8 +1,7 @@
 import { useContext, useEffect, useState } from "react";
-import { FlatList, Text } from "react-native";
+import { ActivityIndicator, FlatList, Text } from "react-native";
 import { getExpenses } from "../../api/expenses";
 import { getBudgets } from "../../api/budgets";
-import { showMessage } from "react-native-flash-message";
 import { ExpenseModalVisibleContext } from "../../contexts/expenses/ExpenseModalVisibleContext";
 import { ExpenseSummaryContext } from "../../contexts/expenses/ExpenseSummaryContext";
 import { CycleListContext } from "../../contexts/cycles/CycleListContext";
@@ -15,12 +14,13 @@ import { Dropdown } from "react-native-element-dropdown";
 import { ReloadBudgetsContext } from "../../contexts/budgets/ReloadBudgetsContext";
 import { useAuth0 } from "react-native-auth0";
 import BadgetPicker from "./BadgetPicker";
-import { useQuery, useQueryClient } from "@tanstack/react-query";
+import {
+  useInfiniteQuery,
+  useQuery,
+  useQueryClient,
+} from "@tanstack/react-query";
 
-export default function ExpenseList({ refreshExpenses, setRefreshExpenses }) {
-  const [expenses, setExpenses] = useState([]);
-  const [isLoading, setIsLoading] = useState(false);
-  const [isListEnd, setIsListEnd] = useState(false);
+export default function ExpenseList() {
   const { modalVisible } = useContext(ExpenseModalVisibleContext);
   const { setExpenseSummary } = useContext(ExpenseSummaryContext);
   const { cycleList } = useContext(CycleListContext);
@@ -32,7 +32,7 @@ export default function ExpenseList({ refreshExpenses, setRefreshExpenses }) {
   const [budgets, setBudgets] = useState([]);
   const queryClient = useQueryClient();
 
-  const { status, data } = useQuery({
+  const { status, data: budgetsData } = useQuery({
     queryKey: ["budgets"],
     queryFn: async () => {
       const credentials = await getCredentials();
@@ -46,6 +46,74 @@ export default function ExpenseList({ refreshExpenses, setRefreshExpenses }) {
     },
     enabled: !!selectedCycle,
   });
+
+  const {
+    data: expensesData,
+    fetchNextPage,
+    hasNextPage,
+    isFetchingNextPage,
+    isLoading: isLoadingExpenses,
+    refetch: refetchExpenses,
+  } = useInfiniteQuery({
+    queryKey: ["expenses", selectedCycle, selectedBudget],
+    queryFn: async ({ pageParam = 0 }) => {
+      const credentials = await getCredentials();
+      const response = await getExpenses(credentials.accessToken, {
+        limit: 10,
+        skip: pageParam,
+        ...(selectedCycle && { cycle_id: selectedCycle }),
+        ...(selectedBudget !== null && { budget_id: selectedBudget }),
+      });
+      if (response.status !== 200) {
+        console.error(response.data);
+        throw new Error(
+          `Error al obtener los gastos desde el API. Status: ${response.status}`,
+        );
+      }
+      return response.data;
+    },
+    getNextPageParam: (lastPage, pages) => {
+      if (lastPage.length < 10) return undefined;
+      return pages.flat().length;
+    },
+  });
+
+  const { data: cycleStatusData } = useQuery({
+    queryKey: ["cycleStatus", selectedCycle],
+    queryFn: async () => {
+      const credentials = await getCredentials();
+      const response = await getCycleStatus(credentials.accessToken, {
+        ...(selectedCycle && { cycle_id: selectedCycle }),
+      });
+      console.log("Called getCycleStatus");
+      if (response.status !== 200) {
+        throw new Error(
+          `Error al obtener el estado del ciclo desde el API. Status: ${response.status}`,
+        );
+      }
+      return response.data;
+    },
+  });
+
+  useEffect(() => {
+    if (cycleStatusData) setExpenseSummary(cycleStatusData);
+  }, [cycleStatusData]);
+
+  useEffect(() => {
+    if (selectedCycle) setReloadBudgets(true);
+  }, [selectedCycle]);
+
+  useEffect(() => {
+    if (status === "success") {
+      setBudgets(budgetsData);
+    }
+    if (reloadBudgets) {
+      setReloadBudgets(false);
+      queryClient.invalidateQueries({ queryKey: ["budgets"] });
+    }
+  }, [status, budgetsData, reloadBudgets]);
+
+  const expenses = expensesData?.pages.flat() ?? [];
 
   const dropdownStyle = StyleSheet.create({
     itemText: {
@@ -72,103 +140,8 @@ export default function ExpenseList({ refreshExpenses, setRefreshExpenses }) {
     },
   });
 
-  const refresh = async () => {
-    setIsListEnd(false);
-    fetchExpenses();
-    fetchCycleStatus();
-  };
-
-  const loadMoreExpenses = async () => {
-    if (isListEnd || isLoading) {
-      return;
-    }
-    fetchExpenses(expenses.length, expenses);
-  };
-
-  const fetchExpenses = async (skip = 0, initialExpenses = []) => {
-    setIsLoading(true);
-    try {
-      const credentials = await getCredentials();
-      const response = await getExpenses(credentials.accessToken, {
-        limit: 10,
-        skip: skip,
-        ...(selectedCycle && { cycle_id: selectedCycle }),
-        ...(selectedBudget !== null && { budget_id: selectedBudget }),
-      });
-      console.log("Called getExpenses");
-      if (response.status !== 200) {
-        console.error(response.data);
-        throw new Error(
-          `Error al obtener los gastos desde el API. Status: ${response.status}`,
-        );
-      }
-      setExpenses([...initialExpenses, ...response.data]);
-      if (!response.data.length || response.data.length < 10) {
-        setIsListEnd(true);
-      }
-    } catch (error) {
-      showMessage({
-        message: "Error al obtener los gastos",
-        type: "danger",
-      });
-      console.error(error);
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
-  const fetchCycleStatus = async () => {
-    try {
-      const credentials = await getCredentials();
-      const response = await getCycleStatus(credentials.accessToken, {
-        ...(selectedCycle && { cycle_id: selectedCycle }),
-      });
-      console.log("Called getCycleStatus");
-      if (response.status !== 200) {
-        throw new Error(
-          `Error al obtener el estado del ciclo desde el API. Status: ${response.status}`,
-        );
-      }
-      setExpenseSummary(response.data);
-    } catch (error) {
-      showMessage({
-        message: "Error al obtener el estado del ciclo",
-        type: "danger",
-      });
-      console.error(error);
-    }
-  };
-
-  useEffect(() => {
-    refresh();
-  }, [selectedBudget]);
-
-  useEffect(() => {
-    refresh();
-    setReloadBudgets(true);
-  }, [selectedCycle]);
-
-  useEffect(() => {
-    if (refreshExpenses) {
-      setIsListEnd(false);
-      setRefreshExpenses(false);
-      fetchExpenses();
-      fetchCycleStatus();
-    }
-  }, [refreshExpenses, fetchExpenses]);
-
-  useEffect(() => {
-    if (status === "success") {
-      setBudgets(data);
-    }
-    if (reloadBudgets) {
-      setReloadBudgets(false);
-      queryClient.invalidateQueries({ queryKey: ["budgets"] });
-    }
-  }, [status, data, reloadBudgets]);
-
   return (
-    <View className="flex-col">
+    <View className="flex-1 flex-col">
       <View className="mb-1 -mt-4 mx-3 flex-row items-center">
         <Dropdown
           style={[dropdownStyle.dropdown, isFocus && { borderColor: "blue" }]}
@@ -189,6 +162,7 @@ export default function ExpenseList({ refreshExpenses, setRefreshExpenses }) {
           onFocus={() => setIsFocus(true)}
           onBlur={() => setIsFocus(false)}
           onChange={(item) => {
+            setSelectedBudget(null);
             setSelectedCycle(item.value);
             setIsFocus(false);
           }}
@@ -202,28 +176,40 @@ export default function ExpenseList({ refreshExpenses, setRefreshExpenses }) {
           />
         </View>
       </View>
-      <View>
+      <View className="flex-1">
         <FlatList
-          className={`${modalVisible ? "opacity-10" : ""} mb-36`}
+          className={`${modalVisible ? "opacity-10" : ""}`}
           data={expenses}
-          onRefresh={refresh}
-          refreshing={isLoading}
+          onRefresh={refetchExpenses}
+          refreshing={isLoadingExpenses}
           keyExtractor={(expense) => expense.id.toString()}
           renderItem={({ item }) => <ExpenseCard expense={item} />}
           ListFooterComponent={
-            <Text className="text-white text-center pb-2">
-              {isListEnd && "No hay más gastos qué mostrar"}
-            </Text>
+            isFetchingNextPage ? (
+              <ActivityIndicator
+                size="small"
+                color="#3da1f3"
+                className="pb-10"
+              />
+            ) : (
+              <Text className="text-white text-center pb-2">
+                {!hasNextPage &&
+                  expenses.length > 0 &&
+                  "No hay más gastos qué mostrar"}
+              </Text>
+            )
           }
           ListEmptyComponent={
             <Text className="text-white text-center pt-2">
-              {!isLoading && expenses.length === 0
+              {!isLoadingExpenses && expenses.length === 0
                 ? "No hay gastos qué mostrar"
                 : ""}
             </Text>
           }
           onEndReachedThreshold={0.2}
-          onEndReached={loadMoreExpenses}
+          onEndReached={() => {
+            if (hasNextPage && !isFetchingNextPage) fetchNextPage();
+          }}
         />
       </View>
     </View>
