@@ -101,6 +101,7 @@ export default function ExpenseModal() {
         setModalVisible(false);
         queryClient.invalidateQueries({ queryKey: ["expenses"] });
         queryClient.invalidateQueries({ queryKey: ["cycleStatus"] });
+        queryClient.invalidateQueries({ queryKey: ["budgets"] });
       } else {
         showMessage({
           message: "No se pudo registrar el gasto",
@@ -137,6 +138,7 @@ export default function ExpenseModal() {
         setModalVisible(false);
         queryClient.invalidateQueries({ queryKey: ["expenses"] });
         queryClient.invalidateQueries({ queryKey: ["cycleStatus"] });
+        queryClient.invalidateQueries({ queryKey: ["budgets"] });
       } else {
         showMessage({
           message: "No se pudo actualizar el gasto",
@@ -168,6 +170,7 @@ export default function ExpenseModal() {
         setModalVisible(false);
         queryClient.invalidateQueries({ queryKey: ["expenses"] });
         queryClient.invalidateQueries({ queryKey: ["cycleStatus"] });
+        queryClient.invalidateQueries({ queryKey: ["budgets"] });
       } else {
         showMessage({
           message: "No se pudo eliminar el gasto",
