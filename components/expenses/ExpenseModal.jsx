@@ -48,7 +48,6 @@ export default function ExpenseModal({ setRefreshExpenses }) {
     ExpenseModalVisibleContext,
   );
   const { reloadBudgets, setReloadBudgets } = useContext(ReloadBudgetsContext);
-  const [selectedBudget, setSelectedBudget] = useState(null);
   const [budgets, setBudgets] = useState([]);
   const [formEnabled, setFormEnabled] = useState(true);
   const { getCredentials } = useAuth0();
@@ -56,9 +55,9 @@ export default function ExpenseModal({ setRefreshExpenses }) {
   const queryClient = useQueryClient();
   const resetFields = () => {
     setSelectedExpense(null);
-    setSelectedBudget(null);
     resetField("total");
     resetField("concept");
+    resetField("budget");
   };
   const [isRecurrentExpenseEnabled, setIsRecurrentExpenseEnabled] =
     useState(false);
@@ -90,7 +89,7 @@ export default function ExpenseModal({ setRefreshExpenses }) {
         val_expense: data.total,
         description: data.concept.trim(),
         date_expense: new Date().toISOString(),
-        budget_id: selectedBudget,
+        budget_id: data.budget,
         create_recurrent_expense: isRecurrentExpenseEnabled,
         cycle_id: selectedCycle,
       });
@@ -127,7 +126,7 @@ export default function ExpenseModal({ setRefreshExpenses }) {
         expense_id: expense_id,
         val_expense: data.total,
         description: data.concept.trim(),
-        budget_id: selectedBudget,
+        budget_id: data.budget,
       });
       if (response.status === 200) {
         showMessage({
@@ -202,7 +201,7 @@ export default function ExpenseModal({ setRefreshExpenses }) {
         String(Math.round(Number(selectedExpense.val_expense))),
       );
       setValue("concept", selectedExpense.description);
-      setSelectedBudget(selectedExpense.budget?.id || null);
+      setValue("budget", selectedExpense.budget?.id || null);
     }
   }, [selectedExpense]);
 
@@ -285,11 +284,17 @@ export default function ExpenseModal({ setRefreshExpenses }) {
               <Text className="text-sm font-bold text-white mt-4">
                 Presupuesto
               </Text>
-              <BadgetPicker
-                budgets={budgets}
-                selectedBudget={selectedBudget}
-                setSelectedBudget={setSelectedBudget}
-                disabled={!formEnabled}
+              <Controller
+                control={control}
+                name="budget"
+                render={({ field: { onChange, value } }) => (
+                  <BadgetPicker
+                    budgets={budgets}
+                    selectedBudget={value ?? null}
+                    setSelectedBudget={onChange}
+                    disabled={!formEnabled}
+                  />
+                )}
               />
               {selectedExpense === null && (
                 <View className="flex-row items-center">
