@@ -19,26 +19,6 @@ export default function BadgetPicker({
       contentContainerStyle={{ paddingVertical: 8 }}
     >
       <View className="flex-row">
-        <Pressable
-          disabled={disabled}
-          className={
-            `justify-center mt-2 mr-2 rounded-xl ` +
-            (selectedBudget === 0 ? activeBadge : inactiveBadge)
-          }
-          onPress={() => setSelectedBudget(selectedBudget === 0 ? null : 0)}
-        >
-          <View className="px-2 py-1">
-            <Text
-              className="text-center leading-tight font-semibold"
-              style={{ fontSize: 11 }}
-            >
-              Sin ppto.
-            </Text>
-            <Text className="text-center leading-tight" style={{ fontSize: 9 }}>
-              $0 / $0
-            </Text>
-          </View>
-        </Pressable>
         {budgets.map((budget) => (
           <Pressable
             disabled={disabled}
@@ -59,8 +39,9 @@ export default function BadgetPicker({
                 {budget.description}
               </Text>
               <Text className="text-center" style={{ fontSize: 9 }}>
-                {formatShortMoney(budget.total_spent)} /{" "}
-                {formatShortMoney(budget.val_budget)}
+                {formatShortMoney(budget.total_spent)}
+                {budget.val_budget > 0 &&
+                  ` / ${formatShortMoney(budget.val_budget)}`}
               </Text>
             </View>
           </Pressable>
