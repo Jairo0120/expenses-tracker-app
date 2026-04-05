@@ -6,6 +6,8 @@ import {
   Pressable,
   ActivityIndicator,
   Switch,
+  KeyboardAvoidingView,
+  Platform,
 } from "react-native";
 import { useForm, Controller } from "react-hook-form";
 import { styled } from "nativewind";
@@ -217,12 +219,17 @@ export default function ExpenseModal({ setRefreshExpenses }) {
   return (
     <View className="bg-black flex-1">
       <Modal transparent={true} visible={modalVisible} animationType="slide">
-        <View className="flex-1 mx-5 justify-center">
-          <View
-            className={`rounded-xl bg-dodger-blue-950 shadow-xl
+        <KeyboardAvoidingView
+          className="flex-1 mx-5"
+          behavior={Platform.OS === "ios" ? "padding" : "height"}
+          keyboardVerticalOffset={Platform.OS === "ios" ? 56 : 0}
+        >
+          <View className="flex-1 justify-start pt-20">
+            <View
+              className={`rounded-xl bg-dodger-blue-950 shadow-xl
             shadow-white border border-dodger-blue-800`}
-          >
-            <View className="mx-4 mt-3">
+            >
+              <View className="mx-4 mt-3">
               {formEnabled || (
                 <ActivityIndicator size="large" color="#c98b1e" />
               )}
@@ -370,7 +377,8 @@ export default function ExpenseModal({ setRefreshExpenses }) {
               )}
             </View>
           </View>
-        </View>
+          </View>
+        </KeyboardAvoidingView>
       </Modal>
     </View>
   );

@@ -1,5 +1,5 @@
-import { Modal, Text, View, Pressable, ActivityIndicator } from "react-native";
-import { useForm, useWatch } from "react-hook-form";
+import { Modal, Text, TextInput, View, Pressable, ActivityIndicator } from "react-native";
+import { useForm, Controller } from "react-hook-form";
 import { styled } from "nativewind";
 import { useEffect, useState, useContext } from "react";
 import { FormTextInput } from "../FormTextInput";
@@ -8,7 +8,7 @@ import {
   updateRecurrentBudget,
   deleteRecurrentBudget,
 } from "../../api/budgets";
-import { formatMoney } from "../../helpers/utils";
+import { formatMoneyInputDisplay, parseMoneyInputText } from "../../helpers/utils";
 import { showMessage } from "react-native-flash-message";
 import { useAuth0 } from "react-native-auth0";
 import { BudgetContext } from "../../contexts/budgets/BudgetContext";
@@ -31,17 +31,10 @@ export default function BudgetModal({ setRefreshBudgets }) {
     BudgetModalVisibleContext,
   );
   const { setReloadBudgets } = useContext(ReloadBudgetsContext);
-  const [totalFormated, setTotalFormated] = useState(null);
   const [formEnabled, setFormEnabled] = useState(true);
   const { getCredentials } = useAuth0();
-  const watchTotal = useWatch({
-    control,
-    name: "total",
-    defaultValue: "",
-  });
   const resetFields = () => {
     setSelectedBudget(null);
-    setTotalFormated(null);
     resetField("total");
     resetField("concept");
   };
@@ -167,12 +160,6 @@ export default function BudgetModal({ setRefreshBudgets }) {
     }
   }, [selectedBudget]);
 
-  useEffect(() => {
-    if (watchTotal !== "") {
-      setTotalFormated(formatMoney(watchTotal));
-    }
-  }, [watchTotal]);
-
   return (
     <View className="bg-black flex-1">
       <Modal transparent={true} visible={modalVisible} animationType="slide">
@@ -188,26 +175,34 @@ export default function BudgetModal({ setRefreshBudgets }) {
               <Text className="text-sm font-bold text-white">
                 Total del presupuesto
               </Text>
-              <FormTextInput
-                className={
-                  `w-full h-12 text-sm border rounded-xl pl-5 text-white ` +
-                  (errors.total ? "border-red-500" : "border-gray-400")
-                }
-                editable={formEnabled}
+              <Controller
                 control={control}
-                keyboardType="numeric"
-                enterKeyHint="next"
-                name={"total"}
-                blurOnSubmit={false}
+                name="total"
                 rules={{ required: true, pattern: /^[0-9.]+$/ }}
-                onSubmitEditing={() => setFocus("concept")}
+                render={({ field: { onChange, value, ref } }) => (
+                  <TextInput
+                    ref={ref}
+                    className={
+                      `w-full h-12 text-sm border rounded-xl pl-5 text-white ` +
+                      (errors.total ? "border-red-500" : "border-gray-400")
+                    }
+                    editable={formEnabled}
+                    keyboardType="numeric"
+                    enterKeyHint="next"
+                    blurOnSubmit={false}
+                    placeholder="$ 0,00"
+                    placeholderTextColor="#9ca3af"
+                    value={formatMoneyInputDisplay(value)}
+                    onChangeText={(text) =>
+                      onChange(parseMoneyInputText(text))
+                    }
+                    onSubmitEditing={() => setFocus("concept")}
+                  />
+                )}
               />
               {errors.total && (
                 <Text className="text-red-500">Campo numerico requerido.</Text>
               )}
-              <Text className="text-sm font-bold text-white mb-4">
-                {totalFormated || "$ 0,00"}
-              </Text>
               <Text className="text-sm font-bold text-white">
                 Descripción del presupuesto
               </Text>

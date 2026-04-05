@@ -1,17 +1,18 @@
 import {
   Modal,
   Text,
+  TextInput,
   View,
   Pressable,
   ActivityIndicator,
   Switch,
 } from "react-native";
-import { useForm, useWatch } from "react-hook-form";
+import { useForm, Controller } from "react-hook-form";
 import { styled } from "nativewind";
 import { useEffect, useState, useContext } from "react";
 import { FormTextInput } from "../FormTextInput";
 import { createIncome, updateIncome, deleteIncome } from "../../api/incomes";
-import { formatMoney } from "../../helpers/utils";
+import { formatMoneyInputDisplay, parseMoneyInputText } from "../../helpers/utils";
 import { showMessage } from "react-native-flash-message";
 import { useAuth0 } from "react-native-auth0";
 import { IncomeContext } from "../../contexts/incomes/IncomeContext";
@@ -33,18 +34,11 @@ export default function IncomeModal({ setRefreshIncomes }) {
   const { modalVisible, setModalVisible } = useContext(
     IncomeModalVisibleContext,
   );
-  const [totalFormated, setTotalFormated] = useState(null);
   const [formEnabled, setFormEnabled] = useState(true);
   const { getCredentials } = useAuth0();
   const { selectedCycle } = useContext(CycleContext);
-  const watchTotal = useWatch({
-    control,
-    name: "total",
-    defaultValue: "",
-  });
   const resetFields = () => {
     setSelectedIncome(null);
-    setTotalFormated(null);
     resetField("total");
     resetField("concept");
     setIsRecurrentIncomeEnabled(false);
@@ -172,12 +166,6 @@ export default function IncomeModal({ setRefreshIncomes }) {
     }
   }, [selectedIncome]);
 
-  useEffect(() => {
-    if (watchTotal !== "") {
-      setTotalFormated(formatMoney(watchTotal));
-    }
-  }, [watchTotal]);
-
   return (
     <View className="bg-black flex-1">
       <Modal transparent={true} visible={modalVisible} animationType="slide">
@@ -193,26 +181,34 @@ export default function IncomeModal({ setRefreshIncomes }) {
               <Text className="text-sm font-bold text-white">
                 Total del ingreso
               </Text>
-              <FormTextInput
-                className={
-                  `w-full h-12 text-sm border rounded-xl pl-5 text-white ` +
-                  (errors.total ? "border-red-500" : "border-gray-400")
-                }
-                editable={formEnabled}
+              <Controller
                 control={control}
-                keyboardType="numeric"
-                enterKeyHint="next"
-                name={"total"}
-                blurOnSubmit={false}
+                name="total"
                 rules={{ required: true, pattern: /^[0-9.]+$/ }}
-                onSubmitEditing={() => setFocus("concept")}
+                render={({ field: { onChange, value, ref } }) => (
+                  <TextInput
+                    ref={ref}
+                    className={
+                      `w-full h-12 text-sm border rounded-xl pl-5 text-white ` +
+                      (errors.total ? "border-red-500" : "border-gray-400")
+                    }
+                    editable={formEnabled}
+                    keyboardType="numeric"
+                    enterKeyHint="next"
+                    blurOnSubmit={false}
+                    placeholder="$ 0,00"
+                    placeholderTextColor="#9ca3af"
+                    value={formatMoneyInputDisplay(value)}
+                    onChangeText={(text) =>
+                      onChange(parseMoneyInputText(text))
+                    }
+                    onSubmitEditing={() => setFocus("concept")}
+                  />
+                )}
               />
               {errors.total && (
                 <Text className="text-red-500">Campo numerico requerido.</Text>
               )}
-              <Text className="text-sm font-bold text-white mb-4">
-                {totalFormated || "$ 0,00"}
-              </Text>
               <Text className="text-sm font-bold text-white">
                 Descripción del ingreso
               </Text>
