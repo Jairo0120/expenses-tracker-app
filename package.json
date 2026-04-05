@@ -10,7 +10,7 @@
     "android:dev": "dotenv -e .env.dev -e .env -- expo prebuild --platform android && dotenv -e .env.dev -e .env -- expo run:android --variant debug",
     "android:release": "dotenv -e .env.release -e .env -- expo prebuild --platform android && dotenv -e .env.release -e .env -- expo run:android --variant release",
     "android:clean:dev": "dotenv -e .env.dev -e .env -- expo prebuild --clean",
-    "android:clean:release": "dotenv -e .env.prod -e .env -- expo prebuild --clean",
+    "android:clean:release": "dotenv -e .env.release -e .env -- expo prebuild --clean",
     "ios": "dotenv -e .env.dev -e .env -- expo run:ios",
     "web": "dotenv -e .env.dev -e .env -- expo start --web",
     "lint": "eslint ."
