@@ -15,6 +15,7 @@ export default function BadgetPicker({
     <ScrollView
       horizontal
       showsHorizontalScrollIndicator={false}
+      keyboardShouldPersistTaps="handled"
       className="mb-2"
       contentContainerStyle={{ paddingVertical: 8 }}
     >
