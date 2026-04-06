@@ -16,7 +16,10 @@ import {
   updateRecurrentExpense,
   deleteRecurrentExpense,
 } from "../../api/expenses";
-import { formatMoneyInputDisplay, parseMoneyInputText } from "../../helpers/utils";
+import {
+  formatMoneyInputDisplay,
+  parseMoneyInputText,
+} from "../../helpers/utils";
 import { showMessage } from "react-native-flash-message";
 import { useAuth0 } from "react-native-auth0";
 import { RecurrentExpenseContext } from "../../contexts/recurrent-expenses/RecurrentExpenseContext";
@@ -40,14 +43,15 @@ export default function RecurrentExpenseModal({ setRefreshRecurrentExpenses }) {
     RecurrentExpenseModalVisibleContext,
   );
   const [formEnabled, setFormEnabled] = useState(true);
+  const [isRecurrentExpenseEnabled, setIsRecurrentExpenseEnabled] =
+    useState(false);
   const { getCredentials } = useAuth0();
   const resetFields = () => {
     setSelectedRecurrentExpense(null);
     resetField("total");
     resetField("concept");
+    setIsRecurrentExpenseEnabled(false);
   };
-  const [isRecurrentExpenseEnabled, setIsRecurrentExpenseEnabled] =
-    useState(false);
   const toggleSwitch = () =>
     setIsRecurrentExpenseEnabled((previousState) => !previousState);
 
@@ -167,6 +171,7 @@ export default function RecurrentExpenseModal({ setRefreshRecurrentExpenses }) {
     if (selectedRecurrentExpense) {
       setValue("total", selectedRecurrentExpense.val_expense.toString());
       setValue("concept", selectedRecurrentExpense.description);
+      setIsRecurrentExpenseEnabled(selectedRecurrentExpense.enabled);
     }
   }, [selectedRecurrentExpense]);
 
@@ -203,9 +208,7 @@ export default function RecurrentExpenseModal({ setRefreshRecurrentExpenses }) {
                     placeholder="$ 0,00"
                     placeholderTextColor="#9ca3af"
                     value={formatMoneyInputDisplay(value)}
-                    onChangeText={(text) =>
-                      onChange(parseMoneyInputText(text))
-                    }
+                    onChangeText={(text) => onChange(parseMoneyInputText(text))}
                     onSubmitEditing={() => setFocus("concept")}
                   />
                 )}
@@ -213,7 +216,7 @@ export default function RecurrentExpenseModal({ setRefreshRecurrentExpenses }) {
               {errors.total && (
                 <Text className="text-red-500">Campo numerico requerido.</Text>
               )}
-              <Text className="text-sm font-bold text-white">
+              <Text className="text-sm font-bold text-white mt-4">
                 Descripción del gasto recurrente
               </Text>
               <FormTextInput

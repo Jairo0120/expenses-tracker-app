@@ -16,7 +16,10 @@ import {
   updateRecurrentIncome,
   deleteRecurrentIncome,
 } from "../../api/incomes";
-import { formatMoneyInputDisplay, parseMoneyInputText } from "../../helpers/utils";
+import {
+  formatMoneyInputDisplay,
+  parseMoneyInputText,
+} from "../../helpers/utils";
 import { showMessage } from "react-native-flash-message";
 import { useAuth0 } from "react-native-auth0";
 import { RecurrentIncomeContext } from "../../contexts/recurrent-incomes/RecurrentIncomeContext";
@@ -205,9 +208,7 @@ export default function RecurrentIncomeModal({ setRefreshRecurrentIncomes }) {
                     placeholder="$ 0,00"
                     placeholderTextColor="#9ca3af"
                     value={formatMoneyInputDisplay(value)}
-                    onChangeText={(text) =>
-                      onChange(parseMoneyInputText(text))
-                    }
+                    onChangeText={(text) => onChange(parseMoneyInputText(text))}
                     onSubmitEditing={() => setFocus("concept")}
                   />
                 )}
@@ -215,7 +216,7 @@ export default function RecurrentIncomeModal({ setRefreshRecurrentIncomes }) {
               {errors.total && (
                 <Text className="text-red-500">Campo numerico requerido.</Text>
               )}
-              <Text className="text-sm font-bold text-white">
+              <Text className="text-sm font-bold text-white mt-4">
                 Descripción del ingreso
               </Text>
               <FormTextInput

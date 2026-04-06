@@ -1,4 +1,11 @@
-import { Modal, Text, TextInput, View, Pressable, ActivityIndicator } from "react-native";
+import {
+  Modal,
+  Text,
+  TextInput,
+  View,
+  Pressable,
+  ActivityIndicator,
+} from "react-native";
 import { useForm, Controller } from "react-hook-form";
 import { styled } from "nativewind";
 import { useEffect, useState, useContext } from "react";
@@ -8,7 +15,10 @@ import {
   updateRecurrentBudget,
   deleteRecurrentBudget,
 } from "../../api/budgets";
-import { formatMoneyInputDisplay, parseMoneyInputText } from "../../helpers/utils";
+import {
+  formatMoneyInputDisplay,
+  parseMoneyInputText,
+} from "../../helpers/utils";
 import { showMessage } from "react-native-flash-message";
 import { useAuth0 } from "react-native-auth0";
 import { BudgetContext } from "../../contexts/budgets/BudgetContext";
@@ -193,9 +203,7 @@ export default function BudgetModal({ setRefreshBudgets }) {
                     placeholder="$ 0,00"
                     placeholderTextColor="#9ca3af"
                     value={formatMoneyInputDisplay(value)}
-                    onChangeText={(text) =>
-                      onChange(parseMoneyInputText(text))
-                    }
+                    onChangeText={(text) => onChange(parseMoneyInputText(text))}
                     onSubmitEditing={() => setFocus("concept")}
                   />
                 )}
@@ -203,7 +211,7 @@ export default function BudgetModal({ setRefreshBudgets }) {
               {errors.total && (
                 <Text className="text-red-500">Campo numerico requerido.</Text>
               )}
-              <Text className="text-sm font-bold text-white">
+              <Text className="text-sm font-bold text-white mt-4">
                 Descripción del presupuesto
               </Text>
               <FormTextInput

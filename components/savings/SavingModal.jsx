@@ -12,7 +12,10 @@ import { styled } from "nativewind";
 import { useEffect, useState, useContext } from "react";
 import { FormTextInput } from "../FormTextInput";
 import { createSaving, updateSaving, deleteSaving } from "../../api/savings";
-import { formatMoneyInputDisplay, parseMoneyInputText } from "../../helpers/utils";
+import {
+  formatMoneyInputDisplay,
+  parseMoneyInputText,
+} from "../../helpers/utils";
 import { showMessage } from "react-native-flash-message";
 import { useAuth0 } from "react-native-auth0";
 import { SavingContext } from "../../contexts/savings/SavingContext";
@@ -199,9 +202,7 @@ export default function SavingModal({ setRefreshSavings }) {
                     placeholder="$ 0,00"
                     placeholderTextColor="#9ca3af"
                     value={formatMoneyInputDisplay(value)}
-                    onChangeText={(text) =>
-                      onChange(parseMoneyInputText(text))
-                    }
+                    onChangeText={(text) => onChange(parseMoneyInputText(text))}
                     onSubmitEditing={() => setFocus("concept")}
                   />
                 )}
@@ -209,7 +210,7 @@ export default function SavingModal({ setRefreshSavings }) {
               {errors.total && (
                 <Text className="text-red-500">Campo numerico requerido.</Text>
               )}
-              <Text className="text-sm font-bold text-white">
+              <Text className="text-sm font-bold text-white mt-4">
                 Descripción del ahorro
               </Text>
               <FormTextInput
