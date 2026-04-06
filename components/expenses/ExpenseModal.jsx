@@ -41,6 +41,7 @@ export default function ExpenseModal() {
     setFocus,
     resetField,
     setValue,
+    getValues,
     formState: { errors },
   } = useForm();
   const { selectedExpense, setSelectedExpense } = useContext(ExpenseContext);
@@ -299,7 +300,13 @@ export default function ExpenseModal() {
                     <BadgetPicker
                       budgets={budgets}
                       selectedBudget={value ?? null}
-                      setSelectedBudget={onChange}
+                      setSelectedBudget={(id) => {
+                        onChange(id);
+                        if (!getValues("concept")) {
+                          const budget = budgets.find((b) => b.id === id);
+                          if (budget) setValue("concept", budget.description);
+                        }
+                      }}
                       disabled={!formEnabled}
                     />
                   )}
